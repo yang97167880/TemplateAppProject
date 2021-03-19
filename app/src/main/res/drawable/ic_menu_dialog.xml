@@ -1,0 +1,21 @@
+<!--
+  ~ Copyright (C) 2021 xuexiangjys(xuexiangjys@163.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<vector android:height="24dp" android:viewportHeight="1024"
+    android:viewportWidth="1024" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#1296db" android:pathData="M320.02,554.6a63.99,63.99 0,1 1,0 -127.98,63.99 63.99,0 0,1 0,127.98zM533.33,554.6a63.99,63.99 0,1 1,0 -127.98,63.99 63.99,0 0,1 0,127.98zM746.64,554.6a63.99,63.99 0,1 1,0 -127.98,63.99 63.99,0 0,1 0,127.98zM983.28,291.81c26.88,59.43 40.61,122.52 40.53,187.58a449.65,449.65 0,0 1,-40.61 187.45,478.07 478.07,0 0,1 -110.28,152.39 513.26,513.26 0,0 1,-162.54 102.17c-62.93,24.7 -129.69,37.29 -198.46,37.29 -54.69,0 -108.36,-7.98 -159.77,-23.81L203.86,1019.19a35.79,35.79 0,0 1,-34 0.81,35.79 35.79,0 0,1 -19.5,-27.9l-23.04,-196.58C45.15,707.93 0.06,596.15 0.06,479.3c0,-64.97 13.69,-128.07 40.61,-187.45C66.7,234.64 103.73,183.45 151,139.46A513.26,513.26 0,0 1,313.54 37.29,540.74 540.74,0 0,1 512,0c68.77,0 135.58,12.59 198.46,37.29a513.26,513.26 0,0 1,162.54 102.17,476.1 476.1,0 0,1 110.28,152.39zM905.42,619.23a351.79,351.79 0,0 0,33.28 -148.97,350.25 350.25,0 0,0 -33.19,-149.02 384.25,384.25 0,0 0,-90.95 -122.35,429.43 429.43,0 0,0 -135.71,-83.06A465.01,465.01 0,0 0,512 85.32c-57.89,0 -113.99,10.28 -166.76,30.5A431.14,431.14 0,0 0,209.53 198.89,383.83 383.83,0 0,0 118.58,321.24a350.25,350.25 0,0 0,-33.15 149.02c0,96.29 39.68,188.48 111.6,259.55 5.42,5.38 8.92,12.37 9.81,19.92L224.46,895.89l111.39,-61.69a35.71,35.71 0,0 1,28.5 -2.65c47.1,15.66 96.84,23.59 147.57,23.59 57.85,0 113.99,-10.2 166.81,-30.5a431.14,431.14 0,0 0,135.75 -83.06,383.83 383.83,0 0,0 90.95,-122.35z"/>
+</vector>
