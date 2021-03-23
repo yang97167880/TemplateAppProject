@@ -18,7 +18,10 @@
 package com.yiflyplan.app.core;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 
 import com.xuexiang.xpage.base.XPageActivity;
 import com.xuexiang.xpage.base.XPageFragment;
@@ -27,6 +30,7 @@ import com.xuexiang.xrouter.facade.service.SerializationService;
 import com.xuexiang.xrouter.launcher.XRouter;
 import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.widget.slideback.SlideBack;
+import com.yiflyplan.app.utils.Utils;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -39,6 +43,7 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper;
  * @since 2019/3/22 11:21
  */
 public class BaseActivity extends XPageActivity {
+
 
     Unbinder mUnbinder;
 
@@ -55,11 +60,18 @@ public class BaseActivity extends XPageActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        initAppTheme();
         initStatusBarStyle();
         super.onCreate(savedInstanceState);
         mUnbinder = ButterKnife.bind(this);
-
         registerSlideBack();
+    }
+
+    /**
+     * 初始化应用的主题
+     */
+    protected void initAppTheme() {
+        Utils.initTheme(this);
     }
 
     /**
@@ -140,6 +152,17 @@ public class BaseActivity extends XPageActivity {
         if (isSupportSlideBack()) {
             SlideBack.unregister(this);
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        resetSlideBack();
+    }
+
+    private void resetSlideBack() {
+        unregisterSlideBack();
+        registerSlideBack();
     }
 
     /**

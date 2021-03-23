@@ -18,14 +18,21 @@
 package com.yiflyplan.app.fragment;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.annotation.RequiresApi;
 
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xui.utils.CountDownButtonHelper;
+import com.xuexiang.xui.utils.KeyboardUtils;
 import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.utils.ThemeUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
@@ -33,9 +40,10 @@ import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
 import com.xuexiang.xutil.app.ActivityUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.activity.MainActivity;
+import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
-import com.yiflyplan.app.utils.CaptchaUtil;
+import com.yiflyplan.app.utils.MD5Util;
 import com.yiflyplan.app.utils.RandomUtils;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
@@ -67,6 +75,7 @@ public class LoginFragment extends BaseFragment {
     @BindView(R.id.code_image)
     ImageView codeImage;
 
+    private final String CURRENTUSER = "currentUser";
     private String savedVerificationCode;
     private Bitmap verificationCodeImage;
 //    @BindView(R.id.btn_get_verify_code)
@@ -90,7 +99,9 @@ public class LoginFragment extends BaseFragment {
         titleBar.addAction(new TitleBar.TextAction(R.string.title_jump_login) {
             @Override
             public void performAction(View view) {
-                onLoginSuccess();
+                String token = RandomUtils.getRandomNumbersAndLetters(16);
+                CurrentUserVO userVO = new CurrentUserVO();
+                onLoginSuccess(userVO,token);
             }
         });
         return titleBar;
@@ -101,21 +112,60 @@ public class LoginFragment extends BaseFragment {
         getVerifyCode();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SingleClick
-    @OnClick({ R.id.btn_login, R.id.tv_other_login, R.id.tv_forget_password, R.id.tv_user_protocol, R.id.tv_privacy_protocol})
-    public void onViewClicked(View view) {
+    @OnClick({ R.id.btn_login, R.id.tv_other_login, R.id.tv_forget_password, R.id.tv_user_protocol, R.id.tv_privacy_protocol,R.id.et_password_number,R.id.et_verify_code,R.id.code_image})
+    public void onViewClicked(View view){
         switch (view.getId()) {
 //            case R.id.btn_get_verify_code:
 //                if (etPhoneNumber.validate()) {
 //                    getVerifyCode(etPhoneNumber.getEditValue());
 //                }
 //                break;
+            case R.id.code_image:
+                getVerifyCode();
+                break;
             case R.id.btn_login:
                 if (etPhoneNumber.validate()) {
                     if (etVerifyCode.validate()) {
-                        loginByVerifyCode(etPhoneNumber.getEditValue(), etVerifyCode.getEditValue());
+                        LinkedHashMap<String,String> params = new  LinkedHashMap<>();
+                        params.put("tel",etPhoneNumber.getText().toString());
+                        String md5psd = null;
+                        try {
+                            md5psd = MD5Util.getMD5(etPasswordNumber.getText().toString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        params.put("password",md5psd);
+                        params.put("verificationCode",etVerifyCode.getText().toString());
+                       MyHttp.postJson("/user/login", params, new MyHttp.Callback() {
+                           @Override
+                           public void success(JSONObject data) throws JSONException {
+                               Log.e("JSON:",data.toString());
+                               CurrentUserVO userVO = new CurrentUserVO();
+                               userVO.setId(data.getInt("userId"));
+                               userVO.setName(data.getString("userName"));
+                               userVO.setAvatar(data.getString("userAvatar"));
+                               userVO.setTel(data.getString("userTel"));
+                               userVO.setCityId(data.getString("userCityId"));
+                               Log.e("UserVO:",userVO.toString());
+                               onLoginSuccess(userVO,data.getString("token"));
+                           }
+                           @Override
+                           public void fail(JSONObject error) {
+                               Log.e("TAG:",error.toString());
+                           }
+                       });
                     }
                 }
+                break;
+            case R.id.et_password_number:
+                KeyboardUtils.isSoftInputShow(getActivity());
+                KeyboardUtils.showSoftInputForce(getActivity());
+                break;
+            case R.id.et_verify_code:
+                KeyboardUtils.isSoftInputShow(getActivity());
+                KeyboardUtils.showSoftInputForce(getActivity());
                 break;
             case R.id.tv_other_login:
                 XToastUtils.info("其他登录方式");
@@ -139,21 +189,20 @@ public class LoginFragment extends BaseFragment {
      */
     private void getVerifyCode() {
 
-//        XToastUtils.warning("只是演示，验证码请随便输");
-//        mCountDownHelper.start();
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("type","0");
         MyHttp.get("/captcha/getRegisteredVerificationCode", params,new MyHttp.Callback() {
             @Override
             public void success(JSONObject data) throws JSONException {
                 savedVerificationCode = data.toString();
-                verificationCodeImage = CaptchaUtil.createBitmap(savedVerificationCode);
+                verificationCodeImage = stringtoBitmap(savedVerificationCode);
                 codeImage.setImageBitmap(verificationCodeImage);
-                //System.out.println(savedVerificationCode);
             }
 
             @Override
             public void fail(JSONObject error) {
+                codeImage.setImageResource(R.drawable.ic_img);
+                Log.e("TAG:", error.toString());
 
             }
         });
@@ -166,19 +215,18 @@ public class LoginFragment extends BaseFragment {
      * @param phoneNumber 手机号
      * @param verifyCode  验证码
      */
-    private void loginByVerifyCode(String phoneNumber, String verifyCode) {
-        // TODO: 2020/8/29 这里只是界面演示而已
-        onLoginSuccess();
-    }
+//    private void loginByVerifyCode(String phoneNumber, String verifyCode) {
+//        // TODO: 2020/8/29 这里只是界面演示而已
+//        onLoginSuccess();
+//    }
 
     /**
      * 登录成功的处理
      */
-    private void onLoginSuccess() {
-        String token = RandomUtils.getRandomNumbersAndLetters(16);
+    private void onLoginSuccess(CurrentUserVO userInfo, String token) {
         if (TokenUtils.handleLoginSuccess(token)) {
             popToBack();
-            ActivityUtils.startActivity(MainActivity.class);
+            ActivityUtils.startActivity(MainActivity.class, CURRENTUSER, userInfo);
         }
     }
 
@@ -188,6 +236,22 @@ public class LoginFragment extends BaseFragment {
             mCountDownHelper.recycle();
         }
         super.onDestroyView();
+    }
+
+    public static Bitmap stringtoBitmap(String string) {
+// 将字符串转换成Bitmap类型
+        Bitmap bitmap = null;
+        try {
+            JSONObject str =  new JSONObject(string);
+            string = str.getString("image");
+            byte[] bitmapArray;
+            bitmapArray = Base64.decode(string.substring(21), Base64.DEFAULT);
+            bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0,
+                    bitmapArray.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 }
 

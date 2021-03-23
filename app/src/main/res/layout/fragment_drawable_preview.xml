@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2019 xuexiangjys(xuexiangjys@163.com)
+  ~ Copyright (C) 2021 xuexiangjys(xuexiangjys@163.com)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -17,32 +17,16 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/xui_config_color_pure_black"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@id/fragment_container"
+    <com.xuexiang.xui.widget.imageview.preview.view.SmoothImageView
+        android:id="@+id/photoView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-    </FrameLayout>
-
-    <!--  主内容填充  -->
-    <include
-        layout="@layout/layout_main_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-<!--    &lt;!&ndash; 侧边栏   &ndash;&gt;-->
-<!--    <com.google.android.material.navigation.NavigationView-->
-<!--        android:id="@+id/nav_view"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_gravity="start"-->
-<!--        app:headerLayout="@layout/include_nav_header"-->
-<!--        app:menu="@menu/menu_drawer" />-->
+        android:layout_height="match_parent"
+        android:padding="20dp"
+        android:background="@color/config_color_select_bg" />
 
 </LinearLayout>

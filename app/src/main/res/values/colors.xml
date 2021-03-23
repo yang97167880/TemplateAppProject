@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#0088ff</color>
     <color name="colorAccent">#0088ff</color>
 
-    <color name="config_color_select_bg">#FFF1F1F1</color>
+    <color name="config_color_select_bg">#eef3f7</color>
 
 
     <!--Toast，可自定义喜欢的颜色-->

@@ -18,46 +18,75 @@
 package com.yiflyplan.app.utils;
 
 
+import android.content.Context;
+
+import com.xuexiang.xutil.XUtil;
+import com.xuexiang.xutil.data.BaseSPUtil;
+
 /**
  * SharedPreferences管理工具基类
  *
  * @author xuexiang
  * @since 2018/11/27 下午5:16
  */
-public final class SettingUtils {
+public final class SettingUtils extends BaseSPUtil {
 
-    private SettingUtils() {
-        throw new UnsupportedOperationException("u can't instantiate me...");
+    private SettingUtils(Context context) {
+//        throw new UnsupportedOperationException("u can't instantiate me...");
+        super(context);
     }
 
-    private static final String IS_FIRST_OPEN_KEY = "is_first_open_key";
+    private static volatile SettingUtils sInstance = null;
 
-    private static final String IS_AGREE_PRIVACY_KEY = "is_agree_privacy_key";
+    private final String IS_USE_APP_THEME_KEY = "is_use_app_theme_key";
+
+    private  final String IS_FIRST_OPEN_KEY = "is_first_open_key";
+
+    private  final String IS_AGREE_PRIVACY_KEY = "is_agree_privacy_key";
+
+    /**
+     * 获取单例
+     *
+     * @return
+     */
+    public static SettingUtils getInstance() {
+        if (sInstance == null) {
+            synchronized (SettingUtils.class) {
+                if (sInstance == null) {
+                    sInstance = new SettingUtils(XUtil.getContext());
+                }
+            }
+        }
+        return sInstance;
+    }
 
     /**
      * 是否是第一次启动
      */
-    public static boolean isFirstOpen() {
-        return MMKVUtils.getBoolean(IS_FIRST_OPEN_KEY, true);
+    public boolean isFirstOpen() {
+        return getBoolean(IS_FIRST_OPEN_KEY, true);
     }
 
     /**
      * 设置是否是第一次启动
      */
-    public static void setIsFirstOpen(boolean isFirstOpen) {
+    public void setIsFirstOpen(boolean isFirstOpen) {
         MMKVUtils.put(IS_FIRST_OPEN_KEY, isFirstOpen);
     }
 
     /**
      * @return 是否同意隐私政策
      */
-    public static boolean isAgreePrivacy() {
-        return MMKVUtils.getBoolean(IS_AGREE_PRIVACY_KEY, false);
+    public  boolean isAgreePrivacy() {
+        return getBoolean(IS_AGREE_PRIVACY_KEY, false);
     }
 
-    public static void setIsAgreePrivacy(boolean isAgreePrivacy) {
+    public void setIsAgreePrivacy(boolean isAgreePrivacy) {
         MMKVUtils.put(IS_AGREE_PRIVACY_KEY, isAgreePrivacy);
     }
 
+    public boolean isUseAppTheme() {
+        return getBoolean(IS_USE_APP_THEME_KEY, true);
+    }
 
 }

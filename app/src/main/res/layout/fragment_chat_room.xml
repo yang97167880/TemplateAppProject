@@ -22,15 +22,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.xuexiang.xui.widget.actionbar.TitleBar
-        android:id="@+id/titlebar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tb_leftImageResource="@drawable/icon_back_white"
-        app:tb_leftText="返回"
-        app:tb_titleText="这是一个Title"
-        app:tb_useThemeColor="false"
-        android:background="@color/colorAccent"/>
+
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/chatRoom_refreshLayout"
         android:layout_width="match_parent"

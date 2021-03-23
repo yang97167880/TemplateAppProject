@@ -33,15 +33,14 @@ import android.view.View;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 
-import com.yiflyplan.app.R;
-import com.yiflyplan.app.core.webview.AgentWebActivity;
+import com.xuexiang.xui.XUI;
 import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.widget.dialog.DialogLoader;
 import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xutil.XUtil;
-
-import java.util.HashMap;
+import com.yiflyplan.app.R;
+import com.yiflyplan.app.core.webview.AgentWebActivity;
 
 import static com.yiflyplan.app.core.webview.AgentWebFragment.KEY_URL;
 
@@ -175,6 +174,18 @@ public final class Utils {
                         / 255;
         return darkness >= 0.382;
     }
+
+    /**
+     * 初始化主题
+     */
+    public static void initTheme(Activity activity) {
+        if (SettingUtils.getInstance().isUseAppTheme()) {
+            activity.setTheme(R.style.AppTheme);
+        } else {
+            XUI.initTheme(activity);
+        }
+    }
+
 
 
 }

@@ -17,11 +17,13 @@
 
 package com.yiflyplan.app.adapter.entity;
 
+import android.net.Uri;
+
 public class OrganizationInfo  {
 
     private String title;
 
-    private int image;
+    private Uri image;
 
     public String getTitle() {
         return title;
@@ -31,20 +33,20 @@ public class OrganizationInfo  {
         this.title = title;
     }
 
-    public void setImage(int image) {
+    public void setImage(Uri image) {
         this.image = image;
     }
 
-    public int getImage() {
+    public Uri getImage() {
         return image;
     }
 
-    public OrganizationInfo(String title) {
+    public OrganizationInfo(String title, int ic_menu_organization) {
         this.title = title;
     }
 
-    public OrganizationInfo(String title, int image) {
+    public OrganizationInfo(String title, String image) {
         this.title = title;
-        this.image = image;
+        this.image = Uri.parse(image);
     }
 }

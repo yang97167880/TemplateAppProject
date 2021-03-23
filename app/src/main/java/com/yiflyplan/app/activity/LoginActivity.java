@@ -1,5 +1,6 @@
+
 /*
- * Copyright (C) 2021 xuexiangjys(xuexiangjys@163.com)
+ * Copyright (C) 2021 12xuexiangjys(xuexiangjys@163.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,17 +19,13 @@
 package com.yiflyplan.app.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 
-import com.xuexiang.xhttp2.XHttp;
-import com.xuexiang.xhttp2.callback.SimpleCallBack;
-import com.xuexiang.xhttp2.exception.ApiException;
-import com.yiflyplan.app.fragment.LoginFragment;
-import com.yiflyplan.app.core.BaseActivity;
 import com.xuexiang.xui.utils.KeyboardUtils;
 import com.xuexiang.xui.utils.StatusBarUtils;
 import com.xuexiang.xutil.display.Colors;
+import com.yiflyplan.app.core.BaseActivity;
+import com.yiflyplan.app.fragment.LoginFragment;
 
 /**
  * 登录页面

@@ -18,7 +18,6 @@
 package com.yiflyplan.app.fragment.organization;
 
 import android.annotation.SuppressLint;
-import android.provider.ContactsContract;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,10 +32,8 @@ import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter;
-import com.yiflyplan.app.adapter.entity.NoticeInfo;
 import com.yiflyplan.app.adapter.entity.OrganizationInfo;
 import com.yiflyplan.app.core.BaseFragment;
-import com.yiflyplan.app.fragment.notices.ChartRoomFragment;
 import com.yiflyplan.app.utils.DemoDataProvider;
 
 import java.util.Objects;
@@ -90,7 +87,7 @@ public class OrganizationFragment extends BaseFragment {
                 if (model != null) {
                     holder.bindDataToViewById(view -> {
                         RadiusImageView imageView = (RadiusImageView) view;
-                        imageView.setImageResource(model.getImage());
+                        imageView.setImageURI(model.getImage());
                     }, R.id.or_image);
 
                     holder.bindDataToViewById(view -> {
@@ -138,6 +135,10 @@ public class OrganizationFragment extends BaseFragment {
             }, 1000);
         });
         refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
+    }
+
+    private void initAPIData(){
+
     }
 }
 

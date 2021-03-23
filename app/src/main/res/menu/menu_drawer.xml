@@ -34,10 +34,10 @@
             android:icon="@drawable/ic_scan_small"
             android:title="@string/menu_input" />
 
-        <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_menu_person"
-            android:title="@string/menu_profile" />
+<!--        <item-->
+<!--            android:id="@+id/nav_profile"-->
+<!--            android:icon="@drawable/ic_menu_person"-->
+<!--            android:title="@string/menu_profile" />-->
         <item
             android:id="@+id/nav_notices"
             android:icon="@drawable/ic_menu_dialog"

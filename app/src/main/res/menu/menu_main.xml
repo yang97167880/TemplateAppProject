@@ -22,7 +22,16 @@
         android:id="@+id/action_privacy"
         android:icon="@drawable/ic_menu_privacy"
         android:orderInCategory="100"
-        android:title="隐私政策"
+        android:title="加入机构"
         app:showAsAction="always" />
+
+<!--    <item-->
+<!--        android:id="@+id/item_setting"-->
+<!--        android:title="加入机构"-->
+<!--        app:showAsAction="never" />-->
+<!--    <item-->
+<!--        android:id="@+id/item_model"-->
+<!--        android:title="夜间模式"-->
+<!--        app:showAsAction="never" />-->
 
 </menu>

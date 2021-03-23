@@ -18,14 +18,12 @@
 package com.yiflyplan.app.fragment.notices;
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
@@ -35,7 +33,6 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
-import com.xuexiang.xui.widget.popupwindow.popup.XUIPopup;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
@@ -43,7 +40,6 @@ import com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.entity.ChartInfo;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.utils.DemoDataProvider;
-import com.yiflyplan.app.utils.XToastUtils;
 
 import java.util.Objects;
 
@@ -57,8 +53,6 @@ public class ChartRoomFragment extends BaseFragment {
     RecyclerView recyclerView;
     @BindView(R.id.chatRoom_refreshLayout)
     SmartRefreshLayout refreshLayout;
-    @BindView(R.id.titlebar)
-    TitleBar mTitleBar;
 
     private SimpleDelegateAdapter<ChartInfo> mChartAdapter;
 
@@ -83,13 +77,6 @@ public class ChartRoomFragment extends BaseFragment {
         RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
         recyclerView.setRecycledViewPool(viewPool);
         viewPool.setMaxRecycledViews(0, 10);
-
-        mTitleBar.setLeftClickListener(view -> popToBack()).setCenterClickListener(v -> XToastUtils.toast("点击标题")).addAction(new TitleBar.ImageAction(R.drawable.ic_web_more) {
-            @Override
-            public void performAction(View view) {
-                XToastUtils.toast("点击更多！");
-            }
-        });
 
         mChartAdapter = new BroccoliSimpleDelegateAdapter<ChartInfo>(R.layout.adapter_chart_item, new LinearLayoutHelper(), DemoDataProvider.getEmptyInfo(ChartInfo.class)) {
 

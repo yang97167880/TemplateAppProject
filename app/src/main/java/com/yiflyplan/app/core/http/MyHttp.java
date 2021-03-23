@@ -18,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.yiflyplan.app.MyApp;
+import com.yiflyplan.app.utils.XToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,10 +38,8 @@ public final class MyHttp {
 
 
 
-    private static final String STATUS = "status";
+    private static final String Message = "message";
     private static final String SUCCESS = "success";
-    private static final String ErrCode = "errCode";
-    private static final String ErrMsg = "errMsg";
     private static final String DATA = "data";
 
     private static final String API = "http://118.190.97.125:8080";
@@ -80,16 +79,15 @@ public final class MyHttp {
 
                             JSONObject res = new JSONObject(response);//将返回数据转化为json
 
-                            // 获得后端json中的data部分
-                            JSONObject data = res.getJSONObject(DATA);
-
                             // 业务处理成功，status字段值为success
-                            if (SUCCESS.equals(res.getString(STATUS))) {
+                            if (SUCCESS.equals(res.getString(Message))) {
+                                // 获得后端json中的data部分
+                                JSONObject data = res.getJSONObject(DATA);
                                 callback.success(data);
                             } else {// 业务处理中产生的异常
-                                Log.e("TAG", data.getString(ErrMsg));
-                                MyMessageBox.showToast(MyApp.getContext(), data.getString(ErrMsg));
-                                callback.fail(data);
+                                Log.e("TAG", res.getString(Message));
+                                XToastUtils.error(res.getString(Message));
+                                callback.fail(res);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -101,7 +99,7 @@ public final class MyHttp {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("TAG", error.getMessage(), error);
-                        MyMessageBox.showToast(MyApp.getContext(), error.getMessage());
+                        XToastUtils.error(error.getMessage());
                     }
                 }) {
             // 对返回的数据的编码格式进行处理
@@ -155,17 +153,14 @@ public final class MyHttp {
                     @Override
                     public void onResponse(JSONObject response) {// 获得后端返回的json数据，包括status和data两部分
                         try {
-
-                            // 获得后端json中的data部分
-                            JSONObject data = response.getJSONObject(DATA);
-
-                            // 业务处理成功，status字段值为success
-                            if (SUCCESS.equals(response.getString(STATUS))) {
+                            // 业务处理成功，success字段值为success
+                            if (SUCCESS.equals(response.getString(Message))) {
+                                JSONObject data = response.getJSONObject(DATA);
                                 callback.success(data);
                             } else {// 业务处理中产生的异常
-                                Log.e("TAG", data.getString(ErrMsg));
-                                MyMessageBox.showToast(MyApp.getContext(), data.getString(ErrMsg));
-                                callback.fail(data);
+                                Log.e("TAG", response.getString(Message));
+                                XToastUtils.error(response.getString(Message));
+                                callback.fail(response);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -177,7 +172,7 @@ public final class MyHttp {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("TAG", error.getMessage(), error);
-                        MyMessageBox.showToast(MyApp.getContext(), error.getMessage());
+                        XToastUtils.error(error.getMessage());
                     }
                 }) {
             // 对返回的数据的编码格式进行处理

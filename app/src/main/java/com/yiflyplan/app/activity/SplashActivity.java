@@ -19,13 +19,12 @@ package com.yiflyplan.app.activity;
 
 import android.view.KeyEvent;
 
-import com.yiflyplan.app.R;
-import com.yiflyplan.app.utils.SettingUtils;
-import com.yiflyplan.app.utils.TokenUtils;
-import com.yiflyplan.app.utils.Utils;
 import com.xuexiang.xui.utils.KeyboardUtils;
 import com.xuexiang.xui.widget.activity.BaseSplashActivity;
 import com.xuexiang.xutil.app.ActivityUtils;
+import com.yiflyplan.app.R;
+import com.yiflyplan.app.utils.SettingUtils;
+import com.yiflyplan.app.utils.TokenUtils;
 
 import me.jessyan.autosize.internal.CancelAdapt;
 
@@ -37,6 +36,10 @@ import me.jessyan.autosize.internal.CancelAdapt;
  */
 public class SplashActivity extends BaseSplashActivity implements CancelAdapt {
 
+    public final static String KEY_IS_DISPLAY = "key_is_display";
+    public final static String KEY_ENABLE_ALPHA_ANIM = "key_enable_alpha_anim";
+
+    private boolean isDisplay = false;
     @Override
     protected long getSplashDurationMillis() {
         return 500;
@@ -47,8 +50,24 @@ public class SplashActivity extends BaseSplashActivity implements CancelAdapt {
      */
     @Override
     protected void onCreateActivity() {
-        initSplashView(R.drawable.xui_config_bg_splash);
-        startSplash(false);
+        isDisplay = getIntent().getBooleanExtra(KEY_IS_DISPLAY, isDisplay);
+        boolean enableAlphaAnim = getIntent().getBooleanExtra(KEY_ENABLE_ALPHA_ANIM, false);
+        SettingUtils spUtil = SettingUtils.getInstance();
+        if (spUtil.isFirstOpen()) {
+            spUtil.setIsFirstOpen(false);
+            ActivityUtils.startActivity(LoginActivity.class);
+            finish();
+
+        } else {
+            if (enableAlphaAnim) {
+                initSplashView(R.drawable.background);
+            } else {
+                initSplashView(R.drawable.xui_config_bg_splash);
+            }
+            startSplash(enableAlphaAnim);
+        }
+//        initSplashView(R.drawable.xui_config_bg_splash);
+//        startSplash(false);
     }
 
 
@@ -57,15 +76,23 @@ public class SplashActivity extends BaseSplashActivity implements CancelAdapt {
      */
     @Override
     protected void onSplashFinished() {
-        if (SettingUtils.isAgreePrivacy()) {
-            loginOrGoMainPage();
-        } else {
-            Utils.showPrivacyDialog(this, (dialog, which) -> {
-                dialog.dismiss();
-                SettingUtils.setIsAgreePrivacy(true);
-                loginOrGoMainPage();
-            });
+        if (!isDisplay) {
+            if (TokenUtils.hasToken()) {
+                ActivityUtils.startActivity(MainActivity.class);
+            } else {
+                ActivityUtils.startActivity(LoginActivity.class);
+            }
         }
+        finish();
+//        if (SettingUtils.isAgreePrivacy()) {
+//            loginOrGoMainPage();
+//        } else {
+//            Utils.showPrivacyDialog(this, (dialog, which) -> {
+//                dialog.dismiss();
+//                SettingUtils.setIsAgreePrivacy(true);
+//                loginOrGoMainPage();
+//            });
+//        }
     }
 
     private void loginOrGoMainPage() {

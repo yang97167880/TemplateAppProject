@@ -35,7 +35,7 @@
             android:layout_width="90dp"
             android:layout_height="30dp"
             android:layout_marginTop="@dimen/config_margin_5dp"
-           android:background="@drawable/logo" />
+           android:background="@drawable/logo_login" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

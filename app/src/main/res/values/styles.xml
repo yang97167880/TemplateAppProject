@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- 拓展主题 theme. -->
     <style name="XUITheme" parent="XUIBaseTheme">
@@ -13,6 +13,72 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="xui_actionbar_height">?actionBarSize</item>
+        <item name="colorControlNormal">@color/xui_config_color_control_normal</item>
+
+        <!--actionbar的样式-->
+        <item name="xui_actionbar_color">@color/colorPrimary</item>
+        <item name="xui_actionbar_text_color">@color/xui_config_color_white</item>
+        <item name="xui_actionbar_immersive">false</item>
+        <item name="xui_actionbar_ic_navigation_back">@drawable/ic_web_back</item>
+        <!--全局样式-->
+        <item name="xui_config_content_spacing_horizontal">16dp</item>
+        <item name="xui_config_content_spacing_vertical">10dp</item>
+
+        <!--文字字号样式-->
+        <item name="xui_config_size_title_text">21sp</item>
+        <item name="xui_config_size_content_text">18sp</item>
+        <item name="xui_config_size_explain_text">14sp</item>
+        <item name="xui_config_size_spinner_text">14sp</item>
+
+        <!--按钮样式-->
+        <item name="xui_btn_view_radius">8dp</item>
+        <item name="xui_btn_view_width">@dimen/default_btn_view_width_phone</item>
+        <item name="xui_btn_view_height">36dp</item>
+        <item name="xui_btn_view_text_size">14sp</item>
+        <item name="xui_btn_view_border_width">0.8dp</item>
+        <item name="xui_config_icon_drawable_padding">8dp</item>
+
+        <!--输入框样式-->
+        <item name="xui_config_size_edittext_input_text">14sp</item>
+        <item name="xui_config_size_edittext_helper_text">10sp</item>
+        <item name="xui_config_size_edittext_components_spacing">8dp</item>
+        <item name="xui_config_size_edittext_left_padding">12dp</item>
+        <item name="xui_config_size_edittext_radius">5dp</item>
+        <item name="xui_config_size_edittext_height">36dp</item>
+
+        <!--actionbar-->
+        <item name="xui_actionbar_height" tools:ignore="DuplicateDefinition">60dp</item>
+        <item name="xui_actionbar_title_text_size">21dp</item>
+        <item name="xui_actionbar_action_text_size">18sp</item>
+        <item name="xui_actionbar_sub_text_size">@dimen/xui_actionbar_sub_text_size_phone</item>
+        <item name="xui_actionbar_action_padding">8dp</item>
+        <item name="xui_actionbar_side_text_padding">15dp</item>
+
+        <!--spinner-->
+        <item name="ms_padding_left_size">10dp</item>
+        <item name="ms_padding_top_size">8dp</item>
+        <item name="ms_item_height_size">36dp</item>
+        <item name="ms_dropdown_offset">2dp</item>
+        <item name="ms_arrow_size">10dp</item>
+        <!--StatefulLayout-->
+        <item name="stf_progressbar_size">70dp</item>
+        <item name="stf_tip_img_size">90dp</item>
+
+          <!--*********************************************
+        *                  Dialog                       *
+        **********************************************-->
+        <item name="xui_dialog_radius_size">8dp</item>
+        <item name="xui_dialog_loading_padding_size">30dp</item>
+        <item name="xui_dialog_loading_min_size">110dp</item>
+        <item name="xui_dialog_mini_loading_padding_size">20dp</item>
+        <item name="xui_dialog_mini_loading_min_size">100dp</item>
+        <item name="xui_loading_view_size">85dp</item>
+        <item name="xui_mini_loading_view_size">30dp</item>
+        <item name="xui_loading_text_size">14sp</item>
+        <item name="xui_loading_view_width">5dp</item>
+        <item name="xui_loading_margin_size">8dp</item>
+        <item name="xui_mini_loading_margin_size">15dp</item>
+        <item name="mini_loading_view_size">25dp</item>
     </style>
 
     <style name="AppTheme.Launch">
