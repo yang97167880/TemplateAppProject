@@ -162,7 +162,7 @@ public class DemoDataProvider {
     public static <T> List<T> getEmptyInfo(Class<T> cls)  {
         List<T> list = new ArrayList<>();
         try {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 1; i++) {
                 list.add(cls.newInstance());
             }
         }catch (Exception e){

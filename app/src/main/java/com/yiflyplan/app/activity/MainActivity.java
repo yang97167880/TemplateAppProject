@@ -21,11 +21,13 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -34,9 +36,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.umeng.analytics.MobclickAgent;
 import com.xuexiang.xaop.annotation.SingleClick;
@@ -44,9 +43,11 @@ import com.xuexiang.xui.adapter.FragmentAdapter;
 import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.utils.ThemeUtils;
 import com.xuexiang.xui.widget.dialog.DialogLoader;
+import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xui.widget.guidview.GuideCaseQueue;
 import com.xuexiang.xui.widget.guidview.GuideCaseView;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
+import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
 import com.xuexiang.xutil.XUtil;
 import com.xuexiang.xutil.common.ClickUtils;
 import com.xuexiang.xutil.common.CollectionUtils;
@@ -57,6 +58,7 @@ import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 import com.yarolegovich.slidingrootnav.callback.DragStateListener;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
+import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.adapter.menu.DrawerAdapter;
 import com.yiflyplan.app.adapter.menu.DrawerItem;
 import com.yiflyplan.app.adapter.menu.SimpleItem;
@@ -68,9 +70,9 @@ import com.yiflyplan.app.fragment.QRCodeFragment;
 import com.yiflyplan.app.fragment.SettingsFragment;
 import com.yiflyplan.app.fragment.input.InputFragment;
 import com.yiflyplan.app.fragment.notices.NoticesFragment;
+import com.yiflyplan.app.fragment.organization.ApplyFormFragment;
 import com.yiflyplan.app.fragment.organization.OrganizationFragment;
 import com.yiflyplan.app.utils.TokenUtils;
-import com.yiflyplan.app.utils.Utils;
 import com.yiflyplan.app.utils.XToastUtils;
 import com.yiflyplan.app.widget.GuideTipsDialog;
 
@@ -99,6 +101,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     private String[] mTitles;
 
     private final String CURRENTUSER = "currentUser";
+    private final String ORGANIZATION = "currentOrganization";
+    private final String RELATIONSHIPS = "relationships";
     private SlidingRootNav mSlidingRootNav;
     private String[] mMenuTitles;
     private Drawable[] mMenuIcons;
@@ -108,6 +112,10 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     private static final int POS_NOTICES = 2;
     private static final int POS_ABOUT = 3;
     private static final int POS_LOGOUT = 5;
+    private CurrentUserVO userVO;
+    OrganizationVO organizationVO;
+    private Bundle relationshipsBundle;
+
 
     @Override
     protected int getLayoutId() {
@@ -117,6 +125,13 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //获取传递过来的用户数据
+        Intent intent = this.getIntent();
+        userVO =  (CurrentUserVO) intent.getSerializableExtra(CURRENTUSER);
+        organizationVO = userVO.getCurrentOrganization();
+//        relationshipsBundle = new Bundle();
+//        relationshipsBundle.putSerializable(RELATIONSHIPS, (Serializable) userVO.getRelationships());
 
         MobclickAgent.onProfileSignIn(DeviceUtils.getAndroidID());
 
@@ -167,6 +182,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 //                new ProfileFragment(),
                 new NoticesFragment(),
         };
+        fragments[0].setArguments(relationshipsBundle);
         FragmentAdapter<BaseFragment> adapter = new FragmentAdapter<>(getSupportFragmentManager(), fragments);
         viewPager.setOffscreenPageLimit(mTitles.length - 1);
         viewPager.setAdapter(adapter);
@@ -176,9 +192,6 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 
 
     private void initSlidingMenu(Bundle savedInstanceState) {
-        //获取传递过来的用户数据
-        Intent intent = this.getIntent();
-        CurrentUserVO userVO = (CurrentUserVO) intent.getSerializableExtra(CURRENTUSER);
 
         mSlidingRootNav = new SlidingRootNavBuilder(this)
                 .withGravity(ResUtils.isRtl() ? SlideGravity.RIGHT : SlideGravity.LEFT)
@@ -188,16 +201,17 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 .withMenuLayout(R.layout.menu_left_drawer)
                 .inject();
 
-        RequestOptions options = new RequestOptions()
-                .placeholder(R.drawable.icon_head_default)
-                .diskCacheStrategy(DiskCacheStrategy.ALL);
-//        TextView userName = findViewById(R.id.tv_name);
-//        userName.setText(userVO.getName());
+//        RequestOptions options = new RequestOptions()
+//                .placeholder(R.drawable.icon_head_default)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL);
+        TextView userName = findViewById(R.id.tv_name);
+        userName.setText(userVO.getName());
 
         RadiusImageView userAvatar = findViewById(R.id.iv_avatar);
-        String url = "https://light-plant.oss-cn-beijing.aliyuncs.com/2021/03/22/2fac6a7f3a764dec8eae65046924296d.jpg";
-        Glide.with(this).load(url).apply(options).into(userAvatar);
-
+        //String url = "https://light-plant.oss-cn-beijing.aliyuncs.com/2021/03/22/2fac6a7f3a764dec8eae65046924296d.jpg";
+        //Glide.with(this).load(url).into(userAvatar);
+        GlideImageLoadStrategy lodeImg = new GlideImageLoadStrategy();
+        lodeImg.loadImage(userAvatar,userVO.getAvatar());
 
         LinearLayout mLLMenu = mSlidingRootNav.getLayout().findViewById(R.id.ll_menu);
         final AppCompatImageView ivQrcode = mSlidingRootNav.getLayout().findViewById(R.id.iv_qrcode);
@@ -265,8 +279,11 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_privacy:
-                Utils.showPrivacyDialog(this, null);
+//            case R.id.action_privacy:
+//                //Utils.showPrivacyDialog(this, null);
+//                break;
+            case R.id.organization_add:
+                showInputDialog();
                 break;
             default:
                 break;
@@ -412,6 +429,31 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
             return mSlidingRootNav.isMenuOpened();
         }
         return false;
+    }
+
+    /**
+     * 带输入框的对话框
+     */
+    private void showInputDialog() {
+        new MaterialDialog.Builder(this)
+                .iconRes(R.drawable.ic_checked)
+                .title("申请加入机构")
+                .inputType(
+                        InputType.TYPE_CLASS_TEXT
+                                | InputType.TYPE_TEXT_FLAG_CAP_WORDS)
+                .input(
+                        getString(R.string.hint_input),
+                        "",
+                        false,
+                        ((dialog, input) -> XToastUtils.toast(input.toString())))
+                .positiveText(R.string.lab_search)
+                .negativeText(R.string.lab_cancel)
+                .onPositive((dialog, which) -> {
+                    //XToastUtils.toast("你输入了:" + dialog.getInputEditText().getText().toString());
+                    openNewPage(ApplyFormFragment.class);
+                })
+                .cancelable(false)
+                .show();
     }
 
 }

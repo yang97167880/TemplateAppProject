@@ -16,33 +16,110 @@
   ~
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="6dp"
+    app:cardBackgroundColor="@color/xui_config_color_white"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardPreventCornerOverlap="true"
+    app:contentPaddingBottom="10dp"
+    app:contentPaddingLeft="16dp"
+    app:contentPaddingRight="16dp"
+    app:contentPaddingTop="5dp">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="69dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="6dp"
-        app:cardBackgroundColor="@color/xui_config_color_white"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
-        app:cardPreventCornerOverlap="true"
-        app:contentPaddingBottom="10dp"
-        app:contentPaddingLeft="16dp"
-        app:contentPaddingRight="16dp"
-        app:contentPaddingTop="5dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:orientation="horizontal">
+
+                <com.xuexiang.xui.widget.imageview.RadiusImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@mipmap/ic_launcher"
+                    app:riv_is_circle="true" />
+
+                <TextView
+                    android:id="@+id/or_roleName"
+                    style="@style/TextStyle.Explain"
+                    android:layout_height="22dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginStart="4dp"
+                    android:textColor="@color/xui_config_color_pure_black" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/or_typeName"
+                style="@style/TextStyle.Explain"
+                android:layout_gravity="end|center_vertical" />
+
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/or_name"
+                    style="@style/TextStyle.Content"
+                    android:ellipsize="end"
+                    android:gravity="start|center_vertical"
+                    android:maxLines="2"
+                    android:singleLine="false"
+                    android:textColor="@color/xui_config_color_pure_black" />
+                <TextView
+                    android:id="@+id/or_time"
+                    style="@style/TextStyle.Explain"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:gravity="start|center_vertical"
+                    android:maxLines="2"
+                    android:singleLine="false"
+                    android:textColor="?attr/xui_config_color_content_text" />
+            </LinearLayout>
+
+            <com.xuexiang.xui.widget.imageview.RadiusImageView
+                android:id="@+id/or_avatar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/xui_ic_default_img"
+                app:riv_border_width="0dp"
+                app:riv_corner_radius="5dp" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,53 +127,20 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <com.xuexiang.xui.widget.imageview.RadiusImageView
-                    android:id="@+id/or_image"
-                    android:layout_width="60dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginTop="4dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/xui_ic_default_img"
-                    app:riv_border_width="0dp"
-                    app:riv_corner_radius="5dp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/or_title"
-                        style="@style/TextStyle.Content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
-                        android:ellipsize="end"
-                        android:gravity="start|center_vertical"
-                        android:maxLines="2"
-                        android:singleLine="false"
-                        android:textColor="@color/xui_config_color_pure_black" />
-                    <TextView
-                        android:id="@+id/detail_title"
-                        style="@style/TextStyle.Content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="5dp"
-                        android:ellipsize="end"
-                        android:gravity="start|center_vertical"
-                        android:maxLines="2"
-                        android:singleLine="false"
-                        android:textColor="@color/xui_btn_gray_normal_color"
-                        android:textSize="@dimen/config_margin_15dp"
-                        android:text="XXX省XXX市XXX级"/>
-
-
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/or_code"
+                    style="@style/TextStyle.Explain"
+                    android:text="编码：" />
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/or_level"
+                style="@style/TextStyle.Explain"
+                android:layout_gravity="center_vertical|end" />
 
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
-</LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -41,6 +41,7 @@ import com.xuexiang.xutil.app.ActivityUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.activity.MainActivity;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
+import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.utils.MD5Util;
@@ -48,10 +49,13 @@ import com.yiflyplan.app.utils.RandomUtils;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -138,17 +142,49 @@ public class LoginFragment extends BaseFragment {
                         }
                         params.put("password",md5psd);
                         params.put("verificationCode",etVerifyCode.getText().toString());
-                       MyHttp.postJson("/user/login", params, new MyHttp.Callback() {
+                       MyHttp.postJson("/user/login","", params, new MyHttp.Callback() {
                            @Override
                            public void success(JSONObject data) throws JSONException {
                                Log.e("JSON:",data.toString());
                                CurrentUserVO userVO = new CurrentUserVO();
+                               OrganizationVO organizationVO = new OrganizationVO();
+
+                               //用户初始化
                                userVO.setId(data.getInt("userId"));
                                userVO.setName(data.getString("userName"));
                                userVO.setAvatar(data.getString("userAvatar"));
                                userVO.setTel(data.getString("userTel"));
                                userVO.setCityId(data.getString("userCityId"));
-                               Log.e("UserVO:",userVO.toString());
+
+                               //机构初始化
+                               JSONObject organization = new JSONObject(data.getString("currentOrganization"));
+                               organizationVO.setId(organization.getInt("organizationId"));
+                               organizationVO.setName(organization.getString("organizationName"));
+                               organizationVO.setAvatar(organization.getString("organizationAvatar"));
+                               organizationVO.setAbbreviation(organization.getString("organizationAbbreviation"));
+                               organizationVO.setLevel(organization.getString("organizationLevel"));
+                               organizationVO.setTypeId(organization.getInt("organizationTypeId"));
+                               organizationVO.setTypeName(organization.getString("organizationTypeName"));
+                               organizationVO.setRoleName(organization.getString("roleName"));
+
+                               //机构关系初始化
+                               JSONArray relationships = new JSONArray(data.getString("relationships"));
+                               List<OrganizationVO> voList = new ArrayList<>();
+                               for(int i = 0;i<relationships.length();i++){
+                                   OrganizationVO temp = new OrganizationVO();
+                                   temp.setId( relationships.getJSONObject(i).getInt("organizationId"));
+                                   temp.setName(relationships.getJSONObject(i).getString("organizationName"));
+                                   temp.setAvatar(relationships.getJSONObject(i).getString("organizationAvatar"));
+                                   temp.setAbbreviation(relationships.getJSONObject(i).getString("organizationAbbreviation"));
+                                   temp.setLevel(relationships.getJSONObject(i).getString("organizationLevel"));
+                                   temp.setTypeId(relationships.getJSONObject(i).getInt("organizationTypeId"));
+                                   temp.setTypeName(relationships.getJSONObject(i).getString("organizationTypeName"));
+                                   temp.setRoleName(relationships.getJSONObject(i).getString("roleName"));
+                                   voList.add(temp);
+                               }
+
+                               userVO.setCurrentOrganization(organizationVO);
+                               userVO.setRelationships(voList);
                                onLoginSuccess(userVO,data.getString("token"));
                            }
                            @Override
@@ -191,7 +227,7 @@ public class LoginFragment extends BaseFragment {
 
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("type","0");
-        MyHttp.get("/captcha/getRegisteredVerificationCode", params,new MyHttp.Callback() {
+        MyHttp.get("/captcha/getRegisteredVerificationCode","", params,new MyHttp.Callback() {
             @Override
             public void success(JSONObject data) throws JSONException {
                 savedVerificationCode = data.toString();

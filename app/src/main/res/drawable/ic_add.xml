@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (C) 2021 xuexiangjys(xuexiangjys@163.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="16dp"
+    android:height="16dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+  <path
+      android:pathData="M434.9,435.04l0,-7.66c0,-84.99 0,-214.69 0,-299.7 0,-34.8 24.74,-61.3 59.51,-61.91 41.62,-0.74 -6.07,-0.72 35.6,-0.02 34.16,0.57 59.03,27.18 59.08,61.74 0.09,84.8 0.04,214.27 0.04,299.07l0,8.49 8.29,0c84.16,0 213.01,0 297.17,0 38.4,0 63.96,25.55 64.05,64.03 0.09,38.48 0.09,-12.39 0,26.11 -0.09,38.53 -25.66,64.03 -64.01,64.03L597.47,589.21l-8.03,0c-0.13,2.18 -0.3,4.01 -0.3,5.82 -0.04,85.23 0.04,215.13 -0.04,300.34 0,30.35 -17.67,54.34 -45.25,61.3 -5.45,1.38 -11.26,1.96 -16.93,1.99 -39.53,0.17 10.25,0.13 -29.28,0.09 -36.65,-0.04 -62.7,-26 -62.74,-62.7 -0.04,-85.43 0,-215.54 0,-300.97l0,-5.87 -7.68,0c-84.99,0 -214.71,0 -299.7,-0.02 -35.73,0 -62.09,-26.2 -62.18,-61.98 -0.09,-39.99 -0.09,9.4 0,-30.56 0.09,-35.38 26.44,-61.59 61.96,-61.59 84.78,-0.04 214.27,-0.02 299.05,-0.02C428.88,435.04 431.41,435.04 434.9,435.04L434.9,435.04zM434.9,435.04"
+      android:fillColor="#ffffff"/>
+</vector>

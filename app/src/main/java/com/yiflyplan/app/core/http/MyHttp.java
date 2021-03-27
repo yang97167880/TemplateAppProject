@@ -47,7 +47,6 @@ public final class MyHttp {
     static {
         // 创建请求队列对象，自动管理请求对象
         mQueue = Volley.newRequestQueue(MyApp.getContext());
-
         // 添加自动cookie管理，不要手动在getHeader中添加cookie
         CookieManager manager = new CookieManager();
         CookieHandler.setDefault(manager);
@@ -65,7 +64,7 @@ public final class MyHttp {
      */
     // 参数为：请求方式、请求路径（前面默认添加API）、请求参数列表、返回结果回调接口
     // 请求参数列表使用LinkedHashMap，确保添加顺序和读取顺序一致
-    private static void request(int method, final String url, final LinkedHashMap<String, String> params, final Callback callback) {
+    private static void request(int method, final String url,final String token, final LinkedHashMap<String, String> params, final Callback callback) {
         //生成请求对象
         StringRequest jsonObjectRequest = new StringRequest(
                 method,//请求方式，GET、POST
@@ -123,6 +122,17 @@ public final class MyHttp {
             protected Map<String, String> getParams() throws AuthFailureError {
                 return params;
             }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError
+            {
+                LinkedHashMap<String, String> headers = new LinkedHashMap<>();
+                headers.put("Charset", "UTF-8");
+                headers.put("Content-Type", "application/json;charset=utf-8");
+                headers.put("Accept-Encoding", "gzip,deflate");
+                headers.put("Authorization",token);
+                return headers;
+            }
         };
         // 超时设置,10秒超时，失败后不重试
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 0, 1.0f));
@@ -131,8 +141,8 @@ public final class MyHttp {
     }
 
     // 使用POST模式传参给后端，并获得后端返回数据（修改数据）
-    public static void post(final String url, final LinkedHashMap<String, String> params, final Callback callback) {
-        request(Request.Method.POST, url, params, callback);
+    public static void post(final String url,final String token, final LinkedHashMap<String, String> params, final Callback callback) {
+        request(Request.Method.POST, url,token, params, callback);
     }
 
     /**
@@ -140,7 +150,7 @@ public final class MyHttp {
      */
     // 参数为：请求方式、请求路径（前面默认添加API）、请求参数列表、返回结果回调接口
     // 请求参数列表使用LinkedHashMap，确保添加顺序和读取顺序一致
-    private static void requestJson(int method, final String url, final LinkedHashMap<String, String> params, final Callback callback) {
+    private static void requestJson(int method, final String url,final String token, final LinkedHashMap<String, String> params, final Callback callback) {
         //JSONObject请求不支持Map传递参数列表，需要自行构造请求参数对象，如果没有参数，则为null
         JSONObject jsonRequest = (params == null || params.isEmpty()) ? null : new JSONObject(params);
         //生成请求对象
@@ -191,6 +201,18 @@ public final class MyHttp {
                     return Response.error(new ParseError(e));
                 }
             }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError
+            {
+                LinkedHashMap<String, String> headers = new LinkedHashMap<>();
+                headers.put("Charset", "UTF-8");
+                headers.put("Content-Type", "application/json;charset=utf-8");
+                headers.put("Accept-Encoding", "gzip,deflate");
+                headers.put("Authorization",token);
+                return headers;
+            }
+
         };
         // 超时设置,10秒超时，失败后不重试
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 0, 1.0f));
@@ -199,19 +221,19 @@ public final class MyHttp {
     }
 
     // 使用POST模式传参给后端，并获得后端返回数据（修改数据）
-    public static void postJson(final String url, final LinkedHashMap<String, String> params, final Callback callback) {
-        requestJson(Request.Method.POST, url, params, callback);
+    public static void postJson(final String url,final String token, final LinkedHashMap<String, String> params, final Callback callback) {
+        requestJson(Request.Method.POST, url,token, params, callback);
     }
 
     // 使用GET模式获得后端返回数据，不传参给后端（查询数据）
-    public static void getWithoutParams(final String url, final Callback callback) {
-        requestJson(Request.Method.GET, url, null, callback);
+    public static void getWithoutParams(final String url,final String token, final Callback callback) {
+        requestJson(Request.Method.GET, url,token, null, callback);
     }
 
     // 使用GET模式传参给后端，并获得后端返回数据（查询数据）
     // GET模式不支持直接用Map传递参数列表，需要将参数列表拼接到请求链接上
-    public static void get(final String url, final LinkedHashMap<String, String> params, final Callback callback) {
-        getWithoutParams(appendParamsToUrl(url, params), callback);
+    public static void get(final String url,final String token, final LinkedHashMap<String, String> params, final Callback callback) {
+        getWithoutParams(appendParamsToUrl(url, params), token,callback);
     }
 
     // 将参数列表添加到请求链接后面

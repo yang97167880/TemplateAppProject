@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.yiflyplan.app.core.http.loader.ProgressLoader;
 import com.umeng.analytics.MobclickAgent;
 import com.xuexiang.xhttp2.subsciber.impl.IProgressLoader;
 import com.xuexiang.xpage.base.XPageActivity;
@@ -36,6 +35,7 @@ import com.xuexiang.xrouter.facade.service.SerializationService;
 import com.xuexiang.xrouter.launcher.XRouter;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.xuexiang.xui.widget.actionbar.TitleUtils;
+import com.yiflyplan.app.core.http.loader.ProgressLoader;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;

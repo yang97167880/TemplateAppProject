@@ -18,8 +18,22 @@
 package com.yiflyplan.app.adapter.VO;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class CurrentUserVO implements Serializable {
+
+    @Override
+    public String toString() {
+        return "CurrentUserVO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", tel='" + tel + '\'' +
+                ", cityId='" + cityId + '\'' +
+                ", relationships='" + relationships + '\'' +
+                ", currentOrganization='" + currentOrganization + '\'' +
+                '}';
+    }
 
     private int id;
 
@@ -30,6 +44,10 @@ public class CurrentUserVO implements Serializable {
     private String tel;
 
     private String cityId;
+
+    private List<OrganizationVO> relationships;
+
+    private OrganizationVO currentOrganization;
 
     public int getId() {
         return id;
@@ -71,14 +89,21 @@ public class CurrentUserVO implements Serializable {
         this.cityId = cityId;
     }
 
-    @Override
-    public String toString() {
-        return "CurrentUserVO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", tel='" + tel + '\'' +
-                ", cityId='" + cityId + '\'' +
-                '}';
+    public List<OrganizationVO> getRelationships() {
+        return relationships;
     }
+
+    public void setRelationships(List<OrganizationVO> relationships) {
+        this.relationships = relationships;
+    }
+
+    public OrganizationVO getCurrentOrganization() {
+        return currentOrganization;
+    }
+
+    public void setCurrentOrganization(OrganizationVO currentOrganization) {
+        this.currentOrganization = currentOrganization;
+    }
+
+
 }

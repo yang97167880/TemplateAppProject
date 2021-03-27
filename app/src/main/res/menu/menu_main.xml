@@ -18,20 +18,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_privacy"
-        android:icon="@drawable/ic_menu_privacy"
-        android:orderInCategory="100"
-        android:title="加入机构"
-        app:showAsAction="always" />
+<!--    <item-->
+<!--        android:id="@+id/action_privacy"-->
+<!--        android:icon="@drawable/ic_add"-->
+<!--        android:orderInCategory="100"-->
+<!--        android:title="机构菜单"-->
+<!--        app:showAsAction="ifRoom" />-->
 
 <!--    <item-->
 <!--        android:id="@+id/item_setting"-->
 <!--        android:title="加入机构"-->
 <!--        app:showAsAction="never" />-->
-<!--    <item-->
-<!--        android:id="@+id/item_model"-->
-<!--        android:title="夜间模式"-->
-<!--        app:showAsAction="never" />-->
+    <item
+        android:id="@+id/organization_add"
+        android:title="加入机构"
+        android:icon="@drawable/ic_add"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/organization_scan"
+        android:title="扫一扫"
+        android:icon="@drawable/ic_scan_small"
+        app:showAsAction="never" />
 
 </menu>
