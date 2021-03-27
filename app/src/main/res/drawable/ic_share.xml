@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (C) 2021 xuexiangjys(xuexiangjys@163.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp"
+    android:height="32dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+  <path
+      android:pathData="M860.2,673.4c-66.8,0 -121.4,35.8 -146.8,91.3L390.6,627.3c18.8,-29.2 29.2,-64.9 29.2,-103.5 0,-16 -1.9,-32 -5.6,-47l206.1,-160c27.3,20.7 62.1,32.9 100.7,32.9 93.2,0 162.8,-69.6 162.8,-161.8S814,26 720.9,26 559,95.6 559,187.8c0,23.5 4.7,45.2 12.2,64l-190,145.9c-37.6,-56.5 -99.7,-96 -170.3,-96C95.2,301.7 2,394.8 2,510.6s93.2,208.9 208.9,208.9c43.3,0 83.7,-11.3 116.7,-32l370.7,158.1C703,933.1 770.8,998 860.2,998c93.2,0 161.8,-69.6 161.8,-161.8s-69.6,-162.8 -161.8,-162.8zM720.9,93.7c46.1,0 93.2,34.8 93.2,93.2s-34.8,93.2 -93.2,93.2 -93.2,-46.1 -93.2,-93.2 47.1,-93.2 93.2,-93.2zM210.9,649.9c-69.6,0 -128,-58.3 -128,-128s58.3,-128 128,-128 128,58.3 128,128c-1,69.6 -58.4,127.9 -128,128zM860.2,928.4c-58.3,0 -93.2,-34.8 -93.2,-93.2s46.1,-93.2 93.2,-93.2c47,0 93.2,34.8 93.2,93.2 -1,58.4 -35.8,93.2 -93.2,93.2z"
+      android:fillColor="#1296db"/>
+</vector>

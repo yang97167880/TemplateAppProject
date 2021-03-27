@@ -37,6 +37,7 @@ import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
+import com.yiflyplan.app.fragment.organization.components.ComponentsFragment;
 import com.yiflyplan.app.utils.DemoDataProvider;
 import com.yiflyplan.app.utils.TokenUtils;
 
@@ -66,7 +67,6 @@ public class OrganizationFragment extends BaseFragment {
 
     private final String RELATIONSHIPS = "relationships";
     private BroccoliSimpleDelegateAdapter<OrganizationVO> mNoticeAdapter;
-
     /**
      * @return 返回为 null意为不需要导航栏
      */
@@ -85,7 +85,6 @@ public class OrganizationFragment extends BaseFragment {
      */
     @Override
     protected void initViews() {
-
         VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager(Objects.requireNonNull(getContext()));
         recyclerView.setLayoutManager(virtualLayoutManager);
         RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
@@ -133,7 +132,9 @@ public class OrganizationFragment extends BaseFragment {
                         TextView level = (TextView) view;
                         level.setText(model.getLevel());
                     },R.id.or_level);
-                    //holder.click(R.id.card_view,v -> openNewPage(ChartRoomFragment.class));
+                    holder.click(R.id.card_view,v ->{
+                        openNewPage(ComponentsFragment.class,"title",model.getName());
+                    });
                 }
 
             }

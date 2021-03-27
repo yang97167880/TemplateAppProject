@@ -70,7 +70,7 @@ import com.yiflyplan.app.fragment.QRCodeFragment;
 import com.yiflyplan.app.fragment.SettingsFragment;
 import com.yiflyplan.app.fragment.input.InputFragment;
 import com.yiflyplan.app.fragment.notices.NoticesFragment;
-import com.yiflyplan.app.fragment.organization.ApplyFormFragment;
+import com.yiflyplan.app.fragment.organization.components.ApplyFormFragment;
 import com.yiflyplan.app.fragment.organization.OrganizationFragment;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;

@@ -15,21 +15,18 @@
  *
  */
 
-package com.yiflyplan.app.fragment.organization;
+package com.yiflyplan.app.fragment.organization.components;
 
 import com.xuexiang.xpage.annotation.Page;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.core.BaseFragment;
 
-/**
- * 申请加入机构表单页
- */
-@Page(name="机构")
-public class ApplyFormFragment extends BaseFragment {
+@Page(name = "机构仓库", extra = R.drawable.ic_warehouse)
+public class OrganizationWarehouse extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_add;
+        return 0;
     }
 
     @Override
