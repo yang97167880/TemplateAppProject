@@ -66,7 +66,7 @@ public class OrganizationFragment extends BaseFragment {
 
 
     private final String RELATIONSHIPS = "relationships";
-    private BroccoliSimpleDelegateAdapter<OrganizationVO> mNoticeAdapter;
+    private BroccoliSimpleDelegateAdapter<OrganizationVO> mOrganizationAdapter;
     /**
      * @return 返回为 null意为不需要导航栏
      */
@@ -94,7 +94,7 @@ public class OrganizationFragment extends BaseFragment {
 //
 //        Bundle bundle = getArguments();
 //        List<CurrentUserVO> list = (List<CurrentUserVO>) bundle.getSerializable("currentUser");
-        mNoticeAdapter = new BroccoliSimpleDelegateAdapter<OrganizationVO>(R.layout.adapter_organization_list_item, new LinearLayoutHelper(), DemoDataProvider.getEmptyInfo(OrganizationVO.class)) {
+        mOrganizationAdapter = new BroccoliSimpleDelegateAdapter<OrganizationVO>(R.layout.adapter_organization_list_item, new LinearLayoutHelper(), DemoDataProvider.getEmptyInfo(OrganizationVO.class)) {
 
 
             @Override
@@ -133,7 +133,7 @@ public class OrganizationFragment extends BaseFragment {
                         level.setText(model.getLevel());
                     },R.id.or_level);
                     holder.click(R.id.card_view,v ->{
-                        openNewPage(ComponentsFragment.class,"title",model.getName());
+                        openNewPage(ComponentsFragment.class,"organization",model);
                     });
                 }
 
@@ -149,7 +149,7 @@ public class OrganizationFragment extends BaseFragment {
         };
 //
         DelegateAdapter delegateAdapter = new DelegateAdapter(virtualLayoutManager);
-        delegateAdapter.addAdapter(mNoticeAdapter);
+        delegateAdapter.addAdapter(mOrganizationAdapter);
 //
         recyclerView.setAdapter(delegateAdapter);
     }
@@ -182,7 +182,7 @@ public class OrganizationFragment extends BaseFragment {
                             //temp.setRoleName(organizations.getJSONObject(i).getString("roleName"));
                             voList.add(temp);
                         }
-                mNoticeAdapter.refresh(voList);
+                        mOrganizationAdapter.refresh(voList);
                         refreshLayout.finishRefresh();
                     }
 

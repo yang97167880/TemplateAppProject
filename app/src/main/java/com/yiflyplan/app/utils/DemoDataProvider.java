@@ -108,11 +108,11 @@ public class DemoDataProvider {
     @MemoryCache
     public static List<NoticeInfo> getDemoNoticeInfos() {
         List<NoticeInfo> infoList = new ArrayList<>();
-        infoList.add(new NoticeInfo("女朋友","icon_head_default","在吗？","21/2/14"));
-        infoList.add(new NoticeInfo("老婆","icon_head_default","吃了吗？","21/2/14"));
-        infoList.add(new NoticeInfo("闺蜜","icon_head_default","晚安。","21/2/14"));
-        infoList.add(new NoticeInfo("老公","icon_head_default","口红好用吗？","21/2/14"));
-        infoList.add(new NoticeInfo("男朋友","icon_head_default","我去洗澡啦？","21/2/14"));
+        infoList.add(new NoticeInfo("成员A","icon_head_default","在吗？","21/2/14"));
+        infoList.add(new NoticeInfo("成员B","icon_head_default","吃了吗？","21/2/14"));
+        infoList.add(new NoticeInfo("成员C","icon_head_default","你好","21/2/14"));
+        infoList.add(new NoticeInfo("成员D","icon_head_default","hello？","21/2/14"));
+        infoList.add(new NoticeInfo("成员E","icon_head_default","再见？","21/2/14"));
         return infoList;
     }
 
