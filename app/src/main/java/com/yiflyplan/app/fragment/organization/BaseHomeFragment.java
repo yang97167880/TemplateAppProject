@@ -19,6 +19,7 @@ package com.yiflyplan.app.fragment.organization;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -34,8 +35,10 @@ import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.activity.MainActivity;
+import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.adapter.WidgetItemAdapter;
 import com.yiflyplan.app.core.BaseFragment;
+import com.yiflyplan.app.fragment.organization.components.OrganizationUser;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,6 +52,8 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    private OrganizationVO organizationVO;
+
     @Override
     protected TitleBar initTitle() { return null; }
 
@@ -60,7 +65,8 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
     @Override
     protected void initViews() {
         Bundle bundle = getArguments();
-        toolbar.setTitle(bundle.getString("title"));
+        organizationVO = (OrganizationVO) bundle.getSerializable("organization");
+        toolbar.setTitle(organizationVO.getName());
         toolbar.setNavigationOnClickListener(v ->{
             popToBack();
         });
@@ -95,7 +101,16 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
     @SingleClick
     public void onItemClick(View itemView, PageInfo widgetInfo, int pos) {
         if (widgetInfo != null) {
-            openNewPage(widgetInfo.getName());
+            switch (widgetInfo.getName()){
+                case "机构成员":
+                    Log.e("id:",String.valueOf(organizationVO.getId()));
+                    openNewPage(OrganizationUser.class,"id",organizationVO.getId());
+                    break;
+                case "个人仓库":
+                case "机构仓库":
+                    openNewPage(widgetInfo.getName());
+            }
+
         }
     }
 

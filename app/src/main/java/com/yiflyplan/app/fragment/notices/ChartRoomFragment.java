@@ -17,7 +17,6 @@
 
 package com.yiflyplan.app.fragment.notices;
 
-import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,8 +30,6 @@ import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xpage.annotation.Page;
-import com.xuexiang.xpage.enums.CoreAnim;
-import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
@@ -46,7 +43,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import me.samlss.broccoli.Broccoli;
 
-@Page(anim = CoreAnim.none)
+@Page(name="成员A")
 public class ChartRoomFragment extends BaseFragment {
 
     @BindView(R.id.chatRoom_recyclerView)
@@ -55,15 +52,6 @@ public class ChartRoomFragment extends BaseFragment {
     SmartRefreshLayout refreshLayout;
 
     private SimpleDelegateAdapter<ChartInfo> mChartAdapter;
-
-    /**
-     * @return 返回为 null意为不需要导航栏
-     */
-    @SuppressLint("ResourceAsColor")
-    @Override
-    protected TitleBar initTitle() {
-       return null;
-    }
 
     @Override
     protected int getLayoutId() {
