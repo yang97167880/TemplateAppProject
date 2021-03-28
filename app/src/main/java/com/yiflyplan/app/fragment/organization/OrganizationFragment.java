@@ -192,7 +192,7 @@ public class OrganizationFragment extends BaseFragment {
                     }
                 });
 
-            }, 1000);
+            }, 500);
         });
         //上拉加载
         refreshLayout.setOnLoadMoreListener(refreshLayout -> {
@@ -200,7 +200,7 @@ public class OrganizationFragment extends BaseFragment {
             refreshLayout.getLayout().postDelayed(() -> {
 //                mNoticeAdapter.loadMore();
                 refreshLayout.finishLoadMore();
-            }, 1000);
+            }, 500);
         });
         refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
     }
