@@ -31,7 +31,7 @@
         app:srlEnableLoadMore="true">
 
 
-        <com.scwang.smartrefresh.header.MaterialHeader
+        <com.scwang.smartrefresh.header.WaterDropHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

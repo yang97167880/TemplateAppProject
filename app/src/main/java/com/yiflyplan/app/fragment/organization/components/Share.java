@@ -26,7 +26,7 @@ public class Share extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return 0;
+        return R.layout.fragment_share;
     }
 
     @Override

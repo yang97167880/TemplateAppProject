@@ -1,0 +1,38 @@
+<!--
+  ~ Copyright (C) 2021 xuexiangjys(xuexiangjys@163.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+  <path
+      android:pathData="M512,512m-445,0a445,445 0,1 0,890 0,445 445,0 1,0 -890,0Z"
+      android:fillColor="#E6F3FF"/>
+  <path
+      android:pathData="M691.5,630.4l-134.6,77.7c-12,6.9 -26.9,-1.7 -26.9,-15.5V563.5c0,-6.4 3.4,-12.3 9,-15.5l134.6,-77.7c12,-6.9 26.9,1.7 26.9,15.5v129.1c0,6.3 -3.4,12.3 -9,15.5z"
+      android:fillColor="#22D0FF"/>
+  <path
+      android:pathData="M332.5,630.4l134.6,77.7c12,6.9 26.9,-1.7 26.9,-15.5V563.5c0,-6.4 -3.4,-12.3 -9,-15.5l-134.6,-77.7c-12,-6.9 -26.9,1.7 -26.9,15.5v129.1c0,6.3 3.4,12.3 9,15.5z"
+      android:fillColor="#148AF4"/>
+  <path
+      android:pathData="M503.1,316l-152.3,87c-12.1,6.9 -12.1,24.3 0,31.2l152.3,87c5.5,3.2 12.3,3.2 17.8,0l152.3,-87c12.1,-6.9 12.1,-24.3 0,-31.2l-152.3,-87c-5.5,-3.1 -12.3,-3.1 -17.8,0z"
+      android:fillColor="#FFD96E"/>
+  <path
+      android:pathData="M503.1,316l-152.3,87c-12.1,6.9 -12.1,24.3 0,31.2l152.3,87c5.5,3.2 12.3,3.2 17.8,0l152.3,-87c12.1,-6.9 12.1,-24.3 0,-31.2l-152.3,-87c-5.5,-3.1 -12.3,-3.1 -17.8,0z"
+      android:fillColor="#B8DDFF"/>
+</vector>
