@@ -17,6 +17,7 @@
 
 package com.yiflyplan.app.fragment.organization.components;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -138,9 +139,12 @@ public class PersonalWarehouse extends BaseFragment {
         //下拉刷新
         refreshLayout.setOnRefreshListener(refreshLayout -> {
             // TODO: 2020-02-25 网络请求
+            Bundle build = getArguments();
+            int id = build.getInt("id");
             refreshLayout.getLayout().postDelayed(() -> {
                 LinkedHashMap<String,String> params = new  LinkedHashMap<>();
                 params.put("queryOwn","true");
+                params.put("organizationId",String.valueOf(id));
                 params.put("pageNo","1");
                 params.put("pageSize","5");
                 MyHttp.postJson("/product/getAllProduct", TokenUtils.getToken(), params, new MyHttp.Callback(){

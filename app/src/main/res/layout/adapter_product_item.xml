@@ -39,10 +39,13 @@
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/xui_config_color_white"
     app:cardPreventCornerOverlap="true"
-    app:contentPaddingBottom="10dp"
+    android:layout_marginStart="@dimen/config_margin_10dp"
+    android:layout_marginEnd="@dimen/config_margin_10dp"
+    app:cardCornerRadius="6dp"
+    app:contentPaddingBottom="18dp"
     app:contentPaddingLeft="16dp"
     app:contentPaddingRight="16dp"
-    app:contentPaddingTop="5dp">
+    app:contentPaddingTop="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -74,7 +77,8 @@
                 <TextView
                     android:id="@+id/product_name"
                     style="@style/TextStyle.Explain"
-                    android:textSize="@dimen/config_margin_16dp"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/config_margin_15dp"
                     android:layout_gravity="start|top"
                     android:layout_marginStart="4dp"
                     android:text="病理性医疗废品"
@@ -84,7 +88,6 @@
                     android:id="@+id/product_from"
                     style="@style/TextStyle.Explain"
                     android:layout_gravity="bottom"
-                    android:layout_marginTop="@dimen/config_margin_5dp"
                     android:layout_marginStart="4dp"
                     android:text="厦门中医院 | 门诊部"
                     android:textSize="@dimen/config_margin_12dp" />
