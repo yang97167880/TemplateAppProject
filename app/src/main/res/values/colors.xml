@@ -25,5 +25,11 @@
     <color name="app_color_theme_8">#AC8FEF</color> <!-- Lavender -->
     <color name="app_color_theme_9">#EE85C1</color> <!-- Pink Rose -->
 
+    <color name="gray">#EBEBEB</color> <!-- gray -->
+    <color name="deep_blue">#3F81ED</color> <!-- deep_blue -->
+
+
+
+
 
 </resources>

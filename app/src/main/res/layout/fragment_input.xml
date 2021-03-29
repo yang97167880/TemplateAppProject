@@ -53,6 +53,7 @@
             android:textSize="@dimen/config_margin_24dp"
             android:text="欢迎您使用!"/>
     </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -61,67 +62,168 @@
         android:padding="@dimen/config_margin_10dp"
         tools:ignore="UselessParent">
 
-    <androidx.cardview.widget.CardView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/scan_card"
-        android:layout_marginTop="@dimen/config_margin_10dp"
-        android:layout_marginStart="@dimen/config_margin_8dp"
-        android:layout_marginBottom="@dimen/config_margin_18dp"
-        android:padding="20dp"
-        android:layout_height="140dp"
-        android:layout_width="140dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="10dp"
-
-        >
-<ImageView
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:layout_marginRight="15dp"
-    android:layout_marginLeft="15dp"
-    android:background="@drawable/ic_scan"/>
-
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:layout_gravity="bottom"
-    android:layout_marginBottom="@dimen/config_margin_8dp"
-    android:textColor="@color/colorPrimary"
-    android:textSize="@dimen/config_margin_20dp"
-    android:text="扫码查看"/>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/bluetooth_card"
-        android:layout_height="140dp"
-        android:layout_width="140dp"
-        android:layout_marginTop="@dimen/config_margin_10dp"
-        android:layout_marginEnd="@dimen/config_margin_8dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="@dimen/config_margin_18dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="10dp"
-       >
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/ic_bluetooth"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/scan_card_instructions"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/scan_card"
+            android:layout_alignStart="@+id/scan_card"
+            android:layout_marginStart="53dp"
+            android:layout_marginTop="-5dp"
+            android:text="@string/instructions"
+            android:textColor="@color/xui_btn_gray_normal_color"
+            android:textSize="@dimen/config_margin_15dp" />
+
+        <TextView
+            android:id="@+id/bluetooth_card_instructions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bluetooth_card"
+            android:layout_alignEnd="@+id/bluetooth_card"
+            android:layout_marginTop="-5dp"
+            android:layout_marginEnd="53dp"
+            android:text="@string/instructions"
+            android:textColor="@color/xui_btn_gray_normal_color"
+            android:textSize="@dimen/config_margin_15dp" />
+
+        <TextView
+            android:id="@+id/scan_card_instructions_info"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/scan_card_instructions"
+            android:layout_alignStart="@+id/scan_card"
+            android:layout_alignEnd="@+id/scan_card"
+            android:layout_marginStart="@dimen/config_margin_10dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="@dimen/config_margin_10dp"
+            android:text="扫描设备上的二维码可查看到暂存箱的医废重量、类型等转运信息。"
+            android:paddingTop="10dp"
+            android:paddingHorizontal="@dimen/config_margin_8dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/config_margin_8dp"
+            android:background="@drawable/ico_dialog"
+            android:visibility="invisible"
+            />
+
+        <TextView
+            android:id="@+id/bluetooth_card_instructions_info"
+            android:layout_width="130dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/bluetooth_card_instructions"
+            android:layout_alignStart="@+id/bluetooth_card"
+            android:layout_alignEnd="@+id/bluetooth_card"
+            android:layout_marginStart="@dimen/config_margin_10dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="@dimen/config_margin_10dp"
+            android:text="蓝牙录入连接手称机。"
             android:gravity="center"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="@dimen/config_margin_8dp"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/config_margin_20dp"
-            android:text="蓝牙录入"/>
-    </androidx.cardview.widget.CardView>
+            android:textColor="@color/black"
+            android:textSize="@dimen/config_margin_8dp"
+            android:background="@drawable/ico_dialog"
+            android:visibility="invisible"
+            />
+
+
+        <EditText
+            android:id="@+id/medical_waste_transfer_information_code"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/txt_manually_enter"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-70dp"
+            android:background="@drawable/edt_rounded_rectangle"
+            android:digits="@string/number_abc"
+            android:inputType="textVisiblePassword"
+            android:maxLength="13"
+            android:paddingEnd="@dimen/config_margin_60dp"
+            android:textAlignment="center"
+            android:textSize="@dimen/config_margin_24dp" />
+
+        <Button
+            android:id="@+id/btn_query"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:layout_alignEnd="@+id/medical_waste_transfer_information_code"
+            android:layout_alignBottom="@+id/medical_waste_transfer_information_code"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
+            android:background="@drawable/btn_rounded_rectangle"
+            android:text="@string/query"
+            android:textSize="@dimen/config_margin_18dp"
+
+            />
+
+        <TextView
+            android:id="@+id/txt_manually_enter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="80dp"
+            android:text="@string/title_manually_enter"
+            android:textColor="@color/app_color_theme_6"
+            android:textSize="@dimen/config_margin_14dp" />
+
+        <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/scan_card"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_marginStart="@dimen/config_margin_8dp"
+            android:layout_marginTop="@dimen/config_margin_10dp"
+            android:layout_marginBottom="@dimen/config_margin_18dp"
+            android:padding="20dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="10dp"
+
+            >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/ic_scan" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="@dimen/config_margin_8dp"
+                android:gravity="center"
+                android:text="扫码查看"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/config_margin_20dp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/bluetooth_card"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/config_margin_10dp"
+            android:layout_marginEnd="@dimen/config_margin_8dp"
+            android:layout_marginBottom="@dimen/config_margin_18dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="10dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/ic_bluetooth" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="@dimen/config_margin_8dp"
+                android:gravity="center"
+                android:text="蓝牙录入"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/config_margin_20dp" />
+        </androidx.cardview.widget.CardView>
     </RelativeLayout>
 
 </LinearLayout>

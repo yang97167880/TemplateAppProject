@@ -84,4 +84,11 @@
     <!-- 分享机构   -->
     <string name="title_share_organization">长按二维码分享或保存</string>
 
+    <!-- input   -->
+    <string name="title_manually_enter">手动输入查看该设备的医废流转信息</string>
+    <string name="number_abc">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="query">查询</string>
+    <string name="instructions">说明</string>
+
+
 </resources>
