@@ -229,12 +229,10 @@ public class ProductVO implements Serializable {
 
     private String createTime;
 
-
     private int updateUserId;
 
     private String updateUserName;
 
     private String updateTime;
-
 
 }
