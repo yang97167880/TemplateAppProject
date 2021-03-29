@@ -17,6 +17,7 @@
 
 package com.yiflyplan.app.fragment.organization.components;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -89,22 +90,22 @@ public class PersonalWarehouse extends BaseFragment {
 
                     holder.bindDataToViewById(view -> {
                         TextView weight = (TextView) view;
-                        weight.setText("重量："+ model.getItemWeight()+"g");
+                        weight.setText(model.getItemWeight()+"g");
                     },R.id.item_weight);
 
                     holder.bindDataToViewById(view -> {
                         TextView itemPackage = (TextView) view;
-                        itemPackage.setText("包装类型："+ model.getBagTypeName());
+                        itemPackage.setText( model.getBagTypeName());
                     },R.id.item_package);
 
                     holder.bindDataToViewById(view -> {
                         TextView level = (TextView) view;
-                        level.setText("污染等级："+ model.getPollutionLevelName());
+                        level.setText(model.getPollutionLevelName());
                     },R.id.item_pollution);
 
                     holder.bindDataToViewById(view -> {
                         TextView person = (TextView) view;
-                        person.setText("创建人："+ model.getCreateUserName());
+                        person.setText( model.getCreateUserName());
                     },R.id.item_create);
 
                     holder.bindDataToViewById(view -> {
@@ -114,7 +115,7 @@ public class PersonalWarehouse extends BaseFragment {
 
                     holder.bindDataToViewById(view -> {
                         TextView code = (TextView) view;
-                        code.setText("生产序号："+ model.getItemCoding());
+                        code.setText(model.getItemCoding());
                     },R.id.item_Coding);
                 }
             }
@@ -138,9 +139,12 @@ public class PersonalWarehouse extends BaseFragment {
         //下拉刷新
         refreshLayout.setOnRefreshListener(refreshLayout -> {
             // TODO: 2020-02-25 网络请求
+            Bundle build = getArguments();
+            int id = build.getInt("id");
             refreshLayout.getLayout().postDelayed(() -> {
                 LinkedHashMap<String,String> params = new  LinkedHashMap<>();
                 params.put("queryOwn","true");
+                params.put("organizationId",String.valueOf(id));
                 params.put("pageNo","1");
                 params.put("pageSize","5");
                 MyHttp.postJson("/product/getAllProduct", TokenUtils.getToken(), params, new MyHttp.Callback(){
