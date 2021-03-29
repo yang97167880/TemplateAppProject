@@ -19,6 +19,7 @@ package com.yiflyplan.app.fragment.organization.components;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;

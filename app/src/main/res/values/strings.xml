@@ -81,4 +81,7 @@
     <string name="tip_title">你知道吗？</string>
     <string name="avatar">头像</string>
 
+    <!-- 分享机构   -->
+    <string name="title_share_organization">长按二维码分享或保存</string>
+
 </resources>

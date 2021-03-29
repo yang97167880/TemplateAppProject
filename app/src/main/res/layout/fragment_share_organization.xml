@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2021 xuexiangjys(xuexiangjys@163.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout style="@style/PullDownStyle">
+
+        <androidx.core.widget.NestedScrollView style="@style/ScrollViewStyle">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/tv_organization_name"
+                    android:layout_gravity="center"
+                    style="@style/TextStyle.Title"
+                    android:layout_marginTop="?attr/xui_config_content_spacing_horizontal"
+                    android:text="厦门中医院" />
+
+                <ImageView
+                    android:id="@+id/iv_organization_qrcode"
+                    android:layout_width="200dp"
+                    android:layout_height="274dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="?attr/xui_config_content_spacing_horizontal"
+                     />
+
+
+                <TextView
+                    android:layout_gravity="center"
+                    style="@style/TextStyle"
+                    android:layout_marginTop="?attr/xui_config_content_spacing_horizontal"
+                    android:text="@string/title_share_organization" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+</LinearLayout>
