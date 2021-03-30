@@ -19,6 +19,7 @@ package com.yiflyplan.app.fragment.organization.components;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -86,7 +87,9 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
             @Override
             public void success(JSONObject data) throws JSONException {
                 String qrCodeBase64 = data.getString("qrCode");
+                Log.e("img",qrCodeBase64);
                 qrCode = base64ToBitmap(qrCodeBase64,"data:img/jpeg;base64,");
+                ivOrganizationQrcode.setImageBitmap(qrCode);
             }
 
 
