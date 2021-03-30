@@ -76,6 +76,7 @@ import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 import com.yiflyplan.app.widget.GuideTipsDialog;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import butterknife.BindView;
@@ -215,7 +216,10 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 
         LinearLayout mLLMenu = mSlidingRootNav.getLayout().findViewById(R.id.ll_menu);
         final AppCompatImageView ivQrcode = mSlidingRootNav.getLayout().findViewById(R.id.iv_qrcode);
-        ivQrcode.setOnClickListener(v -> openNewPage(QRCodeFragment.class));
+        Bundle bundle = new Bundle();
+        bundle.putString("userAvatar",userVO.getAvatar());
+        bundle.putString("userName",userVO.getName());
+        ivQrcode.setOnClickListener(v -> openNewPage(QRCodeFragment.class,bundle));
 
         final AppCompatImageView ivSetting = mSlidingRootNav.getLayout().findViewById(R.id.iv_setting);
         ivSetting.setOnClickListener(v -> openNewPage(SettingsFragment.class));

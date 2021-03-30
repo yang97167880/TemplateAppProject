@@ -17,7 +17,9 @@
 
 package com.yiflyplan.app.fragment.components;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.enums.CoreAnim;
@@ -31,13 +33,15 @@ import butterknife.BindView;
 
 import static com.yiflyplan.app.fragment.components.DrawablePreviewFragment.DRAWABLE_ID;
 
-@Page(name = "资源图片预览", params = {DRAWABLE_ID}, anim = CoreAnim.none)
+@Page(name = "资源图片预览",anim = CoreAnim.none)
 public class DrawablePreviewFragment extends BaseFragment {
     public final static String DRAWABLE_ID = "drawable_id";
+    public final static String BITMAP = "bitmap";
     @BindView(R.id.photoView)
     SmoothImageView mImageView;
 
     private int mDrawableId;
+    private Bitmap mBitmap;
 
     @Override
     protected TitleBar initTitle() {
@@ -48,6 +52,7 @@ public class DrawablePreviewFragment extends BaseFragment {
     protected void initArgs() {
         Bundle args = getArguments();
         if (args != null) {
+            mBitmap = args.getParcelable(BITMAP);
             mDrawableId = args.getInt(DRAWABLE_ID, -1);
         }
     }
@@ -59,7 +64,12 @@ public class DrawablePreviewFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
-        mImageView.setImageDrawable(ResUtils.getDrawable(getContext(), mDrawableId));
+        if (mDrawableId != -1){
+            mImageView.setImageDrawable(ResUtils.getDrawable(getContext(), mDrawableId));
+        }
+        if (mBitmap != null) {
+            mImageView.setImageBitmap(mBitmap);
+        }
         mImageView.setMinimumScale(0.5F);
     }
 

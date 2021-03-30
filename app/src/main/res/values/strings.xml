@@ -89,6 +89,7 @@
     <string name="number_abc">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
     <string name="query">查询</string>
     <string name="instructions">说明</string>
+    <string name="user_qrcode_ins">欢迎长按或扫码关注</string>
 
 
 </resources>
