@@ -65,9 +65,12 @@ public class ImageConversionUtil {
      * @param base64Data
      * @return
      */
-    public static Bitmap base64ToBitmap(String base64Data) {
-        byte[] bytes = Base64.decode(base64Data, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    public static Bitmap base64ToBitmap(String base64Data,String slice) {
+        byte[] bitmapArray;
+        bitmapArray = Base64.decode(base64Data.substring(slice.length()), Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0,
+                bitmapArray.length);
+        return bitmap;
     }
 
     /**

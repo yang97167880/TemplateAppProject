@@ -17,15 +17,13 @@
 
 package com.yiflyplan.app.fragment.organization.components;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xqrcode.XQRCode;
@@ -44,17 +42,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import androidx.annotation.NonNull;
 import butterknife.BindView;
 
 import static com.yiflyplan.app.fragment.components.DrawablePreviewFragment.DRAWABLE_ID;
 import static com.yiflyplan.app.utils.ImageConversionUtil.base64ToBitmap;
-import static com.yiflyplan.app.utils.ImageConversionUtil.bitmapToBase64;
-import static com.yiflyplan.app.utils.ImageConversionUtil.truncateHeadString;
 
 @Page(name = "分享机构", extra = R.drawable.ic_share)
 public class Share extends BaseFragment implements View.OnClickListener, View.OnLongClickListener {
@@ -64,7 +57,6 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
     TextView tvOrganizationName;
 
     private Bitmap qrCode;
-    private String organizationName;
 
     @Override
     protected int getLayoutId() {
@@ -73,8 +65,12 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
 
     @Override
     protected void initViews() {
-
+        ivOrganizationQrcode.setImageBitmap(qrCode);
     }
+
+
+
+
 
     @Override
     protected void initListeners() {
@@ -83,28 +79,23 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
         ivOrganizationQrcode.setOnLongClickListener(this);
 
         Bundle build = getArguments();
-        ArrayList<String> idAndName = build.getStringArrayList("idAndName");
-        organizationName = idAndName.get(1);
+        int id = build.getInt("id");
         LinkedHashMap<String,String> params = new  LinkedHashMap<>();
-        params.put("organizationId",String.valueOf(idAndName.get(0)));
+        params.put("organizationId",String.valueOf(id));
         MyHttp.get("/organization/getTheQrCodeOfTheOrganization",TokenUtils.getToken(), params, new MyHttp.Callback() {
             @Override
             public void success(JSONObject data) throws JSONException {
-
-                Log.d("idAndName",idAndName.get(0)+"-----"+idAndName.get(1));
                 String qrCodeBase64 = data.getString("qrCode");
-                Log.d("qrCodeBase64",qrCodeBase64);
-//                qrCode = base64ToBitmap(qrCodeBase64);
+                qrCode = base64ToBitmap(qrCodeBase64,"data:img/jpeg;base64,");
             }
+
+
+
             @Override
             public void fail(JSONObject error) {
 
             }
         });
-
-        tvOrganizationName.setText(organizationName);
-//        ivOrganizationQrcode.setImageBitmap(qrCode);
-
     }
 
     @Override
@@ -112,6 +103,7 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
         Bundle bundle = new Bundle();
         switch (v.getId()) {
             case R.id.iv_organization_qrcode:
+            //    bundle.putParcelable("bitmap", qrCode);
                 bundle.putInt(DRAWABLE_ID, R.drawable.img_xui_qq);
                 openPage(DrawablePreviewFragment.class, bundle);
                 break;
