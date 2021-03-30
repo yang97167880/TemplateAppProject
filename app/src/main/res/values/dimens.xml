@@ -15,4 +15,6 @@
     <dimen name="config_margin_24dp">24dp</dimen>
     <dimen name="config_margin_32dp">32dp</dimen>
     <dimen name="config_margin_43dp">43dp</dimen>
+    <dimen name="config_margin_52dp">52dp</dimen>
+    <dimen name="config_margin_60dp">60dp</dimen>
 </resources>

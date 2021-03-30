@@ -105,10 +105,9 @@ public class ImageConversionUtil {
 
     /**
      * 去除String前X个字符
-     * @param origin
-     * @param count
      * @return
      */
+
 
     public static String truncateHeadString(String origin, int count) {
         if (origin == null || origin.length() < count) {

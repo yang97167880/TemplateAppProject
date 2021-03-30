@@ -19,9 +19,15 @@ package com.yiflyplan.app.fragment.input;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
@@ -58,6 +64,24 @@ public class InputFragment extends BaseFragment {
 
     @BindView(R.id.bluetooth_card)
     CardView blueToothView;
+
+    @BindView(R.id.medical_waste_transfer_information_code)
+    EditText medicalWasteTransferInformationCodeEditText;
+
+    @BindView(R.id.btn_query)
+    Button queryButton;
+
+    @BindView(R.id.scan_card_instructions)
+    TextView scanCardInstructionsTextView;
+
+    @BindView(R.id.scan_card_instructions_info)
+    TextView scanCardInstructionsInfoTextView;
+
+    @BindView(R.id.bluetooth_card_instructions)
+    TextView bluetoothCardInstructionsTextView;
+
+    @BindView(R.id.bluetooth_card_instructions_info)
+    TextView bluetoothCardInstructionsInfoTextView;
 
 
     /**
@@ -97,6 +121,49 @@ public class InputFragment extends BaseFragment {
     protected void initViews() {
         scanView.setOnClickListener(v -> startScan());
         blueToothView.setOnClickListener(v -> startBlueTooth());
+        queryButton.setOnClickListener(v -> startQuery() );
+        scanCardInstructionsTextView.setOnClickListener(v ->scanCardInstructions() );
+        bluetoothCardInstructionsTextView.setOnClickListener(v ->bluetoothCardInstructions() );
+    }
+
+
+
+    /**
+     * 点击扫码说明
+     */
+    @SuppressLint("ResourceAsColor")
+    private void scanCardInstructions() {
+        //设置可见
+        scanCardInstructionsInfoTextView.setVisibility(View.VISIBLE);
+        bluetoothCardInstructionsInfoTextView.setVisibility(View.INVISIBLE);
+
+        //设置选中颜色
+        scanCardInstructionsTextView.setTextColor(getContext().getResources().getColorStateList(R.color.app_color_theme_6));
+        bluetoothCardInstructionsTextView.setTextColor(getContext().getResources().getColorStateList(R.color.xui_btn_gray_normal_color));
+    }
+
+    /**
+     * 点击蓝牙说明
+     */
+    @SuppressLint("ResourceAsColor")
+    private void bluetoothCardInstructions() {
+        //设置可见
+        bluetoothCardInstructionsInfoTextView.setVisibility(View.VISIBLE);
+        scanCardInstructionsInfoTextView.setVisibility(View.INVISIBLE);
+
+        //设置选中颜色
+        bluetoothCardInstructionsTextView.setTextColor(getContext().getResources().getColorStateList(R.color.app_color_theme_6));
+        scanCardInstructionsTextView.setTextColor(getContext().getResources().getColorStateList(R.color.xui_btn_gray_normal_color));
+    }
+
+
+    /**
+     * 开始查询手动输入的物流码
+     */
+    private void startQuery() {
+        String medicalWasteTransferInformationCode = String.valueOf(medicalWasteTransferInformationCodeEditText.getText());
+        XToastUtils.toast(medicalWasteTransferInformationCode);
+
     }
 
     /**
