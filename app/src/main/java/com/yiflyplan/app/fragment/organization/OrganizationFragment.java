@@ -19,6 +19,7 @@ package com.yiflyplan.app.fragment.organization;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -188,7 +189,8 @@ public class OrganizationFragment extends BaseFragment {
 
                     @Override
                     public void fail(JSONObject error) {
-
+                        Log.e("sss","ss");
+                        refreshLayout.finishRefresh();
                     }
                 });
 

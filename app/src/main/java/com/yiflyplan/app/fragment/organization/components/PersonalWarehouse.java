@@ -63,6 +63,8 @@ public class PersonalWarehouse extends BaseFragment {
         return R.layout.fragment_personal;
     }
 
+    private int pageNo = 1;
+    private int pageSize = 5;
 
     @Override
     protected void initViews() {
@@ -142,51 +144,62 @@ public class PersonalWarehouse extends BaseFragment {
             Bundle build = getArguments();
             int id = build.getInt("id");
             refreshLayout.getLayout().postDelayed(() -> {
-                LinkedHashMap<String,String> params = new  LinkedHashMap<>();
-                params.put("queryOwn","true");
-                params.put("organizationId",String.valueOf(id));
-                params.put("pageNo","1");
-                params.put("pageSize","5");
-                MyHttp.postJson("/product/getAllProduct", TokenUtils.getToken(), params, new MyHttp.Callback(){
-
-                    @Override
-                    public void success(JSONObject data) throws JSONException {
-                        Log.e("RES：",data.toString());
-                        JSONArray product = new JSONArray(data.getString("list"));
-                        List<ProductVO> voList = new ArrayList<>();
-                        for(int i = 0;i<product.length();i++){
-                            ProductVO temp = new ProductVO();
-                            temp.setTypeName( product.getJSONObject(i).getString("itemTypeName"));
-                            temp.setOrganizationName(product.getJSONObject(i).getString("organizationName"));
-                            temp.setDepartmentName(product.getJSONObject(i).getString("departmentName"));
-                            temp.setItemWeight(product.getJSONObject(i).getInt("itemWeight"));
-                            temp.setBagTypeName(product.getJSONObject(i).getString("bagTypeName"));
-                            temp.setPollutionLevelName(product.getJSONObject(i).getString("pollutionLevelName"));
-                            temp.setCreateUserName(product.getJSONObject(i).getString("createUserName"));
-                            temp.setCreateTime(product.getJSONObject(i).getString("createTime"));
-                            temp.setItemCoding(product.getJSONObject(i).getString("itemCoding"));
-                            voList.add(temp);
-                        }
-                        mProductAdapter.refresh(voList);
-                        refreshLayout.finishRefresh();
-                    }
-
-                    @Override
-                    public void fail(JSONObject error) {
-
-                    }
-                });
-
+                apiGetProductVOList(String.valueOf(id),"once");
+                refreshLayout.finishRefresh();
             }, 500);
         });
         //上拉加载
         refreshLayout.setOnLoadMoreListener(refreshLayout -> {
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
-//                mNoticeAdapter.loadMore();
+                Bundle build = getArguments();
+                int id = build.getInt("id");
+                this.pageNo += 1;
+                apiGetProductVOList(String.valueOf(id),"more");
                 refreshLayout.finishLoadMore();
             }, 500);
         });
         refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
+    }
+    protected void apiGetProductVOList(String id,String flag){
+        List<ProductVO> voList = new ArrayList<>();
+        LinkedHashMap<String,String> params = new  LinkedHashMap<>();
+        params.put("queryOwn","true");
+        params.put("organizationId",id);
+        params.put("pageNo",String.valueOf(pageNo));
+        params.put("pageSize",String.valueOf(pageSize));
+        MyHttp.postJson("/product/getAllProduct", TokenUtils.getToken(), params, new MyHttp.Callback(){
+            @Override
+            public void success(JSONObject data) throws JSONException {
+                Log.e("RES：",data.toString());
+                JSONArray product = new JSONArray(data.getString("list"));
+                for(int i = 0;i<product.length();i++){
+                    ProductVO temp = new ProductVO();
+                    temp.setTypeName( product.getJSONObject(i).getString("itemTypeName"));
+                    temp.setOrganizationName(product.getJSONObject(i).getString("organizationName"));
+                    temp.setDepartmentName(product.getJSONObject(i).getString("departmentName"));
+                    temp.setItemWeight(product.getJSONObject(i).getInt("itemWeight"));
+                    temp.setBagTypeName(product.getJSONObject(i).getString("bagTypeName"));
+                    temp.setPollutionLevelName(product.getJSONObject(i).getString("pollutionLevelName"));
+                    temp.setCreateUserName(product.getJSONObject(i).getString("createUserName"));
+                    temp.setCreateTime(product.getJSONObject(i).getString("createTime"));
+                    temp.setItemCoding(product.getJSONObject(i).getString("itemCoding"));
+                    voList.add(temp);
+                }
+                switch(flag){
+                    case "once":
+                        mProductAdapter.refresh(voList);
+                        break;
+                    case "more":
+                        mProductAdapter.loadMore(voList);
+                        break;
+                }
+            }
+
+            @Override
+            public void fail(JSONObject error) {
+                refreshLayout.finishRefresh();
+            }
+        });
     }
 }

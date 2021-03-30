@@ -91,9 +91,6 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
                 qrCode = base64ToBitmap(qrCodeBase64,"data:img/jpeg;base64,");
                 ivOrganizationQrcode.setImageBitmap(qrCode);
             }
-
-
-
             @Override
             public void fail(JSONObject error) {
 

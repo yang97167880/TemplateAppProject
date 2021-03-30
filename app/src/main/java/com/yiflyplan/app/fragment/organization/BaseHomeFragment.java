@@ -19,7 +19,6 @@ package com.yiflyplan.app.fragment.organization;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -39,9 +38,9 @@ import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.adapter.WidgetItemAdapter;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.fragment.organization.components.OrganizationUser;
+import com.yiflyplan.app.fragment.organization.components.PersonalWarehouse;
 import com.yiflyplan.app.fragment.organization.components.Share;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -105,18 +104,14 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
         if (widgetInfo != null) {
             switch (widgetInfo.getName()){
                 case "机构成员":
-                    Log.e("id:",String.valueOf(organizationVO.getId()));
                     openNewPage(OrganizationUser.class,"id",organizationVO.getId());
                     break;
                 case "个人仓库":
                 case "机构仓库":
-                    openNewPage(widgetInfo.getName());
+                    openNewPage(PersonalWarehouse.class,"id",organizationVO.getId());
                     break;
                 case "分享机构":
-                    ArrayList<String> arrayList = new ArrayList<>();
-                    arrayList.add(String.valueOf(organizationVO.getId()));
-                    arrayList.add(organizationVO.getName());
-                    openNewPage(Share.class,"idAndName",arrayList);
+                    openNewPage(Share.class,"id",organizationVO.getId());
                     break;
             }
 

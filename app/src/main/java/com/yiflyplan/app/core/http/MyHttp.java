@@ -98,6 +98,12 @@ public final class MyHttp {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("TAG", error.getMessage(), error);
+                        try{
+                            JSONObject err = new JSONObject("err:"+error.getMessage());
+                            callback.fail(err);
+                        }catch (Exception e){
+                            Log.e("Ex:",e.getMessage());
+                        }
                         XToastUtils.error(error.getMessage());
                     }
                 }) {
@@ -173,6 +179,7 @@ public final class MyHttp {
                                 callback.fail(response);
                             }
                         } catch (JSONException e) {
+                            XToastUtils.error(e.getMessage());
                             e.printStackTrace();
                         }
                     }
@@ -181,7 +188,13 @@ public final class MyHttp {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("TAG", error.getMessage(), error);
+                        Log.e("TAGERR", error.getMessage(), error);
+                        try{
+                            JSONObject err = new JSONObject("{err:"+error.getMessage()+"}");
+                            callback.fail(err);
+                        }catch (Exception e){
+                            Log.e("Ex:",e.getMessage());
+                        }
                         XToastUtils.error(error.getMessage());
                     }
                 }) {

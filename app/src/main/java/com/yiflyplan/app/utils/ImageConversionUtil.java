@@ -66,6 +66,7 @@ public class ImageConversionUtil {
      * @return
      */
     public static Bitmap base64ToBitmap(String base64Data,String slice) {
+
         byte[] bitmapArray;
         bitmapArray = Base64.decode(base64Data.substring(slice.length()), Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0,
