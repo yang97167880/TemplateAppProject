@@ -17,13 +17,14 @@
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/member_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/xui_config_color_white"
     app:cardPreventCornerOverlap="true"
     android:layout_marginTop="1dp"
-    app:contentPaddingBottom="10dp"
+    app:contentPaddingBottom="5dp"
     app:contentPaddingLeft="16dp"
     app:contentPaddingRight="16dp"
     app:contentPaddingTop="5dp">
@@ -37,6 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:paddingTop="@dimen/config_margin_5dp"
+            android:layout_marginBottom="2dp"
             android:orientation="horizontal">
 
             <com.xuexiang.xui.widget.imageview.RadiusImageView
@@ -50,19 +53,33 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_weight="1"
                     android:id="@+id/member_name"
                     style="@style/TextStyle.Content"
                     android:layout_marginLeft="@dimen/config_margin_12dp"
                     android:ellipsize="end"
+                    android:maxLength="25"
                     android:gravity="start|center_vertical"
                     android:maxLines="2"
                     android:singleLine="false"
                     android:textColor="@color/xui_config_color_pure_black" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_next"
+                        tools:ignore="VectorDrawableCompat" />
+                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>
@@ -80,17 +97,19 @@
 
                 <TextView
                     android:id="@+id/member_phone"
+                    android:layout_weight="1"
                     style="@style/TextStyle.Explain"
+                    android:gravity="start"
+                    android:textSize="@dimen/config_margin_12dp"
                    />
+                <TextView
+                    android:id="@+id/member_roleName"
+                    style="@style/TextStyle.Explain"
+                    android:layout_gravity="end"
+                    android:textSize="@dimen/config_margin_12dp"
+                    tools:ignore="SpUsage" />
+
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/or_level"
-                style="@style/TextStyle.Explain"
-                android:layout_gravity="center_vertical|end"
-                android:text="查看仓库"
-                android:textColor="@color/colorAccent" />
-
         </FrameLayout>
 
 

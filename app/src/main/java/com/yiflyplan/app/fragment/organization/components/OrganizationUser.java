@@ -19,7 +19,6 @@ package com.yiflyplan.app.fragment.organization.components;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -98,6 +97,11 @@ public class OrganizationUser extends BaseFragment {
                         TextView phone = (TextView) view;
                         phone.setText("联系电话："+ model.getTel());
                     },R.id.member_phone);
+
+                    holder.bindDataToViewById(view -> {
+                        TextView role = (TextView) view;
+                        role.setText(model.getRoleName());
+                    },R.id.member_roleName);
                 }
             }
 
@@ -140,7 +144,6 @@ public class OrganizationUser extends BaseFragment {
                             temp.setRoleName(members.getJSONObject(i).getString("roleName"));
                             temp.setCityId(members.getJSONObject(i).getInt("userCityId"));
                             temp.setTel(members.getJSONObject(i).getString("userTel"));
-                            //temp.setRoleName(organizations.getJSONObject(i).getString("roleName"));
                             voList.add(temp);
                         }
                         mMemberAdapter.refresh(voList);
@@ -149,7 +152,7 @@ public class OrganizationUser extends BaseFragment {
 
                     @Override
                     public void fail(JSONObject error) {
-
+                        refreshLayout.finishRefresh();
                     }
                 });
 
