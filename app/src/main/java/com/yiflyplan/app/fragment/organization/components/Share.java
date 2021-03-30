@@ -45,6 +45,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import androidx.annotation.NonNull;
@@ -63,6 +64,7 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
     TextView tvOrganizationName;
 
     private Bitmap qrCode;
+    private String organizationName;
 
     @Override
     protected int getLayoutId() {
@@ -72,12 +74,7 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
     @Override
     protected void initViews() {
 
-        ivOrganizationQrcode.setImageBitmap(qrCode);;
     }
-
-
-
-
 
     @Override
     protected void initListeners() {
@@ -86,24 +83,28 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
         ivOrganizationQrcode.setOnLongClickListener(this);
 
         Bundle build = getArguments();
-        int id = build.getInt("id");
+        ArrayList<String> idAndName = build.getStringArrayList("idAndName");
+        organizationName = idAndName.get(1);
         LinkedHashMap<String,String> params = new  LinkedHashMap<>();
-        params.put("organizationId",String.valueOf(id));
+        params.put("organizationId",String.valueOf(idAndName.get(0)));
         MyHttp.get("/organization/getTheQrCodeOfTheOrganization",TokenUtils.getToken(), params, new MyHttp.Callback() {
             @Override
             public void success(JSONObject data) throws JSONException {
+
+                Log.d("idAndName",idAndName.get(0)+"-----"+idAndName.get(1));
                 String qrCodeBase64 = data.getString("qrCode");
-
-                qrCode = base64ToBitmap(qrCodeBase64);
+                Log.d("qrCodeBase64",qrCodeBase64);
+//                qrCode = base64ToBitmap(qrCodeBase64);
             }
-
-
-
             @Override
             public void fail(JSONObject error) {
 
             }
         });
+
+        tvOrganizationName.setText(organizationName);
+//        ivOrganizationQrcode.setImageBitmap(qrCode);
+
     }
 
     @Override
@@ -111,7 +112,6 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
         Bundle bundle = new Bundle();
         switch (v.getId()) {
             case R.id.iv_organization_qrcode:
-            //    bundle.putParcelable("bitmap", qrCode);
                 bundle.putInt(DRAWABLE_ID, R.drawable.img_xui_qq);
                 openPage(DrawablePreviewFragment.class, bundle);
                 break;
