@@ -21,6 +21,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -65,9 +67,19 @@ public class ImageConversionUtil {
      * @param base64Data
      * @return
      */
-    public static Bitmap base64ToBitmap(String base64Data) {
-        byte[] bytes = Base64.decode(base64Data, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    public static Bitmap base64ToBitmap(String base64Data,String slice) {
+        Bitmap bitmap = null;
+        try {
+            JSONObject str =  new JSONObject(base64Data);
+            base64Data = str.getString("image");
+            byte[] bitmapArray;
+            bitmapArray = Base64.decode(base64Data.substring(slice.length()), Base64.DEFAULT);
+            bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0,
+                    bitmapArray.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 
     /**

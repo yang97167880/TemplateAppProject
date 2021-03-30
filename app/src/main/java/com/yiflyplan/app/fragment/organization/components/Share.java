@@ -17,15 +17,13 @@
 
 package com.yiflyplan.app.fragment.organization.components;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xqrcode.XQRCode;
@@ -44,16 +42,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.LinkedHashMap;
 
-import androidx.annotation.NonNull;
 import butterknife.BindView;
 
 import static com.yiflyplan.app.fragment.components.DrawablePreviewFragment.DRAWABLE_ID;
 import static com.yiflyplan.app.utils.ImageConversionUtil.base64ToBitmap;
-import static com.yiflyplan.app.utils.ImageConversionUtil.bitmapToBase64;
-import static com.yiflyplan.app.utils.ImageConversionUtil.truncateHeadString;
 
 @Page(name = "分享机构", extra = R.drawable.ic_share)
 public class Share extends BaseFragment implements View.OnClickListener, View.OnLongClickListener {
@@ -71,7 +65,6 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
 
     @Override
     protected void initViews() {
-
         ivOrganizationQrcode.setImageBitmap(qrCode);;
     }
 
@@ -93,8 +86,7 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
             @Override
             public void success(JSONObject data) throws JSONException {
                 String qrCodeBase64 = data.getString("qrCode");
-
-                qrCode = base64ToBitmap(qrCodeBase64);
+                qrCode = base64ToBitmap(qrCodeBase64,"data:img/jpeg;base64,");
             }
 
 
