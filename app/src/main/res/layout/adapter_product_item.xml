@@ -20,16 +20,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/config_margin_10dp"
-    android:layout_marginBottom="@dimen/config_margin_8dp"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/item_createTime"
         style="@style/TextStyle.Explain"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="@dimen/config_margin_16dp"
+        android:layout_gravity="start"
         android:text="创建时间：2021-03-04 12:00:00"
         />
 
@@ -39,9 +38,6 @@
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/xui_config_color_white"
     app:cardPreventCornerOverlap="true"
-    android:layout_marginStart="@dimen/config_margin_10dp"
-    android:layout_marginEnd="@dimen/config_margin_10dp"
-    app:cardCornerRadius="6dp"
     app:contentPaddingBottom="18dp"
     app:contentPaddingLeft="16dp"
     app:contentPaddingRight="16dp"
@@ -93,36 +89,32 @@
                     android:textSize="@dimen/config_margin_12dp" />
 
             </LinearLayout>
-                <TextView
-                    android:id="@+id/item"
-                    style="@style/TextStyle.Explain"
-                    android:textSize="@dimen/config_margin_14dp"
-                    android:ellipsize="end"
-                    android:gravity="end"
-                    android:layout_gravity="center_vertical"
-                    android:maxLines="2"
-                    android:singleLine="false"
-                    android:text="创建人：" />
-                <TextView
-                    android:id="@+id/item_create"
-                    style="@style/TextStyle.Explain"
-                    android:textSize="@dimen/config_margin_14dp"
-                    android:ellipsize="end"
-                    android:gravity="end"
-                    android:layout_gravity="center_vertical"
-                    android:maxLines="2"
-                    android:singleLine="false"
-                    android:text="Super"
-                    android:textColor="@color/xui_config_color_pure_black"/>
-
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/expand"
+                        android:text="详情"
+                        android:textSize="@dimen/config_margin_12dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/white"
+                        android:textColor="@color/colorAccent"
+                        android:drawableEnd="@drawable/ic_expand"/>
+                </LinearLayout>
             </LinearLayout>
 
         </FrameLayout>
-
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:id="@+id/expand_info"
             android:orientation="vertical"
             android:paddingTop="@dimen/config_margin_8dp"
             android:paddingBottom="@dimen/config_margin_8dp">
@@ -138,7 +130,6 @@
                     android:ellipsize="end"
                     android:gravity="start|center_vertical"
                     android:maxLines="2"
-                    android:text="500g"
                     android:singleLine="false"
                     android:textColor="@color/xui_config_color_pure_black" />
 
@@ -146,7 +137,6 @@
                     android:id="@+id/item_package"
                     style="@style/TextStyle.Explain"
                     android:layout_weight="1"
-                    android:text="普通包装"
                     android:textColor="@color/xui_config_color_pure_black"
                     />
 
@@ -154,7 +144,6 @@
                     android:id="@+id/item_pollution"
                     style="@style/TextStyle.Explain"
                     android:layout_weight="1"
-                    android:text="一级污染"
                     android:gravity="end"
                     android:textColor="@color/xui_config_color_pure_black"
                     />
@@ -163,10 +152,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingTop="@dimen/config_margin_8dp"
-                android:paddingBottom="@dimen/config_margin_8dp">
+                android:paddingTop="@dimen/config_margin_8dp">
                 <TextView
                     android:id="@+id/item_1"
+                    style="@style/TextStyle.Explain"
+                    android:gravity="start"
+                    android:textColor="@color/xui_config_color_pure_black"
+                    android:text="创建人："
+                    />
+                <TextView
+                    android:id="@+id/item_create"
+                    style="@style/TextStyle.Explain"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/config_margin_5dp"
+                android:paddingBottom="@dimen/config_margin_5dp">
+                <TextView
+                    android:id="@+id/item_2"
                     style="@style/TextStyle.Explain"
                     android:gravity="start"
                     android:textColor="@color/xui_config_color_pure_black"
@@ -177,15 +185,15 @@
                     style="@style/TextStyle.Explain"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:text="2021-03-04 12:00:00"
                     />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/config_margin_5dp"
                 android:orientation="horizontal">
                 <TextView
-                    android:id="@+id/item_2"
+                    android:id="@+id/item_3"
                     style="@style/TextStyle.Explain"
                     android:gravity="start"
                     android:textColor="@color/xui_config_color_pure_black"
@@ -196,7 +204,6 @@
                     style="@style/TextStyle.Explain"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:text="xxxx"
                     />
                 <TextView
                     android:id="@+id/item_infor"
@@ -206,28 +213,28 @@
                     android:textColor="@color/xui_config_color_waring"
                     />
             </LinearLayout>
-        </LinearLayout>
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
                 <TextView
+                    android:id="@+id/item_4"
+                    style="@style/TextStyle.Explain"
+                    android:gravity="start"
+                    android:textColor="@color/xui_config_color_pure_black"
+                    android:text="生产序号："
+                    />
+                <TextView
                     android:id="@+id/item_Coding"
                     style="@style/TextStyle.Explain"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:text="生产序号：000000000000000000000000"
                     />
             </LinearLayout>
-
+        </LinearLayout>
 
         </FrameLayout>
-
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

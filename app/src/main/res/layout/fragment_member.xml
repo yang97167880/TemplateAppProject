@@ -30,11 +30,40 @@
         app:srlEnableAutoLoadMore="true"
         app:srlEnableLoadMore="true">
 
-
         <com.scwang.smartrefresh.header.WaterDropHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/white">
+                <Button
+                    android:id="@+id/search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="搜索"
+                    android:layout_gravity="center"
+                    android:textColor="#068bff"
+                    android:background="@color/white"
+                    android:drawableLeft="@drawable/ic_menu_search"
+                    />
+                <com.xuexiang.xui.widget.searchview.MaterialSearchView
+                    android:id="@+id/member_search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
+            <TextView
+                android:id="@+id/member_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/config_margin_5dp"
+                android:paddingBottom="@dimen/config_margin_5dp"
+                android:paddingLeft="@dimen/config_margin_18dp" />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/member_recyclerView"
             android:layout_width="match_parent"
@@ -42,11 +71,11 @@
             android:overScrollMode="never"
             tools:listitem="@layout/adapter_member" />
 
+        </LinearLayout>
         <!--    注意修改包名时，这里也需要修改    -->
         <com.yiflyplan.app.widget.MaterialFooter
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
         </com.yiflyplan.app.widget.MaterialFooter>
-
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>
