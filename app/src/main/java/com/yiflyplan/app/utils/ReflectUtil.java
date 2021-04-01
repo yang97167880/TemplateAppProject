@@ -77,7 +77,11 @@ public final class ReflectUtil {
             Class<?> superClass = cls;
             while (!superClass.equals(Object.class)) {
                 Collections.addAll(fieldList, superClass.getDeclaredFields());
-                superClass = superClass.getSuperclass();
+                Class<?> superclass = superClass.getSuperclass();
+                if (superclass == null) {
+                    break;
+                }
+                superClass = superclass;
             }
             //映射
             for (Field field : fieldList) {
