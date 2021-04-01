@@ -46,6 +46,7 @@ import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.utils.MD5Util;
 import com.yiflyplan.app.utils.RandomUtils;
+import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
@@ -105,7 +106,7 @@ public class LoginFragment extends BaseFragment {
             public void performAction(View view) {
                 String token = RandomUtils.getRandomNumbersAndLetters(16);
                 CurrentUserVO userVO = new CurrentUserVO();
-                onLoginSuccess(userVO,token);
+                onLoginSuccess(userVO, token);
             }
         });
         return titleBar;
@@ -118,8 +119,8 @@ public class LoginFragment extends BaseFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SingleClick
-    @OnClick({ R.id.btn_login, R.id.tv_other_login, R.id.tv_forget_password, R.id.tv_user_protocol, R.id.tv_privacy_protocol,R.id.et_password_number,R.id.et_verify_code,R.id.code_image})
-    public void onViewClicked(View view){
+    @OnClick({R.id.btn_login, R.id.tv_other_login, R.id.tv_forget_password, R.id.tv_user_protocol, R.id.tv_privacy_protocol, R.id.et_password_number, R.id.et_verify_code, R.id.code_image})
+    public void onViewClicked(View view) {
         switch (view.getId()) {
 //            case R.id.btn_get_verify_code:
 //                if (etPhoneNumber.validate()) {
@@ -132,68 +133,70 @@ public class LoginFragment extends BaseFragment {
             case R.id.btn_login:
                 if (etPhoneNumber.validate()) {
                     if (etVerifyCode.validate()) {
-                        LinkedHashMap<String,String> params = new  LinkedHashMap<>();
-                        params.put("tel",etPhoneNumber.getText().toString());
+                        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+                        params.put("tel", etPhoneNumber.getText().toString());
                         String md5psd = null;
                         try {
                             md5psd = MD5Util.getMD5(etPasswordNumber.getText().toString());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        params.put("password",md5psd);
-                        params.put("verificationCode",etVerifyCode.getText().toString());
-                       MyHttp.postJson("/user/login","", params, new MyHttp.Callback() {
-                           @Override
-                           public void success(JSONObject data) throws JSONException {
-                               Log.e("JSON:",data.toString());
-                                   CurrentUserVO userVO = new CurrentUserVO();
-                                   OrganizationVO organizationVO = new OrganizationVO();
+                        params.put("password", md5psd);
+                        params.put("verificationCode", etVerifyCode.getText().toString());
+                        MyHttp.postJson("/user/login", "", params, new MyHttp.Callback() {
+                            @Override
+                            public void success(JSONObject data) throws JSONException {
+                                Log.e("JSON:", data.toString());
+                                CurrentUserVO userVO = new CurrentUserVO();
+                                OrganizationVO organizationVO = new OrganizationVO();
 
-                                   //用户初始化
-                                   userVO.setId(data.getInt("userId"));
-                                   userVO.setName(data.getString("userName"));
-                                   userVO.setAvatar(data.getString("userAvatar"));
-                                   userVO.setTel(data.getString("userTel"));
-                                   userVO.setCityId(data.getString("userCityId"));
+                                //用户初始化
+                                userVO.setId(data.getInt("userId"));
+                                userVO.setName(data.getString("userName"));
+                                userVO.setAvatar(data.getString("userAvatar"));
+                                userVO.setTel(data.getString("userTel"));
+                                userVO.setCityId(data.getString("userCityId"));
 
-                                   //机构初始化
-                                   JSONObject organization = new JSONObject(data.getString("currentOrganization"));
-                                   organizationVO.setId(organization.getInt("organizationId"));
-                                   organizationVO.setName(organization.getString("organizationName"));
-                                   organizationVO.setAvatar(organization.getString("organizationAvatar"));
-                                   organizationVO.setAbbreviation(organization.getString("organizationAbbreviation"));
-                                   organizationVO.setLevel(organization.getString("organizationLevel"));
-                                   organizationVO.setTypeId(organization.getInt("organizationTypeId"));
-                                   organizationVO.setTypeName(organization.getString("organizationTypeName"));
-                                   organizationVO.setRoleName(organization.getString("roleName"));
+                                //机构初始化
+                                JSONObject organization = new JSONObject(data.getString("currentOrganization"));
+                                organizationVO = ReflectUtil.convertToObject(organization, OrganizationVO.class);
+//                                organizationVO.setId(organization.getInt("organizationId"));
+//                                organizationVO.setName(organization.getString("organizationName"));
+//                                organizationVO.setAvatar(organization.getString("organizationAvatar"));
+//                                organizationVO.setAbbreviation(organization.getString("organizationAbbreviation"));
+//                                organizationVO.setLevel(organization.getString("organizationLevel"));
+//                                organizationVO.setTypeId(organization.getInt("organizationTypeId"));
+//                                organizationVO.setTypeName(organization.getString("organizationTypeName"));
+//                                organizationVO.setRoleName(organization.getString("roleName"));
 
-                                   //机构关系初始化
-                                   JSONArray relationships = new JSONArray(data.getString("relationships"));
-                                   List<OrganizationVO> voList = new ArrayList<>();
-                                   for(int i = 0;i<relationships.length();i++){
-                                       OrganizationVO temp = new OrganizationVO();
-                                       temp.setId( relationships.getJSONObject(i).getInt("organizationId"));
-                                       temp.setName(relationships.getJSONObject(i).getString("organizationName"));
-                                       temp.setAvatar(relationships.getJSONObject(i).getString("organizationAvatar"));
-                                       temp.setAbbreviation(relationships.getJSONObject(i).getString("organizationAbbreviation"));
-                                       temp.setLevel(relationships.getJSONObject(i).getString("organizationLevel"));
-                                       temp.setTypeId(relationships.getJSONObject(i).getInt("organizationTypeId"));
-                                       temp.setTypeName(relationships.getJSONObject(i).getString("organizationTypeName"));
-                                       temp.setRoleName(relationships.getJSONObject(i).getString("roleName"));
-                                       voList.add(temp);
-                                   }
-                                   userVO.setCurrentOrganization(organizationVO);
-                                   userVO.setRelationships(voList);
-                                   onLoginSuccess(userVO,data.getString("token"));
-                               }
-                           @Override
-                           public void fail(JSONObject error) throws JSONException{
-                               Log.e("TAG1:",error.toString());
-                               if(error.getInt("code") == 40004){
-                                   getVerifyCode();
-                               }
-                           }
-                       });
+                                //机构关系初始化
+                                JSONArray relationships = new JSONArray(data.getString("relationships"));
+                                List<OrganizationVO> voList = new ArrayList<>();
+                                for (int i = 0; i < relationships.length(); i++) {
+                                    OrganizationVO temp = new OrganizationVO();
+                                    temp.setId(relationships.getJSONObject(i).getInt("organizationId"));
+                                    temp.setName(relationships.getJSONObject(i).getString("organizationName"));
+                                    temp.setAvatar(relationships.getJSONObject(i).getString("organizationAvatar"));
+                                    temp.setAbbreviation(relationships.getJSONObject(i).getString("organizationAbbreviation"));
+                                    temp.setLevel(relationships.getJSONObject(i).getString("organizationLevel"));
+                                    temp.setTypeId(relationships.getJSONObject(i).getInt("organizationTypeId"));
+                                    temp.setTypeName(relationships.getJSONObject(i).getString("organizationTypeName"));
+                                    temp.setRoleName(relationships.getJSONObject(i).getString("roleName"));
+                                    voList.add(temp);
+                                }
+                                userVO.setCurrentOrganization(organizationVO);
+                                userVO.setRelationships(voList);
+                                onLoginSuccess(userVO, data.getString("token"));
+                            }
+
+                            @Override
+                            public void fail(JSONObject error) throws JSONException {
+                                Log.e("TAG1:", error.toString());
+                                if (error.getInt("code") == 40004) {
+                                    getVerifyCode();
+                                }
+                            }
+                        });
                     }
                 }
                 break;
@@ -228,8 +231,8 @@ public class LoginFragment extends BaseFragment {
     private void getVerifyCode() {
 
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("type","0");
-        MyHttp.get("/captcha/getRegisteredVerificationCode","", params,new MyHttp.Callback() {
+        params.put("type", "0");
+        MyHttp.get("/captcha/getRegisteredVerificationCode", "", params, new MyHttp.Callback() {
             @Override
             public void success(JSONObject data) throws JSONException {
                 savedVerificationCode = data.toString();
@@ -280,7 +283,7 @@ public class LoginFragment extends BaseFragment {
 // 将字符串转换成Bitmap类型
         Bitmap bitmap = null;
         try {
-            JSONObject str =  new JSONObject(string);
+            JSONObject str = new JSONObject(string);
             string = str.getString("image");
             byte[] bitmapArray;
             bitmapArray = Base64.decode(string.substring(21), Base64.DEFAULT);
