@@ -31,6 +31,7 @@ import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
+import com.yiflyplan.app.fragment.organization.OrganizationFragment;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
@@ -88,13 +89,12 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
         LinkedHashMap<String,String> params = new  LinkedHashMap<>();
         params.put("pageNo","1");
         params.put("pageSize","5");
-        params.put("searchKey","厦门");
+        params.put("searchKey",organizationInfo);
         MyHttp.postJson("/organization/getAllOrganizationBaseInfo", TokenUtils.getToken(), params, new MyHttp.Callback() {
             @SuppressLint("SetTextI18n")
             @Override
             public void success(JSONObject data) throws JSONException {
                 JSONArray organizationInfo = new JSONArray(data.getString("list"));
-
                 Log.d("eee",organizationInfo.toString());
                 organizationId = organizationInfo.getJSONObject(0).getInt("id");
                 RadiusImageView radiusImageView = findViewById(R.id.or_avatar);
@@ -109,6 +109,8 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
             }
             @Override
             public void fail(JSONObject error) {
+                openPage(OrganizationFragment.class);
+                XToastUtils.toast("未找到机构");
             }
         });
 
@@ -130,6 +132,7 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
             }
             @Override
             public void fail(JSONObject error) {
+
             }
         });
     }

@@ -22,6 +22,7 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -449,14 +450,19 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                         getString(R.string.hint_input),
                         null,
                         false,
-                        ((dialog, input) -> XToastUtils.toast(input.toString())))
+                        ((dialog, input) -> Log.d("","")))
                 .positiveText(R.string.lab_search)
                 .negativeText(R.string.lab_cancel)
                 .onPositive((dialog, which) -> {
                     String organizationInfo =dialog.getInputEditText().getText().toString();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("organizationInfo",organizationInfo);
-                    openNewPage(ApplyFormFragment.class,bundle);
+                    if (organizationInfo.length()==0){
+                        XToastUtils.toast("内容不能为空");
+                    }else{
+                        Bundle bundle = new Bundle();
+                        bundle.putString("organizationInfo",organizationInfo);
+                        openNewPage(ApplyFormFragment.class,bundle);
+                    }
+
                 })
                 .cancelable(false)
                 .show();
