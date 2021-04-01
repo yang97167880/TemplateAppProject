@@ -66,7 +66,6 @@ public class ImageConversionUtil {
      * @return
      */
     public static Bitmap base64ToBitmap(String base64Data,String slice) {
-
         byte[] bitmapArray;
         bitmapArray = Base64.decode(base64Data.substring(slice.length()), Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0,
@@ -97,9 +96,10 @@ public class ImageConversionUtil {
 
     /**
      * 去除String前X个字符
+     * @param origin
+     * @param count
      * @return
      */
-
 
     public static String truncateHeadString(String origin, int count) {
         if (origin == null || origin.length() < count) {
