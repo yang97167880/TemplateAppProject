@@ -91,9 +91,8 @@ public class QRCodeFragment extends BaseFragment implements View.OnClickListener
         ivUserQrcode.setOnClickListener(this);
         ivUserQrcode.setOnLongClickListener(this);
 
-
         LinkedHashMap<String,String> params = new  LinkedHashMap<>();
-        MyHttp.get("/user/getMyQrdCode", TokenUtils.getToken(), params, new MyHttp.Callback() {
+        MyHttp.get("/user/getMyQrCode", TokenUtils.getToken(), params, new MyHttp.Callback() {
             @Override
             public void success(JSONObject data) throws JSONException {
                 String qrCodeBase64 = data.getString("qrCode");

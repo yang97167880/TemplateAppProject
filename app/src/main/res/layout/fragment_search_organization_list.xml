@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2021 xuexiangjys(xuexiangjys@163.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/config_color_select_bg">
+
+        <Button
+            android:id="@+id/btn_search_or"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@color/xui_transparent"
+            android:textColor="@color/xui_config_color_blue"
+            android:textSize="@dimen/config_margin_20dp"
+            android:text="@string/menu_search" />
+
+        <EditText
+            android:id="@+id/edt_search_organization"
+            android:layout_width="270dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="@dimen/config_margin_10dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="@dimen/config_margin_10dp"
+            android:layout_toStartOf="@+id/btn_search_or"
+            android:background="@drawable/edt_rounded_rectangle"
+            android:inputType="text"
+            android:paddingEnd="@dimen/config_margin_20dp"
+            android:paddingStart="@dimen/config_margin_20dp"
+            android:textAlignment="center"
+            android:textSize="@dimen/config_margin_20dp" />
+
+    </RelativeLayout>
+
+
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="1dp"-->
+<!--        android:background="@color/black" />-->
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/organization_refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srlEnableAutoLoadMore="true"
+        app:srlEnableLoadMore="true">
+
+
+        <com.scwang.smartrefresh.header.WaterDropHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/organization_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            tools:listitem="@layout/adapter_organization_list_item" />
+
+        <!--    注意修改包名时，这里也需要修改    -->
+        <com.yiflyplan.app.widget.MaterialFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </com.yiflyplan.app.widget.MaterialFooter>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</LinearLayout>

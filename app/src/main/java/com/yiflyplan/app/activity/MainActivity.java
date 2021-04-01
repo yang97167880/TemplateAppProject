@@ -22,6 +22,7 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -447,14 +448,21 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                                 | InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 .input(
                         getString(R.string.hint_input),
-                        "",
+                        null,
                         false,
-                        ((dialog, input) -> XToastUtils.toast(input.toString())))
+                        ((dialog, input) -> Log.d("","")))
                 .positiveText(R.string.lab_search)
                 .negativeText(R.string.lab_cancel)
                 .onPositive((dialog, which) -> {
-                    //XToastUtils.toast("你输入了:" + dialog.getInputEditText().getText().toString());
-                    openNewPage(ApplyFormFragment.class);
+                    String organizationInfo =dialog.getInputEditText().getText().toString();
+                    if (organizationInfo.length()==0){
+                        XToastUtils.toast("内容不能为空");
+                    }else{
+                        Bundle bundle = new Bundle();
+                        bundle.putString("organizationInfo",organizationInfo);
+                        openNewPage(ApplyFormFragment.class,bundle);
+                    }
+
                 })
                 .cancelable(false)
                 .show();

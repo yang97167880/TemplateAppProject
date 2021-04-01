@@ -63,13 +63,15 @@
                     android:layout_height="22dp"
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginStart="4dp"
-                    android:textColor="@color/xui_config_color_pure_black" />
+                    android:textColor="@color/xui_config_color_pure_black"
+                    android:text=""/>
             </LinearLayout>
 
             <TextView
                 android:id="@+id/or_typeName"
                 style="@style/TextStyle.Explain"
-                android:layout_gravity="end|center_vertical" />
+                android:layout_gravity="end|center_vertical"
+                />
 
         </FrameLayout>
 
