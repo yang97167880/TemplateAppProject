@@ -23,6 +23,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import com.xuexiang.xpage.PageConfig;
 import com.xuexiang.xpage.base.XPageActivity;
 import com.xuexiang.xpage.base.XPageFragment;
 import com.xuexiang.xpage.core.CoreSwitchBean;
@@ -101,6 +102,18 @@ public class BaseActivity extends XPageActivity {
      */
     public <T extends XPageFragment> T openNewPage(Class<T> clazz) {
         CoreSwitchBean page = new CoreSwitchBean(clazz)
+                .setNewActivity(true);
+        return (T) openPage(page);
+    }
+
+
+    /**
+     * 打开fragment并传值
+     *
+     * @return 打开的fragment对象
+     */
+    public <T extends XPageFragment> T openNewPage(Class<T> clazz,Bundle bundle) {
+        CoreSwitchBean page = new CoreSwitchBean(clazz,bundle)
                 .setNewActivity(true);
         return (T) openPage(page);
     }

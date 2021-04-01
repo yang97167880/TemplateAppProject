@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string-array name="home_titles">
         <item>@string/menu_organization</item>
         <item>@string/menu_input</item>

@@ -19,8 +19,10 @@ package com.yiflyplan.app.fragment;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -28,25 +30,42 @@ import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xqrcode.XQRCode;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 import com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet;
+import com.xuexiang.xui.widget.imageview.RadiusImageView;
+import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
 import com.xuexiang.xutil.display.ImageUtils;
 import com.xuexiang.xutil.file.FileUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.core.BaseFragment;
+import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.components.DrawablePreviewFragment;
+import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import butterknife.BindView;
 
+import static com.yiflyplan.app.fragment.components.DrawablePreviewFragment.BITMAP;
 import static com.yiflyplan.app.fragment.components.DrawablePreviewFragment.DRAWABLE_ID;
+import static com.yiflyplan.app.utils.ImageConversionUtil.base64ToBitmap;
 
-@Page(name = "扫码关注")
+@Page(name = "我的二维码")
 public class QRCodeFragment extends BaseFragment implements View.OnClickListener, View.OnLongClickListener {
-    @BindView(R.id.iv_qq_group)
-    ImageView ivQqGroup;
-    @BindView(R.id.iv_win_xin)
-    ImageView ivWinXin;
+    @BindView(R.id.iv_user_qrcode)
+    ImageView ivUserQrcode;
+
+    @BindView(R.id.tv_user_name)
+    TextView tvUserName;
+
+
+    private Bitmap qrCode;
+    private String userName;
+    private String userAvatar;
 
     @Override
     protected int getLayoutId() {
@@ -55,29 +74,46 @@ public class QRCodeFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     protected void initViews() {
+        Bundle bundle = getArguments();
+        userAvatar = bundle.getString("userAvatar");
+        userName = bundle.getString("userName");
+        RadiusImageView radiusImageView = findViewById(R.id.iv_avatar);
+        GlideImageLoadStrategy lodeImg = new GlideImageLoadStrategy();
+        lodeImg.loadImage(radiusImageView,userAvatar);
 
+        tvUserName.setText(userName);
+        ivUserQrcode.setImageBitmap(qrCode);
     }
 
     @Override
     protected void initListeners() {
-        ivQqGroup.setTag("qq_group");
-        ivQqGroup.setOnClickListener(this);
-        ivQqGroup.setOnLongClickListener(this);
-        ivWinXin.setTag("wei_xin_subscription_number");
-        ivWinXin.setOnClickListener(this);
-        ivWinXin.setOnLongClickListener(this);
+        ivUserQrcode.setTag("user_qrcode_subscription_number");
+        ivUserQrcode.setOnClickListener(this);
+        ivUserQrcode.setOnLongClickListener(this);
+
+
+        LinkedHashMap<String,String> params = new  LinkedHashMap<>();
+        MyHttp.get("/user/getMyQrdCode", TokenUtils.getToken(), params, new MyHttp.Callback() {
+            @Override
+            public void success(JSONObject data) throws JSONException {
+                String qrCodeBase64 = data.getString("qrCode");
+                Log.e("img33",qrCodeBase64);
+                qrCode = base64ToBitmap(qrCodeBase64,"data:img/jpeg;base64,");
+                ivUserQrcode.setImageBitmap(qrCode);
+            }
+            @Override
+            public void fail(JSONObject error) {
+
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
         Bundle bundle = new Bundle();
         switch (v.getId()) {
-            case R.id.iv_qq_group:
-                bundle.putInt(DRAWABLE_ID, R.drawable.img_xui_qq);
-                openPage(DrawablePreviewFragment.class, bundle);
-                break;
-            case R.id.iv_win_xin:
-                bundle.putInt(DRAWABLE_ID, R.drawable.img_winxin_subscription_number);
+            case R.id.iv_user_qrcode:
+                bundle.putParcelable(BITMAP, qrCode);
                 openPage(DrawablePreviewFragment.class, bundle);
                 break;
             default:
