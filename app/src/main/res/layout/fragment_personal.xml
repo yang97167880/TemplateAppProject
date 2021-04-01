@@ -23,5 +23,11 @@
         android:layout_height="match_parent"
         android:overScrollMode="never"
         tools:listitem="@layout/adapter_product_item" />
+
+        <!--    注意修改包名时，这里也需要修改    -->
+        <com.yiflyplan.app.widget.MaterialFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </com.yiflyplan.app.widget.MaterialFooter>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

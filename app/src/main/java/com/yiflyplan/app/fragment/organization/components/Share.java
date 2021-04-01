@@ -99,8 +99,6 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
                 ivOrganizationQrcode.setImageBitmap(qrCode);
             }
 
-
-
             @Override
             public void fail(JSONObject error) {
 

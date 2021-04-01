@@ -19,7 +19,6 @@ package com.yiflyplan.app.fragment.organization;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -39,7 +38,6 @@ import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.organization.components.ComponentsFragment;
-import com.yiflyplan.app.utils.DemoDataProvider;
 import com.yiflyplan.app.utils.TokenUtils;
 
 import org.json.JSONArray;
@@ -65,7 +63,10 @@ public class OrganizationFragment extends BaseFragment {
     @BindView(R.id.organization_refreshLayout)
     SmartRefreshLayout refreshLayout;
 
-
+    private int totalPage = 1;
+    private int pageNo = 1;
+    private int pageSize = 5;
+    private List<OrganizationVO> organizationVOS = new ArrayList<>();
     private final String RELATIONSHIPS = "relationships";
     private BroccoliSimpleDelegateAdapter<OrganizationVO> mOrganizationAdapter;
     /**
@@ -95,8 +96,7 @@ public class OrganizationFragment extends BaseFragment {
 //
 //        Bundle bundle = getArguments();
 //        List<CurrentUserVO> list = (List<CurrentUserVO>) bundle.getSerializable("currentUser");
-        mOrganizationAdapter = new BroccoliSimpleDelegateAdapter<OrganizationVO>(R.layout.adapter_organization_list_item, new LinearLayoutHelper(), DemoDataProvider.getEmptyInfo(OrganizationVO.class)) {
-
+        mOrganizationAdapter = new BroccoliSimpleDelegateAdapter<OrganizationVO>(R.layout.adapter_organization_list_item, new LinearLayoutHelper()) {
 
             @Override
             protected void onBindData(MyRecyclerViewHolder holder, OrganizationVO model, int position) {
@@ -162,9 +162,29 @@ public class OrganizationFragment extends BaseFragment {
         refreshLayout.setOnRefreshListener(refreshLayout -> {
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
-                LinkedHashMap<String,String> params = new  LinkedHashMap<>();
-                params.put("pageNo","1");
-                params.put("pageSize","5");
+                apiGetOrganizationVOList("once");
+                refreshLayout.finishRefresh();
+            }, 500);
+        });
+        //上拉加载
+        refreshLayout.setOnLoadMoreListener(refreshLayout -> {
+            // TODO: 2020-02-25 网络请求
+            refreshLayout.getLayout().postDelayed(() -> {
+                apiGetOrganizationVOList("more");
+                refreshLayout.finishLoadMore();
+            }, 500);
+        });
+        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
+    }
+
+    protected void apiGetOrganizationVOList(String flag) {
+        LinkedHashMap<String,String> params = new  LinkedHashMap<>();
+        params.put("pageNo",String.valueOf(pageNo));
+        params.put("pageSize",String.valueOf(pageSize));
+        if(pageNo<=totalPage){
+            if(pageNo>1 && flag == "refresh"){
+                mOrganizationAdapter.refresh(organizationVOS);
+            }else{
                 MyHttp.get("/organization/getOrganizationCreateByUser", TokenUtils.getToken(), params, new MyHttp.Callback() {
                     @Override
                     public void success(JSONObject data) throws JSONException {
@@ -181,34 +201,27 @@ public class OrganizationFragment extends BaseFragment {
                             temp.setTypeName(organizations.getJSONObject(i).getString("organizationTypeName"));
                             temp.setTime(organizations.getJSONObject(i).getString("createTime"));
                             //temp.setRoleName(organizations.getJSONObject(i).getString("roleName"));
-                            voList.add(temp);
+                            organizationVOS.add(temp);
                         }
-                        mOrganizationAdapter.refresh(voList);
-                        refreshLayout.finishRefresh();
+                        switch(flag){
+                            case "once":
+                                mOrganizationAdapter.refresh(organizationVOS);
+                                break;
+                            case "more":
+                                mOrganizationAdapter.loadMore(organizationVOS);
+                                break;
+                        }
+                        pageNo +=1;
                     }
 
                     @Override
                     public void fail(JSONObject error) {
-                        Log.e("sss","ss");
                         refreshLayout.finishRefresh();
                     }
                 });
+            }
 
-            }, 500);
-        });
-        //上拉加载
-        refreshLayout.setOnLoadMoreListener(refreshLayout -> {
-            // TODO: 2020-02-25 网络请求
-            refreshLayout.getLayout().postDelayed(() -> {
-//                mNoticeAdapter.loadMore();
-                refreshLayout.finishLoadMore();
-            }, 500);
-        });
-        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
-    }
-
-    private void initAPIData(){
-
+        }
     }
 }
 
