@@ -8,11 +8,14 @@
     <string name="guide_key_sliding_root_navigation">guide_key_sliding_root_navigation</string>
 
     <string name="menu_organization">机构</string>
-    <string name="hint_input">输入机构的编码</string>
+    <string name="hint_input">输入机构的名称、所在城市或编码</string>
     <string name="lab_search">查询</string>
     <string name="menu_input">录入</string>
 <!--    <string name="menu_profile">我的</string>-->
     <string name="menu_notices">消息</string>
+
+    <string name="joined">已加入</string>
+    <string name="check_pending">待审核</string>
 
 
     <string name="menu_notifications">通知</string>

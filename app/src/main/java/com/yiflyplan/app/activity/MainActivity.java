@@ -447,14 +447,16 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                                 | InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 .input(
                         getString(R.string.hint_input),
-                        "",
+                        null,
                         false,
                         ((dialog, input) -> XToastUtils.toast(input.toString())))
                 .positiveText(R.string.lab_search)
                 .negativeText(R.string.lab_cancel)
                 .onPositive((dialog, which) -> {
-                    //XToastUtils.toast("你输入了:" + dialog.getInputEditText().getText().toString());
-                    openNewPage(ApplyFormFragment.class);
+                    String organizationInfo =dialog.getInputEditText().getText().toString();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("organizationInfo",organizationInfo);
+                    openNewPage(ApplyFormFragment.class,bundle);
                 })
                 .cancelable(false)
                 .show();
