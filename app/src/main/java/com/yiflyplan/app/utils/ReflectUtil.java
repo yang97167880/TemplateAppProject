@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -166,6 +167,23 @@ public final class ReflectUtil {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static <T> List<T> convertToList(JSONArray array, Class<T> cls) {
+        if (array == null) {
+            return new ArrayList<>();
+        }
+        int length = array.length();
+        List<T> list = new ArrayList<>(length);
+        try {
+            for (int i = 0; i < length; i++) {
+                JSONObject arrayJSONObject = array.getJSONObject(i);
+                T value = convertToObject(arrayJSONObject, cls);
+                list.add(value);
+            }
+        } catch (Exception ignored) {
+        }
+        return list;
     }
 
 }
