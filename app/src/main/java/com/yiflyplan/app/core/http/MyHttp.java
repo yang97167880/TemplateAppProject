@@ -56,7 +56,7 @@ public final class MyHttp {
     public interface Callback {
         void success(JSONObject data) throws JSONException;
 
-        void fail(JSONObject error);
+        void fail(JSONObject error) throws JSONException;
     }
 
     /**
@@ -104,7 +104,7 @@ public final class MyHttp {
                         }catch (Exception e){
                             Log.e("Ex:",e.getMessage());
                         }
-                        XToastUtils.error(error.getMessage());
+                        XToastUtils.error("请求失败！请检查网络问题。");
                     }
                 }) {
             // 对返回的数据的编码格式进行处理
@@ -195,7 +195,7 @@ public final class MyHttp {
                         }catch (Exception e){
                             Log.e("Ex:",e.getMessage());
                         }
-                        XToastUtils.error(error.getMessage());
+                        XToastUtils.error("请求失败！请检查网络问题。");
                     }
                 }) {
             // 对返回的数据的编码格式进行处理

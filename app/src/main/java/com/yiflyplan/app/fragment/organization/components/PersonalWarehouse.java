@@ -20,6 +20,7 @@ package com.yiflyplan.app.fragment.organization.components;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -82,6 +83,10 @@ public class PersonalWarehouse extends BaseFragment {
             protected void onBindData(MyRecyclerViewHolder holder, ProductVO model, int position) {
 
                 if(model!=null){
+                    holder.bindDataToViewById(view -> {
+                        CheckBox c = (CheckBox) view;
+                        c.setVisibility(View.GONE);
+                    },R.id.item_checked);
                     holder.bindDataToViewById(view -> {
                         LinearLayout expandInfo = (LinearLayout)view;
                         expandInfo.setVisibility(View.GONE);

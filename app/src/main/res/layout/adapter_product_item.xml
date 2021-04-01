@@ -58,7 +58,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
+                <CheckBox
+                    android:id="@+id/item_checked"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
                 <com.xuexiang.xui.widget.imageview.RadiusImageView
                     android:id="@+id/iv_avatar"
                     android:layout_width="48dp"
