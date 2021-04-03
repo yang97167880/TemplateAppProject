@@ -223,6 +223,7 @@ public class PersonalWarehouse extends BaseFragment {
                             case "lodeMore":
                                 mProductAdapter.loadMore(productVOS);
                                 break;
+                            default:
                         }
                         pageNo +=1;
                     }

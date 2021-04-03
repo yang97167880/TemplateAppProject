@@ -38,6 +38,7 @@ import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.organization.components.ComponentsFragment;
+import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 
 import org.json.JSONArray;
@@ -189,7 +190,7 @@ public class OrganizationFragment extends BaseFragment {
                     @Override
                     public void success(JSONObject data) throws JSONException {
                         JSONArray organizations = new JSONArray(data.getString("list"));
-                        List<OrganizationVO> voList = new ArrayList<>();
+                        //ReflectUtil.convertToList(organizations,OrganizationVO.class);
                         for(int i = 0;i<organizations.length();i++){
                             OrganizationVO temp = new OrganizationVO();
                             temp.setId( organizations.getJSONObject(i).getInt("id"));
@@ -210,6 +211,7 @@ public class OrganizationFragment extends BaseFragment {
                             case "more":
                                 mOrganizationAdapter.loadMore(organizationVOS);
                                 break;
+                            default:
                         }
                         pageNo +=1;
                     }

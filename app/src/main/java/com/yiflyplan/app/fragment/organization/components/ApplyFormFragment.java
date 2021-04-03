@@ -166,9 +166,8 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
                     public void fail(JSONObject error) {
                     }
                 });
-
-
                 break;
+            default:
         }
     }
 }

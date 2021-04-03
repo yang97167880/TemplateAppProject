@@ -115,6 +115,7 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
                     break;
                 case "产品转移":
                     openNewPage(Transfer.class,"id",organizationVO.getId());
+                default:
             }
 
         }
