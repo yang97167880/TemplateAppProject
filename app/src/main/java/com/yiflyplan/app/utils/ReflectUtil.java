@@ -17,7 +17,10 @@
 
 package com.yiflyplan.app.utils;
 
+import android.util.Log;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
@@ -70,6 +73,18 @@ public final class ReflectUtil {
         }
     }
 
+    public static final class TypeDefaultValueEnum {
+        private static final byte BYTE_DEFAULT = 0;
+        private static final boolean BOOLEAN_DEFAULT = false;
+        private static final short SHORT_DEFAULT = 0;
+        private static final int INT_DEFAULT = 0;
+        private static final float FLOAT_DEFAULT = 0.0f;
+        private static final double DOUBLE_DEFAULT = 0.00d;
+        private static final long LONG_DEFAULT = 0L;
+        private static final String STRING_DEFAULT = " ";
+        private static final Object OBJECT_DEFAULT = null;
+    }
+
     public static <T> T convertToObject(JSONObject json, Class<T> cls) {
         try {
             T instance = cls.newInstance();
@@ -92,49 +107,49 @@ public final class ReflectUtil {
                 try {
                     // Byte
                     if (PrimitiveClassEnum.isByte(fieldType) || fieldType.equals(Byte.class)) {
-                        int value = json.getInt(fieldName);
+                        Number value = getValue(() -> json.getInt(fieldName), TypeDefaultValueEnum.BYTE_DEFAULT);
                         field.setAccessible(true);
-                        field.set(instance, (byte) value);
+                        field.set(instance, value.byteValue());
                     }
                     // Short
                     else if (PrimitiveClassEnum.isShort(fieldType) || fieldType.equals(Short.class)) {
-                        int value = json.getInt(fieldName);
+                        Number value = getValue(() -> json.getInt(fieldName), TypeDefaultValueEnum.SHORT_DEFAULT);
                         field.setAccessible(true);
-                        field.set(instance, (short) value);
+                        field.set(instance, value.shortValue());
                     }
                     // Int
                     else if (PrimitiveClassEnum.isInt(fieldType) || fieldType.equals(Integer.class)) {
-                        int value = json.getInt(fieldName);
+                        Number value = getValue(() -> json.getInt(fieldName), TypeDefaultValueEnum.INT_DEFAULT);
                         field.setAccessible(true);
-                        field.set(instance, value);
+                        field.set(instance, value.intValue());
                     }
                     // Float
                     else if (PrimitiveClassEnum.isFloat(fieldType) || fieldType.equals(Float.class)) {
-                        double value = json.getDouble(fieldName);
+                        Number value = getValue(() -> json.getDouble(fieldName), TypeDefaultValueEnum.FLOAT_DEFAULT);
                         field.setAccessible(true);
-                        field.set(instance, (float) value);
+                        field.set(instance, value.floatValue());
                     }
                     // Double
                     else if (PrimitiveClassEnum.isDouble(fieldType) || fieldType.equals(Double.class)) {
-                        double value = json.getDouble(fieldName);
+                        Number value = getValue(() -> json.getDouble(fieldName), TypeDefaultValueEnum.DOUBLE_DEFAULT);
                         field.setAccessible(true);
-                        field.set(instance, value);
+                        field.set(instance, value.doubleValue());
                     }
                     // Long
                     else if (PrimitiveClassEnum.isLong(fieldType) || fieldType.equals(Long.class)) {
-                        long value = json.getLong(fieldName);
+                        Number value = getValue(() -> json.getLong(fieldName), TypeDefaultValueEnum.LONG_DEFAULT);
                         field.setAccessible(true);
-                        field.set(instance, value);
+                        field.set(instance, value.longValue());
                     }
                     // Char
                     else if (PrimitiveClassEnum.isChar(fieldType) || fieldType.equals(Character.class)) {
-                        String value = json.getString(fieldName);
+                        String value = getValue(() -> json.getString(fieldName), TypeDefaultValueEnum.STRING_DEFAULT);
                         field.setAccessible(true);
                         field.set(instance, value.charAt(0));
                     }
                     // Boolean
                     else if (PrimitiveClassEnum.isBoolean(fieldType) || fieldType.equals(Boolean.class)) {
-                        boolean value = json.getBoolean(fieldName);
+                        boolean value = getValue(() -> json.getBoolean(fieldName), TypeDefaultValueEnum.BOOLEAN_DEFAULT);
                         field.setAccessible(true);
                         field.set(instance, value);
                     }
@@ -149,10 +164,16 @@ public final class ReflectUtil {
                             field.set(instance, value);
                         }
                     }
+                    //String
+                    else if (fieldType.equals(String.class)) {
+                        String value = getValue(() -> json.getString(fieldName), TypeDefaultValueEnum.STRING_DEFAULT);
+                        field.setAccessible(true);
+                        field.set(instance, value);
+                    }
                     // Object
                     else {
                         JSONObject jsonObj = json.getJSONObject(fieldName);
-                        Object value = convertToObject(jsonObj, fieldType);
+                        Object value = getValue(() -> convertToObject(jsonObj, fieldType), TypeDefaultValueEnum.OBJECT_DEFAULT);
                         field.setAccessible(true);
                         field.set(instance, value);
                     }
@@ -165,6 +186,7 @@ public final class ReflectUtil {
             }
             return instance;
         } catch (Exception e) {
+//            e.printStackTrace();
             return null;
         }
     }
@@ -184,6 +206,19 @@ public final class ReflectUtil {
         } catch (Exception ignored) {
         }
         return list;
+    }
+
+    private static <T> T getValue(Callable<T> callable, T defaultValue) {
+        try {
+            return callable.call();
+        } catch (Exception e) {
+            Log.e("【 Reflect Error 】", String.format("%s", e));
+            return defaultValue;
+        }
+    }
+
+    interface Callable<T> {
+        T call() throws JSONException;
     }
 
 }
