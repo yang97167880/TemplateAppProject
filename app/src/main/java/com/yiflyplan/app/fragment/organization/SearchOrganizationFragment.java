@@ -118,21 +118,21 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
                 if (model != null) {
                     holder.bindDataToViewById(view -> {
                         TextView name = (TextView) view;
-                       name.setText(model.getName());
+                       name.setText(model.getOrganizationName());
                     },R.id.or_name);
                     holder.bindDataToViewById(view -> {
                         RadiusImageView avatar = (RadiusImageView) view;
                         //设置头像
                         GlideImageLoadStrategy img = new GlideImageLoadStrategy();
-                        img.loadImage(avatar, Uri.parse(model.getAvatar()));
+                        img.loadImage(avatar, Uri.parse(model.getOrganizationAvatar()));
                     },R.id.or_avatar);
                     holder.bindDataToViewById(view -> {
                         TextView code = (TextView) view;
-                        code.setText(model.getAbbreviation());
+                        code.setText(model.getOrganizationAbbreviation());
                     },R.id.or_code);
                     holder.bindDataToViewById(view -> {
                         TextView level = (TextView) view;
-                        level.setText(model.getLevel());
+                        level.setText(model.getOrganizationLevel());
                     },R.id.or_level);
                     holder.click(R.id.btn_join_or,v ->{
                         openNewPage(ApplyFormFragment.class,"organization",model);
@@ -198,12 +198,12 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
                         for(int i = 0;i<organizationInfo.length();i++){
                             OrganizationVO temp = new OrganizationVO();
                             temp.setId( organizationInfo.getJSONObject(i).getInt("id"));
-                            temp.setName(organizationInfo.getJSONObject(i).getString("organizationName"));
-                            temp.setAvatar(organizationInfo.getJSONObject(i).getString("organizationAvatar"));
+                            temp.setOrganizationName(organizationInfo.getJSONObject(i).getString("organizationName"));
+                            temp.setOrganizationAvatar(organizationInfo.getJSONObject(i).getString("organizationAvatar"));
                             temp.setCityName(organizationInfo.getJSONObject(i).getString("cityName"));
-                            temp.setAbbreviation(organizationInfo.getJSONObject(i).getString("organizationAbbreviation"));
-                            temp.setLevel(organizationInfo.getJSONObject(i).getString("organizationLevel"));
-                            temp.setTypeName(organizationInfo.getJSONObject(i).getString("organizationTypeName"));
+                            temp.setOrganizationAbbreviation(organizationInfo.getJSONObject(i).getString("organizationAbbreviation"));
+                            temp.setOrganizationLevel(organizationInfo.getJSONObject(i).getString("organizationLevel"));
+                            temp.setOrganizationTypeName(organizationInfo.getJSONObject(i).getString("organizationTypeName"));
                             voList.add(temp);
                         }
                         organizationVOS.clear();
@@ -239,6 +239,7 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
                 }
 
                 break;
+            default:
 
         }
     }

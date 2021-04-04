@@ -91,12 +91,12 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
         organizationId = organizationVO.getId();
         RadiusImageView radiusImageView = findViewById(R.id.or_avatar);
         GlideImageLoadStrategy lodeImg = new GlideImageLoadStrategy();
-        lodeImg.loadImage(radiusImageView,organizationVO.getAvatar());
-        orName.setText(organizationVO.getName());
+        lodeImg.loadImage(radiusImageView,organizationVO.getOrganizationAvatar());
+        orName.setText(organizationVO.getOrganizationName());
         orCity.setText("城市："+organizationVO.getCityName());
-        orCode.setText(organizationVO.getAbbreviation());
-        orTypeName.setText("机构类型："+organizationVO.getTypeName());
-        orLevel.setText("机构等级："+organizationVO.getLevel());
+        orCode.setText(organizationVO.getOrganizationAbbreviation());
+        orTypeName.setText("机构类型："+organizationVO.getOrganizationTypeName());
+        orLevel.setText("机构等级："+organizationVO.getOrganizationLevel());
 
 
         /**
