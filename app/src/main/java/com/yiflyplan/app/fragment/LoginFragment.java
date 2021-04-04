@@ -134,21 +134,22 @@ public class LoginFragment extends BaseFragment {
                 if (etPhoneNumber.validate()) {
                     if (etVerifyCode.validate()) {
                         LinkedHashMap<String, String> params = new LinkedHashMap<>();
-                        params.put("tel", etPhoneNumber.getText().toString());
+                        params.put("tel", String.valueOf(etPhoneNumber.getText()));
                         String md5psd = null;
                         try {
-                            md5psd = MD5Util.getMD5(etPasswordNumber.getText().toString());
+                            md5psd = MD5Util.getMD5(String.valueOf(etPasswordNumber.getText()));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         params.put("password", md5psd);
-                        params.put("verificationCode", etVerifyCode.getText().toString());
+                        params.put("verificationCode", String.valueOf(etVerifyCode.getText()));
                         MyHttp.postJson("/user/login", "", params, new MyHttp.Callback() {
                             @Override
                             public void success(JSONObject data) throws JSONException {
                                 Log.e("JSON:", data.toString());
                                 CurrentUserVO userVO = new CurrentUserVO();
                                 userVO = ReflectUtil.convertToObject(data,CurrentUserVO.class);
+                                Log.e("list",String.valueOf(userVO.getRelationships()));
                                 //用户初始化
                                 onLoginSuccess(userVO, data.getString("token"));
                             }

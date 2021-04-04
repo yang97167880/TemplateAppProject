@@ -88,7 +88,7 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
     protected void initViews() {
         Bundle bundle = getArguments();
         organizationVO = (OrganizationVO) bundle.getSerializable("organization");
-        organizationId = organizationVO.getId();
+        organizationId = organizationVO.getOrganizationId();
         RadiusImageView radiusImageView = findViewById(R.id.or_avatar);
         GlideImageLoadStrategy lodeImg = new GlideImageLoadStrategy();
         lodeImg.loadImage(radiusImageView,organizationVO.getOrganizationAvatar());

@@ -19,6 +19,7 @@ package com.yiflyplan.app.fragment.organization;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -52,9 +53,6 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-
     private OrganizationVO organizationVO;
 
     @Override
@@ -69,10 +67,7 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
     protected void initViews() {
         Bundle bundle = getArguments();
         organizationVO = (OrganizationVO) bundle.getSerializable("organization");
-        toolbar.setTitle(organizationVO.getOrganizationName());
-        toolbar.setNavigationOnClickListener(v ->{
-            popToBack();
-        });
+        Log.e("VO",String.valueOf(organizationVO));
         initRecyclerView();
     }
 
@@ -106,19 +101,19 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
         if (widgetInfo != null) {
             switch (widgetInfo.getName()){
                 case "机构成员":
-                    openNewPage(OrganizationUser.class,"id",organizationVO.getId());
+                    openNewPage(OrganizationUser.class,"id",organizationVO.getOrganizationId());
                     break;
                 case "个人仓库":
-                    openNewPage(PersonalWarehouse.class,"id",organizationVO.getId());
+                    openNewPage(PersonalWarehouse.class,"id",organizationVO.getOrganizationId());
                     break;
                 case "分享机构":
-                    openNewPage(Share.class,"id",organizationVO.getId());
+                    openNewPage(Share.class,"id",organizationVO.getOrganizationId());
                     break;
                 case "产品转移":
-                    openNewPage(Transfer.class,"id",organizationVO.getId());
+                    openNewPage(Transfer.class,"id",organizationVO.getOrganizationId());
                     break;
                 case "产品接收":
-                    openNewPage(Receive.class,"id",organizationVO.getId());
+                    openNewPage(Receive.class,"id",organizationVO.getOrganizationId());
                     break;
                 default:
             }
