@@ -24,10 +24,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public final class ReflectUtil {
     public static final class PrimitiveClassEnum {
@@ -88,6 +95,7 @@ public final class ReflectUtil {
     public static <T> T convertToObject(JSONObject json, Class<T> cls) {
         try {
             T instance = cls.newInstance();
+
             //拿到所有字段
             List<Field> fieldList = new LinkedList<>();
             Class<?> superClass = cls;
@@ -172,21 +180,44 @@ public final class ReflectUtil {
                     }
                     // Object
                     else {
-                        JSONObject jsonObj = json.getJSONObject(fieldName);
-                        Object value = getValue(() -> convertToObject(jsonObj, fieldType), TypeDefaultValueEnum.OBJECT_DEFAULT);
+                        Object obj = json.get(fieldName);
+                        Object value;
+                        //如果只是正常的 JSONObject
+                        if (obj instanceof JSONObject) {
+                            JSONObject jsonObj = (JSONObject) obj;
+                            value = getValue(() -> convertToObject(jsonObj, fieldType), TypeDefaultValueEnum.OBJECT_DEFAULT);
+                        }
+                        //如果是JSONArray
+                        else if (obj instanceof JSONArray) {
+                            JSONArray jsonArray = (JSONArray) obj;
+                            Type genericType = field.getGenericType();
+                            if (genericType != null) {
+                                ParameterizedType pt = (ParameterizedType) genericType;
+                                Class<?> realClass = (Class<?>) pt.getActualTypeArguments()[0];
+                                value = getValue(() -> convertToList(jsonArray, realClass), TypeDefaultValueEnum.OBJECT_DEFAULT);
+                            } else {
+                                value = getValue(() -> convertToList(jsonArray, fieldType), TypeDefaultValueEnum.OBJECT_DEFAULT);
+                            }
+                        }
+                        //其他对象
+                        else {
+                            value = obj;
+                        }
                         field.setAccessible(true);
                         field.set(instance, value);
                     }
                 }
                 // 异常直接置空，不影响其他属性注入
                 catch (Exception e) {
+                    e.printStackTrace();
                     field.setAccessible(true);
                     field.set(instance, null);
                 }
             }
             return instance;
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
+            Log.e("【 Reflect Error 】", String.format("%s", e));
             return null;
         }
     }
@@ -219,6 +250,18 @@ public final class ReflectUtil {
 
     interface Callable<T> {
         T call() throws JSONException;
+    }
+
+    private static <T> List<T> getDefaultList() {
+        return new ArrayList<>();
+    }
+
+    private static <K, V> Map<K, V> getDefaultMap() {
+        return new HashMap<>();
+    }
+
+    private static <T> Set<T> getDefaultSet() {
+        return new HashSet<>();
     }
 
 }
