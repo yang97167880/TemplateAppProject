@@ -25,6 +25,8 @@ public class OrganizationVO implements Serializable {
 
     private String name;
 
+    private String cityName;
+
     private String avatar;
 
     private String level;
@@ -38,6 +40,14 @@ public class OrganizationVO implements Serializable {
     private String roleName;
 
     private String time;
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
 
     public String getTime() {
         return "申请时间："+time;

@@ -16,6 +16,7 @@
 
     <string name="joined">已加入</string>
     <string name="check_pending">待审核</string>
+    <string name="join">加入</string>
 
 
     <string name="menu_notifications">通知</string>
@@ -93,6 +94,7 @@
     <string name="query">查询</string>
     <string name="instructions">说明</string>
     <string name="user_qrcode_ins">欢迎长按或扫码关注</string>
+    <string name="hint_search_or">机构名称/城市</string>
 
 
 </resources>

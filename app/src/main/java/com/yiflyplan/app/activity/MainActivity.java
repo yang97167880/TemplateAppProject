@@ -71,6 +71,7 @@ import com.yiflyplan.app.fragment.QRCodeFragment;
 import com.yiflyplan.app.fragment.SettingsFragment;
 import com.yiflyplan.app.fragment.input.InputFragment;
 import com.yiflyplan.app.fragment.notices.NoticesFragment;
+import com.yiflyplan.app.fragment.organization.SearchOrganizationFragment;
 import com.yiflyplan.app.fragment.organization.components.ApplyFormFragment;
 import com.yiflyplan.app.fragment.organization.OrganizationFragment;
 import com.yiflyplan.app.utils.TokenUtils;
@@ -288,7 +289,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 //                //Utils.showPrivacyDialog(this, null);
 //                break;
             case R.id.organization_add:
-                showInputDialog();
+                openNewPage(SearchOrganizationFragment.class);
                 break;
             default:
                 break;
