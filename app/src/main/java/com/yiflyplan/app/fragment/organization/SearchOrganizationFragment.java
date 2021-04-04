@@ -141,7 +141,6 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
 
             }
 
-
             @Override
             protected void onBindBroccoli(MyRecyclerViewHolder holder, Broccoli broccoli) {
                 broccoli.addPlaceholders(
@@ -197,7 +196,7 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
                         List<OrganizationVO> voList = new ArrayList<>();
                         for(int i = 0;i<organizationInfo.length();i++){
                             OrganizationVO temp = new OrganizationVO();
-                            temp.setId( organizationInfo.getJSONObject(i).getInt("id"));
+                            temp.setOrganizationId( organizationInfo.getJSONObject(i).getInt("id"));
                             temp.setOrganizationName(organizationInfo.getJSONObject(i).getString("organizationName"));
                             temp.setOrganizationAvatar(organizationInfo.getJSONObject(i).getString("organizationAvatar"));
                             temp.setCityName(organizationInfo.getJSONObject(i).getString("cityName"));

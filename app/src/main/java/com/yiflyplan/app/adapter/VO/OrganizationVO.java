@@ -22,12 +22,12 @@ import java.io.Serializable;
 public class OrganizationVO implements Serializable {
 
 
-    public int getId() {
-        return id;
+    public int getOrganizationId() {
+        return organizationId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setOrganizationId(int organizationId) {
+        this.organizationId = organizationId;
     }
 
     public String getOrganizationName() {
@@ -102,7 +102,7 @@ public class OrganizationVO implements Serializable {
         this.createTime = createTime;
     }
 
-    private int id;
+    private int organizationId;
 
     private String organizationName;
 
@@ -125,7 +125,7 @@ public class OrganizationVO implements Serializable {
     @Override
     public String toString() {
         return "OrganizationVO{" +
-                "id=" + id +
+                "organizationId=" + organizationId +
                 ", organizationName='" + organizationName + '\'' +
                 ", organizationAvatar='" + organizationAvatar + '\'' +
                 ", organizationCityId='" + organizationCityId + '\'' +

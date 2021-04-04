@@ -36,7 +36,7 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/organization_scan"
-        android:title="扫一扫"
+        android:title="切换当前机构"
         android:icon="@drawable/ic_scan_small"
         app:showAsAction="never" />
 

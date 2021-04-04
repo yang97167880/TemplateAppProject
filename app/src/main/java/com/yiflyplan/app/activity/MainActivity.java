@@ -74,10 +74,12 @@ import com.yiflyplan.app.fragment.notices.NoticesFragment;
 import com.yiflyplan.app.fragment.organization.SearchOrganizationFragment;
 import com.yiflyplan.app.fragment.organization.components.ApplyFormFragment;
 import com.yiflyplan.app.fragment.organization.OrganizationFragment;
+import com.yiflyplan.app.fragment.organization.components.ComponentsFragment;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 import com.yiflyplan.app.widget.GuideTipsDialog;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -115,7 +117,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     private static final int POS_LOGOUT = 5;
     private CurrentUserVO userVO;
     OrganizationVO organizationVO;
-    private Bundle relationshipsBundle;
+    private Bundle organizationBundle;
 
 
     @Override
@@ -131,8 +133,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         Intent intent = this.getIntent();
         userVO =  (CurrentUserVO) intent.getSerializableExtra(CURRENTUSER);
         organizationVO = userVO.getCurrentOrganization();
-//        relationshipsBundle = new Bundle();
-//        relationshipsBundle.putSerializable(RELATIONSHIPS, (Serializable) userVO.getRelationships());
+        organizationBundle = new Bundle();
+        organizationBundle.putSerializable("organization", userVO.getCurrentOrganization());
 
         MobclickAgent.onProfileSignIn(DeviceUtils.getAndroidID());
 
@@ -178,12 +180,12 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 
         //主页内容填充
         BaseFragment[] fragments = new BaseFragment[]{
-                new OrganizationFragment(),
+                new ComponentsFragment(),
                 new InputFragment(),
 //                new ProfileFragment(),
                 new NoticesFragment(),
         };
-        fragments[0].setArguments(relationshipsBundle);
+        fragments[0].setArguments( organizationBundle);
         FragmentAdapter<BaseFragment> adapter = new FragmentAdapter<>(getSupportFragmentManager(), fragments);
         viewPager.setOffscreenPageLimit(mTitles.length - 1);
         viewPager.setAdapter(adapter);
@@ -208,6 +210,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         TextView userName = findViewById(R.id.tv_name);
         userName.setText(userVO.getUserName());
 
+        TextView organizationName = findViewById(R.id.tv_organization);
+        organizationName.setText(userVO.getCurrentOrganization().getOrganizationName());
         RadiusImageView userAvatar = findViewById(R.id.iv_avatar);
         //String url = "https://light-plant.oss-cn-beijing.aliyuncs.com/2021/03/22/2fac6a7f3a764dec8eae65046924296d.jpg";
         //Glide.with(this).load(url).into(userAvatar);

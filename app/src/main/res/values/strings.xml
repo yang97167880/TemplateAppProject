@@ -7,7 +7,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="guide_key_sliding_root_navigation">guide_key_sliding_root_navigation</string>
 
-    <string name="menu_organization">机构</string>
+    <string name="menu_organization">功能</string>
     <string name="hint_input">输入机构的名称、所在城市或编码</string>
     <string name="lab_search">查询</string>
     <string name="menu_input">录入</string>
