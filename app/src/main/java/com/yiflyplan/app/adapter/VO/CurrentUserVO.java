@@ -22,71 +22,60 @@ import java.util.List;
 
 public class CurrentUserVO implements Serializable {
 
-    @Override
-    public String toString() {
-        return "CurrentUserVO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", tel='" + tel + '\'' +
-                ", cityId='" + cityId + '\'' +
-                ", relationships='" + relationships + '\'' +
-                ", currentOrganization='" + currentOrganization + '\'' +
-                '}';
+    public int getUserId() {
+        return userId;
     }
 
-    private int id;
-
-    private String name;
-
-    private String avatar;
-
-    private String tel;
-
-    private String cityId;
-
-    private List<OrganizationVO> relationships;
-
-    private OrganizationVO currentOrganization;
-
-    public int getId() {
-        return id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getUserName() {
+        return userName;
     }
 
-    public String getName() {
-        return name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getUserAvatar() {
+        return userAvatar;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public String getUserTel() {
+        return userTel;
     }
 
-    public String getTel() {
-        return tel;
+    public void setUserTel(String userTel) {
+        this.userTel = userTel;
     }
 
-    public void setTel(String tel) {
-        this.tel = tel;
+    public String getUserCityId() {
+        return userCityId;
     }
 
-    public String getCityId() {
-        return cityId;
+    public void setUserCityId(String userCityId) {
+        this.userCityId = userCityId;
     }
 
-    public void setCityId(String cityId) {
-        this.cityId = cityId;
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public String getRfid() {
+        return rfid;
+    }
+
+    public void setRfid(String rfid) {
+        this.rfid = rfid;
     }
 
     public List<OrganizationVO> getRelationships() {
@@ -105,5 +94,35 @@ public class CurrentUserVO implements Serializable {
         this.currentOrganization = currentOrganization;
     }
 
+    @Override
+    public String toString() {
+        return "CurrentUserVO{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userAvatar='" + userAvatar + '\'' +
+                ", userTel='" + userTel + '\'' +
+                ", userCityId='" + userCityId + '\'' +
+                ", platform='" + platform + '\'' +
+                ", rfid='" + rfid + '\'' +
+                '}';
+    }
+
+    private int userId;
+
+    private String userName;
+
+    private String userAvatar;
+
+    private String userTel;
+
+    private String userCityId;
+
+    private String platform;
+
+    private String rfid;
+
+    private List<OrganizationVO> relationships;
+
+    private OrganizationVO currentOrganization;
 
 }

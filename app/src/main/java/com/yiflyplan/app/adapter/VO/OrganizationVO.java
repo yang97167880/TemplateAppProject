@@ -21,31 +21,6 @@ import java.io.Serializable;
 
 public class OrganizationVO implements Serializable {
 
-    private int id;
-
-    private String name;
-
-    private String avatar;
-
-    private String level;
-
-    private String abbreviation;
-
-    private int typeId;
-
-    private String typeName;
-
-    private String roleName;
-
-    private String time;
-
-    public String getTime() {
-        return "申请时间："+time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
     public int getId() {
         return id;
     }
@@ -54,74 +29,111 @@ public class OrganizationVO implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getOrganizationName() {
+        return organizationName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public String getOrganizationAvatar() {
+        return organizationAvatar;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setOrganizationAvatar(String organizationAvatar) {
+        this.organizationAvatar = organizationAvatar;
     }
 
-    public String getLevel() {
-        return level;
+    public String getOrganizationCityId() {
+        return organizationCityId;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setOrganizationCityId(String organizationCityId) {
+        this.organizationCityId = organizationCityId;
     }
 
-    public String getAbbreviation() {
-        return "编号："+abbreviation;
+    public String getCityName() {
+        return cityName;
     }
 
-    public void setAbbreviation(String abbreviation) {
-        this.abbreviation = abbreviation;
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 
-    public int getTypeId() {
-        return typeId;
+    public String getOrganizationLevel() {
+        return organizationLevel;
     }
 
-    public void setTypeId(int typeId) {
-        this.typeId = typeId;
+    public void setOrganizationLevel(String organizationLevel) {
+        this.organizationLevel = organizationLevel;
     }
 
-    public String getTypeName() {
-        return typeName;
+    public String getOrganizationAbbreviation() {
+        return "编号：" + organizationAbbreviation;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public void setOrganizationAbbreviation(String organizationAbbreviation) {
+        this.organizationAbbreviation = organizationAbbreviation;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public int getOrganizationTypeId() {
+        return organizationTypeId;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setOrganizationTypeId(int organizationTypeId) {
+        this.organizationTypeId = organizationTypeId;
     }
+
+    public String getOrganizationTypeName() {
+        return organizationTypeName;
+    }
+
+    public void setOrganizationTypeName(String organizationTypeName) {
+        this.organizationTypeName = organizationTypeName;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    private int id;
+
+    private String organizationName;
+
+    private String organizationAvatar;
+
+    private String organizationCityId;
+
+    private String cityName;
+
+    private String organizationLevel;
+
+    private String organizationAbbreviation;
+
+    private int organizationTypeId;
+
+    private String organizationTypeName;
+
+    private String createTime;
 
     @Override
     public String toString() {
         return "OrganizationVO{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", level='" + level + '\'' +
-                ", abbreviation='" + abbreviation + '\'' +
-                ", typeId=" + typeId +
-                ", typeName='" + typeName + '\'' +
-                ", roleName='" + roleName + '\'' +
-                ", time='" + time + '\'' +
+                ", organizationName='" + organizationName + '\'' +
+                ", organizationAvatar='" + organizationAvatar + '\'' +
+                ", organizationCityId='" + organizationCityId + '\'' +
+                ", cityName='" + cityName + '\'' +
+                ", organizationLevel='" + organizationLevel + '\'' +
+                ", organizationAbbreviation='" + organizationAbbreviation + '\'' +
+                ", organizationTypeId=" + organizationTypeId +
+                ", organizationTypeName='" + organizationTypeName + '\'' +
+                ", createTime='" + createTime + '\'' +
                 '}';
     }
 }

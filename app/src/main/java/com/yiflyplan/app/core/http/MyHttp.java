@@ -74,11 +74,12 @@ public final class MyHttp {
                     @Override
                     public void onResponse(String response) {// 获得后端返回的json数据，包括status和data两部分
                         try {
-                            if(response != null && response.startsWith("\ufeff"))response = response.substring(1);
-
+                            if(response != null && response.startsWith("\ufeff")) {
+                                response = response.substring(1);
+                            }
                             JSONObject res = new JSONObject(response);//将返回数据转化为json
-
                             // 业务处理成功，status字段值为success
+
                             if (SUCCESS.equals(res.getString(Message))) {
                                 // 获得后端json中的data部分
                                 JSONObject data = res.getJSONObject(DATA);
@@ -156,7 +157,7 @@ public final class MyHttp {
      */
     // 参数为：请求方式、请求路径（前面默认添加API）、请求参数列表、返回结果回调接口
     // 请求参数列表使用LinkedHashMap，确保添加顺序和读取顺序一致
-    private static void requestJson(int method, final String url,final String token, final LinkedHashMap<String, String> params, final Callback callback) {
+    private static void requestJson(int method, final String url,final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
         //JSONObject请求不支持Map传递参数列表，需要自行构造请求参数对象，如果没有参数，则为null
         JSONObject jsonRequest = (params == null || params.isEmpty()) ? null : new JSONObject(params);
         //生成请求对象
@@ -234,7 +235,7 @@ public final class MyHttp {
     }
 
     // 使用POST模式传参给后端，并获得后端返回数据（修改数据）
-    public static void postJson(final String url,final String token, final LinkedHashMap<String, String> params, final Callback callback) {
+    public static void postJson(final String url,final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
         requestJson(Request.Method.POST, url,token, params, callback);
     }
 
@@ -253,7 +254,7 @@ public final class MyHttp {
     private static String appendParamsToUrl(final String url, final Map<String, String> params) {
         // 无参数直接返回原url
         if (params == null || params.isEmpty())
-            return url;
+        {  return url;}
 
         // 构造新的请求链接
         StringBuilder sb = new StringBuilder(url);

@@ -28,20 +28,20 @@ public class ProductVO implements Serializable {
         this.id = id;
     }
 
-    public int getTypeId() {
-        return typeId;
+    public int getItemTypeId() {
+        return itemTypeId;
     }
 
-    public void setTypeId(int typeId) {
-        this.typeId = typeId;
+    public void setItemTypeId(int typeId) {
+        this.itemTypeId = typeId;
     }
 
-    public String getTypeName() {
-        return typeName;
+    public String getItemTypeName() {
+        return itemTypeName;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public void setItemTypeName(String itemTypeName) {
+        this.itemTypeName = itemTypeName;
     }
 
     public int getPollutionLevelId() {
@@ -176,8 +176,8 @@ public class ProductVO implements Serializable {
     public String toString() {
         return "ProductVO{" +
                 "id=" + id +
-                ", typeId=" + typeId +
-                ", typeName='" + typeName + '\'' +
+                ", itemTypeId=" + itemTypeId +
+                ", itemTypeName='" + itemTypeId + '\'' +
                 ", pollutionLevelId=" + pollutionLevelId +
                 ", pollutionLevelName='" + pollutionLevelName + '\'' +
                 ", organizationId=" + organizationId +
@@ -199,9 +199,9 @@ public class ProductVO implements Serializable {
 
     private int id;
 
-     private int typeId;
+     private int itemTypeId;
 
-     private String typeName;
+     private String itemTypeName;
 
      private int pollutionLevelId;
 

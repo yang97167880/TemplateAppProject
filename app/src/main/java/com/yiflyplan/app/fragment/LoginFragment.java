@@ -148,44 +148,8 @@ public class LoginFragment extends BaseFragment {
                             public void success(JSONObject data) throws JSONException {
                                 Log.e("JSON:", data.toString());
                                 CurrentUserVO userVO = new CurrentUserVO();
-                                OrganizationVO organizationVO = new OrganizationVO();
-
+                                userVO = ReflectUtil.convertToObject(data,CurrentUserVO.class);
                                 //用户初始化
-                                userVO.setId(data.getInt("userId"));
-                                userVO.setName(data.getString("userName"));
-                                userVO.setAvatar(data.getString("userAvatar"));
-                                userVO.setTel(data.getString("userTel"));
-                                userVO.setCityId(data.getString("userCityId"));
-
-                                //机构初始化
-                                JSONObject organization = new JSONObject(data.getString("currentOrganization"));
-                                organizationVO = ReflectUtil.convertToObject(organization, OrganizationVO.class);
-//                                organizationVO.setId(organization.getInt("organizationId"));
-//                                organizationVO.setName(organization.getString("organizationName"));
-//                                organizationVO.setAvatar(organization.getString("organizationAvatar"));
-//                                organizationVO.setAbbreviation(organization.getString("organizationAbbreviation"));
-//                                organizationVO.setLevel(organization.getString("organizationLevel"));
-//                                organizationVO.setTypeId(organization.getInt("organizationTypeId"));
-//                                organizationVO.setTypeName(organization.getString("organizationTypeName"));
-//                                organizationVO.setRoleName(organization.getString("roleName"));
-
-                                //机构关系初始化
-                                JSONArray relationships = new JSONArray(data.getString("relationships"));
-                                List<OrganizationVO> voList = new ArrayList<>();
-                                for (int i = 0; i < relationships.length(); i++) {
-                                    OrganizationVO temp = new OrganizationVO();
-                                    temp.setId(relationships.getJSONObject(i).getInt("organizationId"));
-                                    temp.setName(relationships.getJSONObject(i).getString("organizationName"));
-                                    temp.setAvatar(relationships.getJSONObject(i).getString("organizationAvatar"));
-                                    temp.setAbbreviation(relationships.getJSONObject(i).getString("organizationAbbreviation"));
-                                    temp.setLevel(relationships.getJSONObject(i).getString("organizationLevel"));
-                                    temp.setTypeId(relationships.getJSONObject(i).getInt("organizationTypeId"));
-                                    temp.setTypeName(relationships.getJSONObject(i).getString("organizationTypeName"));
-                                    temp.setRoleName(relationships.getJSONObject(i).getString("roleName"));
-                                    voList.add(temp);
-                                }
-                                userVO.setCurrentOrganization(organizationVO);
-                                userVO.setRelationships(voList);
                                 onLoginSuccess(userVO, data.getString("token"));
                             }
 
