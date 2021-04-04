@@ -56,6 +56,8 @@ import java.util.Objects;
 import butterknife.BindView;
 import me.samlss.broccoli.Broccoli;
 
+import static com.yiflyplan.app.utils.ImageConversionUtil.base64ToBitmap;
+
 @Page(name = "产品转移", extra = R.drawable.ic_transfer)
 public class Transfer extends BaseFragment {
     @BindView(R.id.product_recyclerView)
@@ -69,7 +71,112 @@ public class Transfer extends BaseFragment {
     private int visible = View.GONE;
     private int num = 0;
     private List<String> organizationId = new ArrayList<>();
-    private BroccoliSimpleDelegateAdapter<ProductVO> mProductAdapter;
+    private BroccoliSimpleDelegateAdapter<ProductVO> mProductAdapter = new BroccoliSimpleDelegateAdapter<ProductVO>(R.layout.adapter_product_item, new LinearLayoutHelper()){
+        protected void onBindData(MyRecyclerViewHolder holder, ProductVO model, int position) {
+
+            if(model!=null){
+                holder.click(R.id.item_checked,v -> {
+                    CheckBox box = (CheckBox) v;
+                    if(box.isChecked()){num++ ;organizationId.add(String.valueOf(model.getId()));}
+                    else{num = num - 1;organizationId.remove(String.valueOf(model.getId()));}
+                    ImageView imageView = new ImageView(getContext());
+                    imageView.setImageResource(R.drawable.ic_box);
+                    imageView.setPadding(10, 10, 15, 15);
+                    SnackbarUtils.Indefinite(v,"选择了"+ num +"个物品").info().addView(imageView, 0)
+                            .backColor(Color.WHITE)
+                            .actionColor(ResUtils.getColor(R.color.colorAccent))
+                            .messageColor(ResUtils.getColor(R.color.colorAccent))
+                            .setAction("取消", view -> XToastUtils.toast("点击了取消！"))
+                            .setAction("转移", view -> {
+                                XToastUtils.toast("点击了转移！");
+                                Log.e("ids",organizationId.toString());
+                                LinkedHashMap<String,String> params = new  LinkedHashMap<>();
+                                params.put("ids", organizationId.toString());
+                                MyHttp.postJson("/product/circulationProductsWithQrCode",TokenUtils.getToken(), params,new MyHttp.Callback() {
+                                    @Override
+                                    public void success(JSONObject data) throws JSONException {
+                                        Log.e("qrcode",data.toString());
+                                        String qrCodeBase64 = data.getString("qrCode");
+//                                        qrCode = base64ToBitmap(qrCodeBase64,"data:img/jpeg;base64,");
+//                                        ivOrganizationQrcode.setImageBitmap(qrCode);
+                                    }
+
+                                    @Override
+                                    public void fail(JSONObject error) {
+
+                                    }
+                                });
+                                //openNewPage(Share.class,"ids",organizationId.toString());
+                            }).show();
+                });
+                holder.bindDataToViewById(view -> {
+                    LinearLayout expandInfo = (LinearLayout)view;
+                    expandInfo.setVisibility(View.GONE);
+                    holder.click(R.id.expand,v -> {
+                        if(expandInfo.getVisibility() == View.GONE){
+                            expandInfo.setVisibility(View.VISIBLE);
+                        }else{
+                            expandInfo.setVisibility(View.GONE);
+                        }
+                    });
+                },R.id.expand_info);
+
+                holder.bindDataToViewById(view -> {
+                    TextView name = (TextView) view;
+                    name.setText(model.getTypeName());
+                },R.id.product_name);
+
+                holder.bindDataToViewById(view -> {
+                    TextView from = (TextView) view;
+                    from.setText(model.getOrganizationName() + " | " + model.getDepartmentName());
+                },R.id.product_from);
+
+                holder.bindDataToViewById(view -> {
+                    TextView weight = (TextView) view;
+                    weight.setText(model.getItemWeight()+"g");
+                },R.id.item_weight);
+
+                holder.bindDataToViewById(view -> {
+                    TextView itemPackage = (TextView) view;
+                    itemPackage.setText( model.getBagTypeName());
+                },R.id.item_package);
+
+                holder.bindDataToViewById(view -> {
+                    TextView level = (TextView) view;
+                    level.setText(model.getPollutionLevelName());
+                },R.id.item_pollution);
+
+                holder.bindDataToViewById(view -> {
+                    TextView person = (TextView) view;
+                    person.setText( model.getCreateUserName());
+                },R.id.item_create);
+
+                holder.bindDataToViewById(view -> {
+                    TextView time = (TextView) view;
+                    time.setText("创建时间："+ model.getCreateTime());
+                },R.id.item_createTime);
+                holder.bindDataToViewById(view -> {
+                    TextView updateName = (TextView) view;
+                    updateName.setText(model.getUpdateUserName());
+                },R.id.item_updateName);
+                holder.bindDataToViewById(view -> {
+                    TextView updateTime = (TextView) view;
+                    updateTime.setText(model.getUpdateTime());
+                },R.id.item_updateTime);
+                holder.bindDataToViewById(view -> {
+                    TextView code = (TextView) view;
+                    code.setText(model.getItemCoding());
+                },R.id.item_Coding);
+            }
+        }
+
+        @Override
+        protected void onBindBroccoli(MyRecyclerViewHolder holder, Broccoli broccoli) {
+            broccoli.addPlaceholders(
+                    holder.findView(R.id.product_view)
+            );
+        }
+    };
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_transfer;
@@ -82,96 +189,6 @@ public class Transfer extends BaseFragment {
         RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
         recyclerView.setRecycledViewPool(viewPool);
         viewPool.setMaxRecycledViews(0, 10);
-
-        mProductAdapter = new BroccoliSimpleDelegateAdapter<ProductVO>(R.layout.adapter_product_item, new LinearLayoutHelper()){
-            protected void onBindData(MyRecyclerViewHolder holder, ProductVO model, int position) {
-
-                if(model!=null){
-                    holder.click(R.id.item_checked,v -> {
-                        CheckBox box = (CheckBox) v;
-                        if(box.isChecked()){num++ ;organizationId.add(String.valueOf(model.getId()));}
-                        else{num = num - 1;organizationId.remove(String.valueOf(model.getId()));}
-                        ImageView imageView = new ImageView(getContext());
-                        imageView.setImageResource(R.drawable.ic_box);
-                        imageView.setPadding(10, 10, 15, 15);
-                        SnackbarUtils.Indefinite(v,"选择了"+ num +"个物品").info().addView(imageView, 0)
-                                .backColor(Color.WHITE)
-                                .actionColor(ResUtils.getColor(R.color.colorAccent))
-                                .messageColor(ResUtils.getColor(R.color.colorAccent))
-                                .setAction("取消", view -> XToastUtils.toast("点击了取消！"))
-                                .setAction("转移", view -> {
-                                    XToastUtils.toast("点击了转移！");
-                                    Log.e("id",organizationId.toString());
-                                }).show();
-                    });
-                    holder.bindDataToViewById(view -> {
-                        LinearLayout expandInfo = (LinearLayout)view;
-                        expandInfo.setVisibility(View.GONE);
-                        holder.click(R.id.expand,v -> {
-                            if(expandInfo.getVisibility() == View.GONE){
-                                expandInfo.setVisibility(View.VISIBLE);
-                            }else{
-                                expandInfo.setVisibility(View.GONE);
-                            }
-                        });
-                    },R.id.expand_info);
-
-                    holder.bindDataToViewById(view -> {
-                        TextView name = (TextView) view;
-                        name.setText(model.getTypeName());
-                    },R.id.product_name);
-
-                    holder.bindDataToViewById(view -> {
-                        TextView from = (TextView) view;
-                        from.setText(model.getOrganizationName() + " | " + model.getDepartmentName());
-                    },R.id.product_from);
-
-                    holder.bindDataToViewById(view -> {
-                        TextView weight = (TextView) view;
-                        weight.setText(model.getItemWeight()+"g");
-                    },R.id.item_weight);
-
-                    holder.bindDataToViewById(view -> {
-                        TextView itemPackage = (TextView) view;
-                        itemPackage.setText( model.getBagTypeName());
-                    },R.id.item_package);
-
-                    holder.bindDataToViewById(view -> {
-                        TextView level = (TextView) view;
-                        level.setText(model.getPollutionLevelName());
-                    },R.id.item_pollution);
-
-                    holder.bindDataToViewById(view -> {
-                        TextView person = (TextView) view;
-                        person.setText( model.getCreateUserName());
-                    },R.id.item_create);
-
-                    holder.bindDataToViewById(view -> {
-                        TextView time = (TextView) view;
-                        time.setText("创建时间："+ model.getCreateTime());
-                    },R.id.item_createTime);
-                    holder.bindDataToViewById(view -> {
-                        TextView updateName = (TextView) view;
-                        updateName.setText(model.getUpdateUserName());
-                    },R.id.item_updateName);
-                    holder.bindDataToViewById(view -> {
-                        TextView updateTime = (TextView) view;
-                        updateTime.setText(model.getUpdateTime());
-                    },R.id.item_updateTime);
-                    holder.bindDataToViewById(view -> {
-                        TextView code = (TextView) view;
-                        code.setText(model.getItemCoding());
-                    },R.id.item_Coding);
-                }
-            }
-
-            @Override
-            protected void onBindBroccoli(MyRecyclerViewHolder holder, Broccoli broccoli) {
-                broccoli.addPlaceholders(
-                        holder.findView(R.id.product_view)
-                );
-            }
-        };
 
         DelegateAdapter delegateAdapter = new DelegateAdapter(virtualLayoutManager);
         delegateAdapter.addAdapter(mProductAdapter);
@@ -221,6 +238,7 @@ public class Transfer extends BaseFragment {
                         JSONArray product = new JSONArray(data.getString("list"));
                         for(int i = 0;i<product.length();i++){
                             ProductVO temp = new ProductVO();
+                            temp.setId(product.getJSONObject(i).getInt("id"));
                             temp.setTypeName( product.getJSONObject(i).getString("itemTypeName"));
                             temp.setOrganizationName(product.getJSONObject(i).getString("organizationName"));
                             temp.setDepartmentName(product.getJSONObject(i).getString("departmentName"));
@@ -241,6 +259,7 @@ public class Transfer extends BaseFragment {
                             case "lodeMore":
                                 mProductAdapter.loadMore(productVOS);
                                 break;
+                            default:
                         }
                         pageNo +=1;
                     }

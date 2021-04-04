@@ -94,7 +94,6 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
             @Override
             public void success(JSONObject data) throws JSONException {
                 String qrCodeBase64 = data.getString("qrCode");
-                Log.e("img",qrCodeBase64);
                 qrCode = base64ToBitmap(qrCodeBase64,"data:img/jpeg;base64,");
                 ivOrganizationQrcode.setImageBitmap(qrCode);
             }
@@ -115,6 +114,7 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
                 //bundle.putInt(DRAWABLE_ID, R.drawable.img_xui_qq);
                 openPage(DrawablePreviewFragment.class, bundle);
                 break;
+                default:
         }
 
     }

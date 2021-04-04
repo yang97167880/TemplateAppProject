@@ -39,12 +39,6 @@ public class MyApp extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        //示范一下
-
-//        getUserInformation
-        //明白了吗
-//
-        //解决4.x运行崩溃的问题
         MultiDex.install(this);
     }
 
