@@ -64,9 +64,12 @@ io.reactivex.internal.operators.maybe.MaybeFromCompletable:
     public void <init>(io.reactivex.CompletableSource)
     public io.reactivex.CompletableSource source()
 com.yiflyplan.app.adapter.entity.OrganizationInfo:
-    public void <init>(java.lang.String)
+    public void <init>(java.lang.String,java.lang.String)
+    public java.lang.String getTitle()
     public void setTitle(java.lang.String)
-    public void setImage(int)
+    public void setImage(android.net.Uri)
+    public android.net.Uri getImage()
+    private android.net.Uri image
 io.reactivex.internal.operators.flowable.FlowableAllSingle:
     public void <init>(io.reactivex.Flowable,io.reactivex.functions.Predicate)
     public io.reactivex.Flowable fuseToFlowable()
@@ -387,7 +390,6 @@ com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder:
     public final android.content.Context getContext()
     public com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder text(int,int)
     public com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder textColorId(int,int)
-    public com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder image(int,int)
     public com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder image(int,android.graphics.drawable.Drawable)
     public com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder image(int,java.lang.Object)
     public com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder imageLevel(int,int)
@@ -596,7 +598,6 @@ org.reactivestreams.FlowAdapters:
     public static org.reactivestreams.Subscriber toSubscriber(java.util.concurrent.Flow$Subscriber)
 com.xuexiang.xutil.data.BaseSPUtil:
     public void <init>(android.content.Context,java.lang.String)
-    public void <init>(android.content.Context)
     public boolean putBoolean(java.lang.String,boolean)
     public boolean putFloat(java.lang.String,float)
     public boolean putLong(java.lang.String,long)
@@ -605,7 +606,6 @@ com.xuexiang.xutil.data.BaseSPUtil:
     public boolean putObject(java.lang.String,java.lang.Object)
     public boolean putEncodeObject(java.lang.String,java.lang.Object)
     public boolean put(java.lang.String,java.lang.Object)
-    public boolean getBoolean(java.lang.String,boolean)
     public long getLong(java.lang.String,long)
     public float getFloat(java.lang.String,float)
     public java.lang.String getString(java.lang.String,java.lang.String)
@@ -620,8 +620,6 @@ com.xuexiang.xutil.data.BaseSPUtil:
     public boolean clear()
     public java.lang.String getString(int)
     public void apply()
-    private final android.content.SharedPreferences mSP
-    private final android.content.Context mContext
 io.reactivex.internal.operators.maybe.MaybeDetach:
     public void <init>(io.reactivex.MaybeSource)
 kotlin.collections.ArraysKt___ArraysJvmKt$asList$5:
@@ -654,6 +652,10 @@ okhttp3.internal.cache.DiskLruCache:
     private static final java.lang.String DIRTY
     private static final java.lang.String REMOVE
     private static final java.lang.String READ
+com.yiflyplan.app.utils.ImageConversionUtil:
+    public static java.lang.String bitmapToBase64(android.graphics.Bitmap)
+    public static byte[] BitmapToByteArray(android.graphics.Bitmap)
+    public static java.lang.String truncateHeadString(java.lang.String,int)
 com.xuexiang.xui.widget.picker.widget.WheelTime$4:
     void <init>(com.xuexiang.xui.widget.picker.widget.WheelTime,java.util.List,java.util.List)
 com.jakewharton.disklrucache.DiskLruCache$Snapshot:
@@ -866,7 +868,6 @@ com.xuexiang.xrouter.facade.callback.NavCallback:
     public abstract void onArrival(com.xuexiang.xrouter.facade.Postcard)
 org.aspectj.runtime.reflect.Factory:
     public static org.aspectj.lang.JoinPoint$StaticPart makeEncSJP(java.lang.reflect.Member)
-    public static org.aspectj.lang.JoinPoint makeJP(org.aspectj.lang.JoinPoint$StaticPart,java.lang.Object,java.lang.Object,java.lang.Object[])
     public org.aspectj.lang.JoinPoint$StaticPart makeSJP(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int)
     public org.aspectj.lang.JoinPoint$StaticPart makeSJP(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int)
     public org.aspectj.lang.JoinPoint$StaticPart makeSJP(java.lang.String,org.aspectj.lang.Signature,org.aspectj.lang.reflect.SourceLocation)
@@ -975,12 +976,12 @@ io.reactivex.disposables.SerialDisposable:
     public io.reactivex.disposables.Disposable get()
 io.reactivex.internal.operators.flowable.FlowableSingle:
     public void <init>(io.reactivex.Flowable,java.lang.Object,boolean)
-com.scwang.smartrefresh.header.WaveSwipeHeader:
-    protected static final float MAX_PROGRESS_ROTATION_RATE
 com.bumptech.glide.load.engine.cache.MemorySizeCalculator:
     private static final java.lang.String TAG
     static final int BYTES_PER_ARGB_8888_PIXEL
     private static final int LOW_MEMORY_BYTE_ARRAY_POOL_DIVISOR
+com.scwang.smartrefresh.header.WaveSwipeHeader:
+    protected static final float MAX_PROGRESS_ROTATION_RATE
 kotlin.collections.ArraysKt___ArraysJvmKt$asList$4:
     void <init>(long[])
 com.just.agentweb.core.video.IVideo:
@@ -1070,6 +1071,7 @@ com.xuexiang.xqrcode.camera.PlanarYUVLuminanceSource:
     public int getDataWidth()
     public int getDataHeight()
 com.yiflyplan.app.utils.Utils:
+    public static boolean isColorDark(int)
     private static final java.lang.String PRIVACY_URL
 kotlin.collections.MapWithDefault:
     public abstract java.util.Map getMap()
@@ -1097,14 +1099,12 @@ io.reactivex.internal.subscribers.BasicFuseableSubscriber:
     public final boolean offer(java.lang.Object,java.lang.Object)
 io.reactivex.internal.operators.flowable.FlowableConcatMapPublisher:
     public void <init>(org.reactivestreams.Publisher,io.reactivex.functions.Function,int,io.reactivex.internal.util.ErrorMode)
-com.xuexiang.xpage.utils.TitleUtils$3:
-    void <init>(androidx.fragment.app.Fragment)
 com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory:
     public void <init>(android.content.Context,long)
+com.xuexiang.xpage.utils.TitleUtils$3:
+    void <init>(androidx.fragment.app.Fragment)
 com.xuexiang.xrouter.launcher._XRouter$5:
     void <init>(com.xuexiang.xrouter.launcher._XRouter,androidx.fragment.app.Fragment,int,com.xuexiang.xrouter.facade.callback.NavigationCallback,com.xuexiang.xrouter.facade.Postcard)
-com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder$1:
-    void <init>(com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder)
 com.xuexiang.xui.widget.picker.widget.utils.LunarCalendarUtils:
     public static int[] solarToLunar(int,int,int)
     public static int[] solarToLunarDeprecated(int,int,int)
@@ -1596,6 +1596,10 @@ kotlin.jvm.internal.IntSpreadBuilder:
     private final int[] values
 io.reactivex.internal.operators.flowable.FlowableJoin:
     public void <init>(io.reactivex.Flowable,org.reactivestreams.Publisher,io.reactivex.functions.Function,io.reactivex.functions.Function,io.reactivex.functions.BiFunction)
+com.android.volley.DefaultRetryPolicy:
+    public static final int DEFAULT_TIMEOUT_MS
+    public static final int DEFAULT_MAX_RETRIES
+    public static final float DEFAULT_BACKOFF_MULT
 com.xuexiang.xui.widget.imageview.strategy.IImageLoadStrategy:
     public abstract void loadImage(android.widget.ImageView,java.lang.Object,com.xuexiang.xui.widget.imageview.strategy.ILoadListener)
     public abstract void loadGifImage(android.widget.ImageView,java.lang.Object)
@@ -1717,6 +1721,8 @@ kotlin.jvm.internal.LongSpreadBuilder:
     public final void add(long)
     public final long[] toArray()
     private final long[] values
+com.xuexiang.xhttp2.subsciber.CallBackSubscriber:
+    public void <init>(com.xuexiang.xhttp2.callback.CallBack)
 com.xuexiang.xutil.display.Colors:
     public static final int WHITE
     public static final int WHITE_TRANSLUCENT
@@ -1802,38 +1808,28 @@ com.bumptech.glide.load.model.StreamEncoder:
 com.alibaba.android.vlayout.ExposeLinearLayoutManagerEx$ViewHolderWrapper:
     void setFlags(int,int)
 com.xuexiang.xui.utils.SnackbarUtils:
-    private void <init>(java.lang.ref.WeakReference)
     public static void setColorInfo(int)
     public static void setColorConfirm(int)
     public static void setColorWarning(int)
     public static void setColorDanger(int)
     public static com.xuexiang.xui.utils.SnackbarUtils Short(android.view.View,java.lang.String)
-    public static com.xuexiang.xui.utils.SnackbarUtils Long(android.view.View,java.lang.String)
-    public static com.xuexiang.xui.utils.SnackbarUtils Indefinite(android.view.View,java.lang.String)
     public static com.xuexiang.xui.utils.SnackbarUtils Custom(android.view.View,java.lang.String,int)
     private android.graphics.drawable.GradientDrawable getRadiusDrawable(android.graphics.drawable.Drawable)
     private int calculateSnackBarHeight()
-    public com.google.android.material.snackbar.Snackbar getSnackbar()
-    public com.xuexiang.xui.utils.SnackbarUtils info()
     public com.xuexiang.xui.utils.SnackbarUtils confirm()
     public com.xuexiang.xui.utils.SnackbarUtils warning()
     public com.xuexiang.xui.utils.SnackbarUtils danger()
-    public com.xuexiang.xui.utils.SnackbarUtils backColor(int)
-    public com.xuexiang.xui.utils.SnackbarUtils messageColor(int)
-    public com.xuexiang.xui.utils.SnackbarUtils actionColor(int)
     public com.xuexiang.xui.utils.SnackbarUtils colors(int,int,int)
     public com.xuexiang.xui.utils.SnackbarUtils alpha(float)
     public com.xuexiang.xui.utils.SnackbarUtils gravityFrameLayout(int)
     public com.xuexiang.xui.utils.SnackbarUtils gravityCoordinatorLayout(int)
     public com.xuexiang.xui.utils.SnackbarUtils setAction(int,android.view.View$OnClickListener)
-    public com.xuexiang.xui.utils.SnackbarUtils setAction(java.lang.CharSequence,android.view.View$OnClickListener)
     public com.xuexiang.xui.utils.SnackbarUtils setCallback(com.google.android.material.snackbar.Snackbar$Callback)
     public com.xuexiang.xui.utils.SnackbarUtils leftAndRightDrawable(java.lang.Integer,java.lang.Integer)
     public com.xuexiang.xui.utils.SnackbarUtils leftAndRightDrawable(android.graphics.drawable.Drawable,android.graphics.drawable.Drawable)
     public com.xuexiang.xui.utils.SnackbarUtils messageCenter()
     public com.xuexiang.xui.utils.SnackbarUtils messageRight()
     public com.xuexiang.xui.utils.SnackbarUtils addView(int,int)
-    public com.xuexiang.xui.utils.SnackbarUtils addView(android.view.View,int)
     public com.xuexiang.xui.utils.SnackbarUtils margins(int)
     public com.xuexiang.xui.utils.SnackbarUtils margins(int,int,int,int)
     public com.xuexiang.xui.utils.SnackbarUtils radius(float)
@@ -1842,9 +1838,7 @@ com.xuexiang.xui.utils.SnackbarUtils:
     public com.xuexiang.xui.utils.SnackbarUtils aboveCoordinatorLayout(android.view.View,int,int,int)
     public com.xuexiang.xui.utils.SnackbarUtils bellow(android.view.View,int,int,int)
     public com.xuexiang.xui.utils.SnackbarUtils bellowCoordinatorLayout(android.view.View,int,int,int)
-    public void show()
     private static final java.lang.String TAG
-    private static java.lang.ref.WeakReference mSnackbarWeakRef
 com.xuexiang.xui.widget.flowlayout.FlowTagLayout$OnInitSelectedPosition:
     public abstract boolean isSelectedPosition(int)
 com.xuexiang.xui.widget.button.shadowbutton.RippleShadowShadowButton:
@@ -1893,6 +1887,9 @@ io.reactivex.internal.operators.completable.CompletableMergeArray:
     public void <init>(io.reactivex.CompletableSource[])
 com.bumptech.glide.load.model.ModelLoaderFactory:
     public abstract void teardown()
+com.android.volley.toolbox.PoolingByteArrayOutputStream:
+    public void <init>(com.android.volley.toolbox.ByteArrayPool)
+    private static final int DEFAULT_SIZE
 com.bumptech.glide.load.engine.Engine:
     public void clearDiskCache()
     public void shutdown()
@@ -2282,6 +2279,44 @@ io.reactivex.processors.ReplayProcessor$SizeAndTimeBoundReplayBuffer:
     int size(io.reactivex.processors.ReplayProcessor$TimedNode)
     public java.lang.Throwable getError()
     public boolean isDone()
+com.yiflyplan.app.GlideRequests:
+    public synchronized com.yiflyplan.app.GlideRequests applyDefaultRequestOptions(com.bumptech.glide.request.RequestOptions)
+    public synchronized com.yiflyplan.app.GlideRequests setDefaultRequestOptions(com.bumptech.glide.request.RequestOptions)
+    public com.yiflyplan.app.GlideRequests addDefaultRequestListener(com.bumptech.glide.request.RequestListener)
+    public com.yiflyplan.app.GlideRequest load(android.graphics.Bitmap)
+    public com.yiflyplan.app.GlideRequest load(android.graphics.drawable.Drawable)
+    public com.yiflyplan.app.GlideRequest load(java.lang.String)
+    public com.yiflyplan.app.GlideRequest load(android.net.Uri)
+    public com.yiflyplan.app.GlideRequest load(java.io.File)
+    public com.yiflyplan.app.GlideRequest load(java.lang.Integer)
+    public com.yiflyplan.app.GlideRequest load(java.net.URL)
+    public com.yiflyplan.app.GlideRequest load(byte[])
+    public com.yiflyplan.app.GlideRequest downloadOnly()
+    public com.yiflyplan.app.GlideRequest download(java.lang.Object)
+    public com.yiflyplan.app.GlideRequest asFile()
+    public synthetic bridge com.bumptech.glide.RequestBuilder asFile()
+    public synthetic bridge com.bumptech.glide.RequestBuilder download(java.lang.Object)
+    public synthetic bridge com.bumptech.glide.RequestBuilder downloadOnly()
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(byte[])
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(java.net.URL)
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(java.lang.Integer)
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(java.io.File)
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(android.net.Uri)
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(java.lang.String)
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(android.graphics.drawable.Drawable)
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(android.graphics.Bitmap)
+    public synthetic bridge com.bumptech.glide.RequestManager addDefaultRequestListener(com.bumptech.glide.request.RequestListener)
+    public synthetic bridge com.bumptech.glide.RequestManager setDefaultRequestOptions(com.bumptech.glide.request.RequestOptions)
+    public synthetic bridge com.bumptech.glide.RequestManager applyDefaultRequestOptions(com.bumptech.glide.request.RequestOptions)
+    public synthetic bridge java.lang.Object load(java.lang.Object)
+    public synthetic bridge java.lang.Object load(byte[])
+    public synthetic bridge java.lang.Object load(java.net.URL)
+    public synthetic bridge java.lang.Object load(java.lang.Integer)
+    public synthetic bridge java.lang.Object load(java.io.File)
+    public synthetic bridge java.lang.Object load(android.net.Uri)
+    public synthetic bridge java.lang.Object load(java.lang.String)
+    public synthetic bridge java.lang.Object load(android.graphics.drawable.Drawable)
+    public synthetic bridge java.lang.Object load(android.graphics.Bitmap)
 android.support.v4.media.session.MediaSessionCompat$ResultReceiverWrapper:
     public void <init>(android.os.ResultReceiver)
 kotlin.UByteArrayKt:
@@ -2290,6 +2325,10 @@ kotlin.UByteArrayKt:
 butterknife.OnItemSelected:
     public abstract int[] value()
     public abstract butterknife.OnItemSelected$Callback callback()
+com.yiflyplan.app.adapter.FlowTagAdapter:
+    public void <init>(android.content.Context)
+com.yiflyplan.app.MyApp:
+    public static android.app.Application getApplication()
 com.xuexiang.xhttp2.callback.CallClazzProxy:
     public java.lang.reflect.Type getRawType()
 kotlin.coroutines.jvm.internal.DebugMetadata:
@@ -2330,7 +2369,6 @@ kotlin.UByteArray:
 io.reactivex.internal.operators.completable.CompletableFromRunnable:
     public void <init>(java.lang.Runnable)
 com.xuexiang.xui.adapter.recyclerview.BaseRecyclerAdapter:
-    public void <init>(java.util.Collection)
     public void <init>(java.lang.Object[])
 com.bumptech.glide.load.engine.bitmap_recycle.BitmapPoolAdapter:
     public long getMaxSize()
@@ -2351,8 +2389,6 @@ com.zzhoujay.richtext.RichText:
 io.reactivex.internal.operators.maybe.MaybeDoFinally:
     public void <init>(io.reactivex.MaybeSource,io.reactivex.functions.Action)
 com.xuexiang.xui.adapter.recyclerview.GridDividerItemDecoration:
-    public void <init>(android.content.Context,int)
-    public void <init>(android.content.Context,int,int)
     public void <init>(android.content.Context,int,int,int)
 com.bumptech.glide.request.transition.ViewPropertyAnimationFactory:
     public void <init>(com.bumptech.glide.request.transition.ViewPropertyTransition$Animator)
@@ -3650,6 +3686,13 @@ android.support.v4.media.session.IMediaControllerCallback$Stub:
     static final int TRANSACTION_onSessionReady
 io.reactivex.internal.operators.completable.CompletableCreate:
     public void <init>(io.reactivex.CompletableOnSubscribe)
+com.android.volley.RequestQueue$1:
+    void <init>(com.android.volley.RequestQueue,java.lang.Object)
+    public boolean apply(com.android.volley.Request)
+    final synthetic com.android.volley.RequestQueue this$0
+    private final synthetic java.lang.Object val$tag
+com.android.volley.toolbox.JsonObjectRequest:
+    public void <init>(java.lang.String,org.json.JSONObject,com.android.volley.Response$Listener,com.android.volley.Response$ErrorListener)
 io.reactivex.internal.operators.single.SingleDefer:
     public void <init>(java.util.concurrent.Callable)
 kotlin.jvm.internal.ArrayIterator:
@@ -3747,12 +3790,8 @@ com.xuexiang.xui.widget.guidview.GuideCaseView:
     void <init>(android.content.Context,android.util.AttributeSet)
     void <init>(android.content.Context,android.util.AttributeSet,int)
     void <init>(android.content.Context,android.util.AttributeSet,int,int)
-    public static boolean isShowOnce(android.content.Context,java.lang.String)
     public static void resetShowOnce(android.content.Context,java.lang.String)
     public static void resetAllShowOnce(android.content.Context)
-    public void <init>(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    private void <init>(android.app.Activity,android.view.View,java.lang.String,java.lang.String,android.text.Spanned,int,int,int,int,double,int,int,int,int,com.xuexiang.xui.widget.guidview.OnViewInflateListener,android.view.animation.Animation,android.view.animation.Animation,boolean,boolean,int,int,com.xuexiang.xui.widget.guidview.FocusShape,com.xuexiang.xui.widget.guidview.DismissListener,int,int,int,int,int,int,int,int,int,int,int,int,boolean,int,int)
-    private void initializeParameters()
     public static java.lang.Boolean isVisible(android.app.Activity)
     public static void hideCurrent(android.app.Activity)
     private static final java.lang.String CONTAINER_TAG
@@ -4042,6 +4081,8 @@ com.xuexiang.xrouter.utils.TextUtils:
     public static java.lang.String getRight(java.lang.String)
 com.xuexiang.xui.widget.imageview.photoview.Compat:
     private static final int SIXTY_FPS_INTERVAL
+com.android.volley.ExecutorDelivery:
+    public void <init>(java.util.concurrent.Executor)
 io.reactivex.internal.operators.maybe.MaybeFlatMapSingleElement:
     public void <init>(io.reactivex.MaybeSource,io.reactivex.functions.Function)
 kotlin.ranges.CharProgression:
@@ -4128,9 +4169,11 @@ com.xuexiang.xui.widget.toast.XToast:
     public static android.widget.Toast normal(android.content.Context,java.lang.CharSequence,int,android.graphics.drawable.Drawable)
     public static android.widget.Toast normal(android.content.Context,int,int,android.graphics.drawable.Drawable,boolean)
     public static android.widget.Toast warning(android.content.Context,int)
+    public static android.widget.Toast warning(android.content.Context,java.lang.CharSequence)
     public static android.widget.Toast warning(android.content.Context,int,int)
     public static android.widget.Toast warning(android.content.Context,java.lang.CharSequence,int)
     public static android.widget.Toast warning(android.content.Context,int,int,boolean)
+    public static android.widget.Toast warning(android.content.Context,java.lang.CharSequence,int,boolean)
     public static android.widget.Toast info(android.content.Context,int)
     public static android.widget.Toast info(android.content.Context,int,int)
     public static android.widget.Toast info(android.content.Context,java.lang.CharSequence,int)
@@ -4253,6 +4296,9 @@ io.reactivex.internal.operators.single.SingleTimeout:
 com.bumptech.glide.request.transition.BitmapTransitionFactory:
     public void <init>(com.bumptech.glide.request.transition.TransitionFactory)
 com.yiflyplan.app.widget.GuideTipsDialog:
+    public void <init>(android.content.Context,java.util.List)
+    private void initViews()
+    private void updateTips(java.util.List)
     private static final java.lang.String KEY_IS_IGNORE_TIPS
 kotlin.coroutines.experimental.SequenceBuilderIterator:
     public final kotlin.coroutines.experimental.Continuation getNextStep()
@@ -4424,6 +4470,10 @@ android.support.v4.media.session.MediaControllerCompatApi23$TransportControls:
     public static void playFromUri(java.lang.Object,android.net.Uri,android.os.Bundle)
 io.github.inflationx.viewpump.Interceptor$Companion$invoke$1:
     public void <init>(kotlin.jvm.functions.Function1)
+com.android.volley.toolbox.JsonRequest:
+    public void <init>(java.lang.String,java.lang.String,com.android.volley.Response$Listener,com.android.volley.Response$ErrorListener)
+    protected abstract com.android.volley.Response parseNetworkResponse(com.android.volley.NetworkResponse)
+    private static final java.lang.String PROTOCOL_CHARSET
 com.xuexiang.xui.adapter.FragmentAdapter:
     public void <init>(androidx.fragment.app.FragmentManager)
     public void <init>(androidx.fragment.app.FragmentManager,int)
@@ -4511,16 +4561,8 @@ com.xuexiang.xpage.core.PageOption:
     public androidx.fragment.app.Fragment openForResult(com.xuexiang.xpage.base.XPageFragment,int)
     public androidx.fragment.app.Fragment open(com.xuexiang.xpage.base.XPageActivity)
     public com.xuexiang.xpage.core.PageOption setBundle(android.os.Bundle)
-    public com.xuexiang.xpage.core.PageOption putString(java.lang.String,java.lang.String)
-    public com.xuexiang.xpage.core.PageOption putBoolean(java.lang.String,boolean)
-    public com.xuexiang.xpage.core.PageOption putInt(java.lang.String,int)
     public com.xuexiang.xpage.core.PageOption putShort(java.lang.String,short)
-    public com.xuexiang.xpage.core.PageOption putLong(java.lang.String,long)
-    public com.xuexiang.xpage.core.PageOption putFloat(java.lang.String,float)
-    public com.xuexiang.xpage.core.PageOption putDouble(java.lang.String,double)
-    public com.xuexiang.xpage.core.PageOption putParcelable(java.lang.String,android.os.Parcelable)
     public com.xuexiang.xpage.core.PageOption putParcelableArray(java.lang.String,android.os.Parcelable[])
-    public com.xuexiang.xpage.core.PageOption putSerializable(java.lang.String,java.io.Serializable)
     public com.xuexiang.xpage.core.PageOption putByte(java.lang.String,byte)
     public com.xuexiang.xpage.core.PageOption putAll(android.os.Bundle)
 kotlin.io.LinesSequence:
@@ -4589,6 +4631,13 @@ kotlin.collections.MapsKt___MapsKt:
     public static final java.util.Map onEach(java.util.Map,kotlin.jvm.functions.Function1)
     private static final java.lang.Iterable asIterable(java.util.Map)
     public static final kotlin.sequences.Sequence asSequence(java.util.Map)
+com.yarolegovich.slidingrootnav.BuildConfig:
+    public static final boolean DEBUG
+    public static final java.lang.String APPLICATION_ID
+    public static final java.lang.String BUILD_TYPE
+    public static final java.lang.String FLAVOR
+    public static final int VERSION_CODE
+    public static final java.lang.String VERSION_NAME
 com.xuexiang.xaop.util.PermissionUtils:
     public static varargs boolean isGranted(java.lang.String[])
     static synthetic void access$000(com.xuexiang.xaop.util.PermissionUtils)
@@ -4699,6 +4748,15 @@ com.xuexiang.xui.widget.imageview.crop.CropImageType:
     public static final int CROPIMAGE_GRID_OFF
     public static final int CROPIMAGE_GRID_ON_TOUCH
     public static final int CROPIMAGE_GRID_ON
+com.android.volley.Request$Method:
+    public static final int DEPRECATED_GET_OR_POST
+    public static final int GET
+    public static final int POST
+    public static final int PUT
+    public static final int DELETE
+com.xuexiang.xhttp2.request.CustomRequest$2:
+    void <init>(com.xuexiang.xhttp2.request.CustomRequest)
+    final synthetic com.xuexiang.xhttp2.request.CustomRequest this$0
 okhttp3.Cache:
     public void initialize()
     public void delete()
@@ -4865,10 +4923,10 @@ com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper$LazySpanLookup:
     private static final int MIN_SIZE
 com.bumptech.glide.load.model.ByteArrayLoader$StreamFactory:
     public void teardown()
-com.bumptech.glide.load.data.mediastore.ThumbFetcher$VideoThumbnailQuery:
-    private static final java.lang.String PATH_SELECTION
 com.bumptech.glide.load.model.ResourceLoader$UriFactory:
     public void teardown()
+com.bumptech.glide.load.data.mediastore.ThumbFetcher$VideoThumbnailQuery:
+    private static final java.lang.String PATH_SELECTION
 kotlin.jvm.internal.ByteCompanionObject:
     public static final byte MIN_VALUE
     public static final byte MAX_VALUE
@@ -5089,8 +5147,6 @@ com.yiflyplan.app.core.BaseFragment:
     public com.xuexiang.xhttp2.subsciber.impl.IProgressLoader getProgressLoader(java.lang.String)
     public androidx.fragment.app.Fragment openNewPage(java.lang.String)
     public androidx.fragment.app.Fragment openNewPage(java.lang.Class,java.lang.Class)
-    public androidx.fragment.app.Fragment openNewPage(java.lang.Class,java.lang.String,java.lang.Object)
-    public androidx.fragment.app.Fragment openPage(com.xuexiang.xpage.core.PageOption,java.lang.String,java.lang.Object)
     public androidx.fragment.app.Fragment openPage(java.lang.Class,boolean,java.lang.String,java.lang.String)
     public androidx.fragment.app.Fragment openPage(java.lang.Class,java.lang.String,java.lang.Object)
     public androidx.fragment.app.Fragment openPage(java.lang.Class,boolean,java.lang.String,java.lang.Object)
@@ -5098,8 +5154,9 @@ com.yiflyplan.app.core.BaseFragment:
     public androidx.fragment.app.Fragment openPageForResult(java.lang.Class,java.lang.String,java.lang.Object,int)
     public androidx.fragment.app.Fragment openPageForResult(java.lang.Class,java.lang.String,java.lang.String,int)
     public androidx.fragment.app.Fragment openPageForResult(java.lang.Class,int)
-    public java.lang.String serializeObject(java.lang.Object)
     public java.lang.Object deserializeObject(java.lang.String,java.lang.reflect.Type)
+com.yiflyplan.app.core.http.api.ApiService$IGetService:
+    public abstract io.reactivex.Observable getTips()
 io.reactivex.observers.TestObserver:
     public static io.reactivex.observers.TestObserver create()
     public static io.reactivex.observers.TestObserver create(io.reactivex.Observer)
@@ -5237,6 +5294,9 @@ kotlin.internal.RequireKotlin:
     public abstract kotlin.DeprecationLevel level()
     public abstract kotlin.internal.RequireKotlinVersionKind versionKind()
     public abstract int errorCode()
+com.yarolegovich.slidingrootnav.transform.YTranslationTransformation:
+    public void <init>(float)
+    private static final float START_TRANSLATION
 kotlin.coroutines.ContinuationKt:
     private static final void resume(kotlin.coroutines.Continuation,java.lang.Object)
     private static final void resumeWithException(kotlin.coroutines.Continuation,java.lang.Throwable)
@@ -5488,7 +5548,6 @@ com.alibaba.android.vlayout.SortedList$BatchedCallback:
 com.xuexiang.xutil.XUtil:
     public static void disableAutoInit()
     public static void registerLifecycleCallbacks(android.app.Application,com.xuexiang.xutil.app.ActivityLifecycleHelper)
-    public static android.content.ContentResolver getContentResolver()
     public static android.content.res.Resources getResources()
     public static android.content.res.AssetManager getAssetManager()
     public static android.content.pm.PackageManager getPackageManager()
@@ -5567,6 +5626,8 @@ okhttp3.internal.ws.RealWebSocket$Message:
     final okio.ByteString data
 io.reactivex.internal.operators.maybe.MaybeFlatMapNotification:
     public void <init>(io.reactivex.MaybeSource,io.reactivex.functions.Function,io.reactivex.functions.Function,java.util.concurrent.Callable)
+com.yarolegovich.slidingrootnav.transform.ElevationTransformation:
+    private static final float START_ELEVATION
 io.github.inflationx.viewpump.InflateResult$Companion:
     public final io.github.inflationx.viewpump.InflateResult$Builder builder()
 kotlin.sequences.SequencesKt___SequencesKt$sorted$1:
@@ -5595,6 +5656,8 @@ com.bumptech.glide.load.engine.Engine$LazyDiskCacheProvider:
 com.bumptech.glide.request.target.BitmapThumbnailImageViewTarget:
     public void <init>(android.widget.ImageView)
     public void <init>(android.widget.ImageView,boolean)
+com.android.volley.VolleyLog$MarkerLog:
+    private static final long MIN_DURATION_FOR_LOGGING_MS
 com.xuexiang.xui.widget.layout.linkage.view.LinkageTextView$1:
     public int getVerticalScrollExtent()
 com.xuexiang.xui.widget.picker.widget.WheelOptions$4:
@@ -5831,46 +5894,6 @@ com.xuexiang.xui.widget.dialog.materialdialog.simplelist.MaterialSimpleListItem:
     public long getId()
     public java.lang.Object getTag()
 com.xuexiang.xui.widget.guidview.GuideCaseView$Builder:
-    public void <init>(android.app.Activity)
-    static synthetic android.app.Activity access$000(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic android.view.View access$100(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic java.lang.String access$200(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic java.lang.String access$300(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic android.text.Spanned access$400(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$500(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$600(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$700(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$800(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic double access$900(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$1000(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$1100(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$1200(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$1300(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic com.xuexiang.xui.widget.guidview.OnViewInflateListener access$1400(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic android.view.animation.Animation access$1500(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic android.view.animation.Animation access$1600(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic boolean access$1700(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic boolean access$1800(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$1900(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$2000(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic com.xuexiang.xui.widget.guidview.FocusShape access$2100(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic com.xuexiang.xui.widget.guidview.DismissListener access$2200(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$2300(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$2400(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$2500(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$2600(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$2700(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$2800(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$2900(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$3000(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$3100(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$3200(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$3300(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$3400(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic boolean access$3500(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$3600(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    static synthetic int access$3700(com.xuexiang.xui.widget.guidview.GuideCaseView$Builder)
-    public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder title(java.lang.String)
     public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder title(android.text.Spanned)
     public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder picture(int)
     public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder picture(int,int,int)
@@ -5883,9 +5906,7 @@ com.xuexiang.xui.widget.guidview.GuideCaseView$Builder:
     public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder focusBorderColor(int)
     public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder focusBorderSize(int)
     public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder titleGravity(int)
-    public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder titleSize(int,int)
     public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder showOnce(java.lang.String)
-    public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder focusOn(android.view.View)
     public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder backgroundColor(int)
     public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder focusCircleRadiusFactor(double)
     public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder customView(int,com.xuexiang.xui.widget.guidview.OnViewInflateListener)
@@ -5904,46 +5925,7 @@ com.xuexiang.xui.widget.guidview.GuideCaseView$Builder:
     public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder disableFocusAnimation()
     public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder focusAnimationMaxValue(int)
     public com.xuexiang.xui.widget.guidview.GuideCaseView$Builder focusAnimationStep(int)
-    public com.xuexiang.xui.widget.guidview.GuideCaseView build()
     public void show()
-    private android.app.Activity mActivity
-    private android.view.View mView
-    private java.lang.String mId
-    private java.lang.String mTitle
-    private android.text.Spanned mSpannedTitle
-    private double mFocusCircleRadiusFactor
-    private int mBackgroundColor
-    private int mFocusBorderColor
-    private int mTitleGravity
-    private int mTitleSize
-    private int mTitleSizeUnit
-    private int mTitleStyle
-    private int mPictureResId
-    private int mPictureWidth
-    private int mPictureHeight
-    private int mPictureGravity
-    private int mPictureOffSetX
-    private int mPictureOffSetY
-    private int mCustomViewRes
-    private int mRoundRectRadius
-    private com.xuexiang.xui.widget.guidview.OnViewInflateListener mViewInflateListener
-    private android.view.animation.Animation mEnterAnimation
-    private android.view.animation.Animation mExitAnimation
-    private boolean mCloseOnTouch
-    private boolean mFitSystemWindows
-    private int mAdjustHeight
-    private int mFocusOffSetX
-    private com.xuexiang.xui.widget.guidview.FocusShape mFocusShape
-    private com.xuexiang.xui.widget.guidview.DismissListener mDismissListener
-    private int mFocusBorderSize
-    private int mFocusPositionX
-    private int mFocusPositionY
-    private int mFocusCircleRadius
-    private int mFocusRectangleWidth
-    private int mFocusRectangleHeight
-    private boolean mFocusAnimationEnabled
-    private int mFocusAnimationMaxValue
-    private int mFocusAnimationStep
 kotlin.math.MathKt:
     public static synthetic void E$annotations()
     public static synthetic void PI$annotations()
@@ -6610,6 +6592,9 @@ android.support.v4.media.session.MediaSessionCompatApi21:
     public static void setExtras(java.lang.Object,android.os.Bundle)
     public static boolean hasCallback(java.lang.Object)
     static final java.lang.String TAG
+com.android.volley.Cache:
+    public abstract void invalidate(java.lang.String,boolean)
+    public abstract void remove(java.lang.String)
 com.scwang.smartrefresh.layout.adapter.SmartViewHolder:
     public void <init>(android.view.View)
     public android.view.View findViewById(int)
@@ -6696,6 +6681,7 @@ com.xuexiang.xhttp2.callback.ProgressLoadingCallBack:
     public void <init>(com.xuexiang.xhttp2.subsciber.impl.IProgressLoader)
     public void <init>(com.xuexiang.xhttp2.subsciber.impl.IProgressLoader,boolean,boolean)
     private void init(boolean)
+    public void subscription(io.reactivex.disposables.Disposable)
 com.xuexiang.xaop.BuildConfig:
     public static final boolean DEBUG
     public static final java.lang.String LIBRARY_PACKAGE_NAME
@@ -6704,6 +6690,9 @@ com.xuexiang.xaop.BuildConfig:
     public static final java.lang.String FLAVOR
     public static final int VERSION_CODE
     public static final java.lang.String VERSION_NAME
+com.android.volley.VolleyLog:
+    public static void setTag(java.lang.String)
+    public static varargs void wtf(java.lang.Throwable,java.lang.String,java.lang.Object[])
 com.xuexiang.xupdate.XUpdate:
     public static com.xuexiang.xupdate.UpdateManager$Builder newBuild(android.content.Context)
     public static com.xuexiang.xupdate.UpdateManager$Builder newBuild(android.content.Context,java.lang.String)
@@ -6759,6 +6748,11 @@ org.aspectj.lang.annotation.control.CodeGenerationHint:
     public abstract java.lang.String ifNameSuffix()
 com.bumptech.glide.request.target.BitmapImageViewTarget:
     public void <init>(android.widget.ImageView,boolean)
+com.android.volley.toolbox.DiskBasedCache:
+    public synchronized void invalidate(java.lang.String,boolean)
+    private static final int DEFAULT_DISK_USAGE_BYTES
+    private static final float HYSTERESIS_FACTOR
+    private static final int CACHE_MAGIC
 kotlin.sequences.EmptySequence:
     public kotlin.sequences.EmptySequence drop(int)
     public synthetic bridge kotlin.sequences.Sequence drop(int)
@@ -7003,14 +6997,19 @@ android.support.v4.media.session.MediaControllerCompat$MediaControllerImplBase:
     public java.lang.String getPackageName()
     public java.lang.Object getMediaController()
     private android.support.v4.media.session.MediaControllerCompat$TransportControls mTransportControls
+com.yarolegovich.slidingrootnav.SlidingRootNavLayout:
+    public void removeDragListener(com.yarolegovich.slidingrootnav.callback.DragListener)
+    public void removeDragStateListener(com.yarolegovich.slidingrootnav.callback.DragStateListener)
+    private static final java.lang.String EXTRA_IS_OPENED
+    private static final java.lang.String EXTRA_SUPER
 io.reactivex.internal.operators.mixed.FlowableConcatMapCompletable:
     public void <init>(io.reactivex.Flowable,io.reactivex.functions.Function,io.reactivex.internal.util.ErrorMode,int)
-com.xuexiang.xui.widget.banner.transform.ZoomOutSlideTransformer:
-    private static final float MIN_SCALE
-    private static final float MIN_ALPHA
 com.bumptech.glide.load.engine.ActiveResources:
     void setDequeuedResourceCallback(com.bumptech.glide.load.engine.ActiveResources$DequeuedResourceCallback)
     void shutdown()
+com.xuexiang.xui.widget.banner.transform.ZoomOutSlideTransformer:
+    private static final float MIN_SCALE
+    private static final float MIN_ALPHA
 kotlin.ReplaceWith:
     public abstract java.lang.String expression()
     public abstract java.lang.String[] imports()
@@ -7170,9 +7169,7 @@ com.xuexiang.xutil.app.SAFUtils:
     public static android.os.ParcelFileDescriptor openFileDescriptor(android.net.Uri,java.lang.String)
     public static android.os.ParcelFileDescriptor openFileDescriptorWithException(android.net.Uri,java.lang.String)
     public static android.content.res.AssetFileDescriptor openAssetFileDescriptor(android.net.Uri)
-    public static android.content.res.AssetFileDescriptor openAssetFileDescriptorWithException(android.net.Uri)
     public static android.content.res.AssetFileDescriptor openAssetFileDescriptor(android.net.Uri,java.lang.String)
-    public static android.content.res.AssetFileDescriptor openAssetFileDescriptorWithException(android.net.Uri,java.lang.String)
     public static boolean writeFileToPublicDownloads(java.lang.String,java.lang.String,java.lang.String,java.io.InputStream)
     private static android.net.Uri getFileDownloadUri(java.lang.String,java.lang.String,java.lang.String)
     public static boolean saveImageToPublicDCIM(java.lang.String,java.lang.String,android.graphics.Bitmap,android.graphics.Bitmap$CompressFormat)
@@ -7213,6 +7210,8 @@ com.xuexiang.xui.widget.popupwindow.easypopup.ListPopup:
     private android.widget.AdapterView$OnItemClickListener mOnItemClickListener
 org.aspectj.lang.annotation.RequiredTypes:
     public abstract java.lang.String[] value()
+com.xuexiang.xui.utils.CountDownButtonHelper$1:
+    void <init>(com.xuexiang.xui.utils.CountDownButtonHelper,long,long)
 kotlin.ULongArray:
     public static synthetic void storage$annotations()
     private synthetic void <init>(long[])
@@ -7285,13 +7284,23 @@ com.xuexiang.xui.widget.tabbar.vertical.XTabView:
     public synthetic bridge com.xuexiang.xui.widget.tabbar.vertical.ITabView setBadge(com.xuexiang.xui.widget.tabbar.vertical.ITabView$TabBadge)
 com.zzhoujay.markdown.style.CodeSpan:
     private static final float radius
+com.android.volley.toolbox.AndroidAuthenticator:
+    public void <init>(android.content.Context,android.accounts.Account,java.lang.String)
+    public void <init>(android.content.Context,android.accounts.Account,java.lang.String,boolean)
+    public android.accounts.Account getAccount()
+    public java.lang.String getAuthToken()
+    public void invalidateAuthToken(java.lang.String)
+    private final android.content.Context mContext
+    private final android.accounts.Account mAccount
+    private final java.lang.String mAuthTokenType
+    private final boolean mNotifyAuthFailure
 com.bumptech.glide.ListPreloader$PreloadTargetQueue:
     void <init>(int)
-com.xuexiang.xui.widget.popupwindow.good.GoodView$1:
-    void <init>(com.xuexiang.xui.widget.popupwindow.good.GoodView)
 com.bumptech.glide.load.resource.bitmap.BitmapDrawableDecoder:
     public void <init>(android.content.Context,com.bumptech.glide.load.ResourceDecoder)
     public void <init>(android.content.res.Resources,com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool,com.bumptech.glide.load.ResourceDecoder)
+com.xuexiang.xui.widget.popupwindow.good.GoodView$1:
+    void <init>(com.xuexiang.xui.widget.popupwindow.good.GoodView)
 okhttp3.MultipartBody$Part:
     public static okhttp3.MultipartBody$Part create(okhttp3.RequestBody)
     public okhttp3.Headers headers()
@@ -7340,7 +7349,6 @@ org.aspectj.runtime.reflect.LockSignatureImpl:
     void <init>(java.lang.String)
     public java.lang.Class getParameterType()
 com.yiflyplan.app.utils.TokenUtils:
-    public static java.lang.String getToken()
     private static final java.lang.String KEY_TOKEN
     private static final java.lang.String KEY_PROFILE_CHANNEL
 com.bumptech.glide.load.resource.bitmap.FitCenter:
@@ -7643,6 +7651,8 @@ com.just.agentweb.download.BuildConfig:
     public static final java.lang.String FLAVOR
     public static final int VERSION_CODE
     public static final java.lang.String VERSION_NAME
+com.android.volley.toolbox.HurlStack:
+    private static final java.lang.String HEADER_CONTENT_TYPE
 io.reactivex.internal.operators.flowable.FlowableFlatMapSingle:
     public void <init>(io.reactivex.Flowable,io.reactivex.functions.Function,boolean,int)
 com.bumptech.glide.load.resource.gif.GifBitmapProvider:
@@ -7660,18 +7670,14 @@ com.bumptech.glide.load.engine.ResourceRecycler$ResourceRecyclerCallback:
 com.xuexiang.xui.widget.imageview.crop.HandleUtil:
     private static final int TARGET_RADIUS_DP
 com.xuexiang.xutil.file.FileUtils:
-    public static boolean isSDCardExist()
     public static java.lang.String getDiskCacheDir()
     public static java.lang.String getDiskCacheDir(java.lang.String)
-    public static java.lang.String getDiskFilesDir()
     public static java.lang.String getDiskFilesDir(java.lang.String)
     public static java.lang.String getDiskDir(java.lang.String)
     public static java.lang.String getDiskDir()
     public static java.lang.String getFilePath(java.lang.String,java.lang.String)
     public static java.lang.String getDirPath(java.lang.String)
     public static boolean isFileExists(java.io.File)
-    public static boolean isFileExists(java.lang.String)
-    private static boolean isFileExistsApi29(java.lang.String)
     public static boolean isFolderExist(java.lang.String)
     public static boolean isFolderExist(java.io.File)
     public static boolean isDir(java.lang.String)
@@ -8058,6 +8064,9 @@ android.support.v4.media.session.PlaybackStateCompat$CustomAction$Builder:
     private android.os.Bundle mExtras
 com.xuexiang.xupdate.widget.NumberProgressBar$OnProgressBarListener:
     public abstract void onProgressChange(int,int)
+com.android.volley.toolbox.StringRequest:
+    public void <init>(int,java.lang.String,com.android.volley.Response$Listener,com.android.volley.Response$ErrorListener)
+    public void <init>(java.lang.String,com.android.volley.Response$Listener,com.android.volley.Response$ErrorListener)
 com.xuexiang.xui.widget.tabbar.vertical.ITabView$TabIcon$Builder:
     public com.xuexiang.xui.widget.tabbar.vertical.ITabView$TabIcon$Builder setIcon(int,int)
     public com.xuexiang.xui.widget.tabbar.vertical.ITabView$TabIcon$Builder setIconSize(int,int)
@@ -8438,6 +8447,10 @@ com.xuexiang.xui.widget.banner.widget.banner.base.BaseIndicatorBanner:
     public static final int STYLE_CORNER_RECTANGLE
 io.reactivex.annotations.BackpressureSupport:
     public abstract io.reactivex.annotations.BackpressureKind value()
+com.yiflyplan.app.fragment.organization.components.Receive:
+    public static final int REQUEST_CODE
+    public static final int REQUEST_IMAGE
+    public static final int REQUEST_CUSTOM_SCAN
 com.xuexiang.xui.utils.SpanUtils$CustomLineHeightSpan:
     static final int ALIGN_CENTER
     static final int ALIGN_TOP
@@ -8567,6 +8580,7 @@ com.yiflyplan.app.utils.XToastUtils:
     public static void info(int)
     public static void info(java.lang.CharSequence,int)
     public static void info(int,int)
+    public static void warning(java.lang.CharSequence)
     public static void warning(int)
     public static void warning(java.lang.CharSequence,int)
     public static void warning(int,int)
@@ -8764,6 +8778,8 @@ com.just.agentweb.core.client.WebViewClientDelegate:
 io.reactivex.observers.ResourceSingleObserver:
     public final void add(io.reactivex.disposables.Disposable)
 com.xuexiang.xhttp2.utils.TypeUtils:
+    public static java.lang.reflect.Type findNeedClass(java.lang.Class)
+    public static java.lang.reflect.Type findRawType(java.lang.Class)
     public static java.lang.reflect.Type getApiResultType(java.lang.reflect.Type)
     public static java.lang.reflect.Type getListType(java.lang.reflect.Type)
 com.xuexiang.xui.widget.picker.wheelview.timer.MessageHandler:
@@ -9546,12 +9562,7 @@ com.xuexiang.xui.XUI:
     public static void initFontStyle(java.lang.String)
     public static void debug(java.lang.String)
     public static varargs void setViewsFont(android.view.View[])
-    private static int checkScreenSize(android.content.Context)
-    public static int getScreenType()
     public static boolean isTablet()
-    public static void initTheme(android.app.Activity)
-    private static boolean sIsTabletChecked
-    private static int sScreenType
 com.xuexiang.xupdate.logs.LogcatLogger:
     private static final int MAX_LOG_LENGTH
 com.xuexiang.xui.widget.banner.recycler.layout.BannerLayoutManager:
@@ -9809,6 +9820,10 @@ kotlin.StandardKt__StandardKt:
     private static final java.lang.Object takeIf(java.lang.Object,kotlin.jvm.functions.Function1)
     private static final java.lang.Object takeUnless(java.lang.Object,kotlin.jvm.functions.Function1)
     private static final void repeat(int,kotlin.jvm.functions.Function1)
+com.android.volley.toolbox.ImageRequest:
+    private static final int IMAGE_TIMEOUT_MS
+    private static final int IMAGE_MAX_RETRIES
+    private static final float IMAGE_BACKOFF_MULT
 io.reactivex.internal.operators.single.SingleDoAfterSuccess:
     public void <init>(io.reactivex.SingleSource,io.reactivex.functions.Consumer)
 io.reactivex.internal.operators.completable.CompletableConcatIterable:
@@ -10033,6 +10048,24 @@ okio.RealBufferedSink:
     public java.io.OutputStream outputStream()
 io.reactivex.internal.operators.single.SingleHide:
     public void <init>(io.reactivex.SingleSource)
+com.yarolegovich.slidingrootnav.SlidingRootNavBuilder:
+    public com.yarolegovich.slidingrootnav.SlidingRootNavBuilder withMenuView(android.view.View)
+    public com.yarolegovich.slidingrootnav.SlidingRootNavBuilder withToolbarMenuToggle(androidx.appcompat.widget.Toolbar)
+    public com.yarolegovich.slidingrootnav.SlidingRootNavBuilder withContentView(android.view.ViewGroup)
+    public com.yarolegovich.slidingrootnav.SlidingRootNavBuilder withMenuLocked(boolean)
+    public com.yarolegovich.slidingrootnav.SlidingRootNavBuilder withDragDistance(int)
+    public com.yarolegovich.slidingrootnav.SlidingRootNavBuilder withDragDistancePx(int)
+    public com.yarolegovich.slidingrootnav.SlidingRootNavBuilder withRootViewScale(float)
+    public com.yarolegovich.slidingrootnav.SlidingRootNavBuilder withRootViewElevation(int)
+    public com.yarolegovich.slidingrootnav.SlidingRootNavBuilder withRootViewElevationPx(int)
+    public com.yarolegovich.slidingrootnav.SlidingRootNavBuilder withRootViewYTranslation(int)
+    public com.yarolegovich.slidingrootnav.SlidingRootNavBuilder withRootViewYTranslationPx(int)
+    public com.yarolegovich.slidingrootnav.SlidingRootNavBuilder addRootTransformation(com.yarolegovich.slidingrootnav.transform.RootTransformation)
+    public com.yarolegovich.slidingrootnav.SlidingRootNavBuilder addDragListener(com.yarolegovich.slidingrootnav.callback.DragListener)
+    public com.yarolegovich.slidingrootnav.SlidingRootNavBuilder addDragStateListener(com.yarolegovich.slidingrootnav.callback.DragStateListener)
+    private static final float DEFAULT_END_SCALE
+    private static final int DEFAULT_END_ELEVATION_DP
+    private static final int DEFAULT_DRAG_DIST_DP
 com.alibaba.android.vlayout.layout.FixLayoutHelper$FixViewDisappearAnimatorListener:
     synthetic void <init>(com.alibaba.android.vlayout.layout.FixLayoutHelper$1)
 kotlin.UseExperimental:
@@ -10125,6 +10158,14 @@ com.scwang.smartrefresh.layout.api.RefreshLayout:
     public abstract boolean autoLoadMore(int)
     public abstract boolean autoLoadMoreAnimationOnly()
     public abstract boolean autoLoadMore(int,int,float,boolean)
+com.yiflyplan.app.core.http.MyHttp:
+    private static void request(int,java.lang.String,java.lang.String,java.util.LinkedHashMap,com.yiflyplan.app.core.http.MyHttp$Callback)
+    public static void post(java.lang.String,java.lang.String,java.util.LinkedHashMap,com.yiflyplan.app.core.http.MyHttp$Callback)
+    public static java.lang.String transArrayToStr(java.lang.String,java.util.List)
+    private static final java.lang.String Message
+    private static final java.lang.String SUCCESS
+    private static final java.lang.String DATA
+    private static final java.lang.String API
 okhttp3.WebSocket$Factory:
     public abstract okhttp3.WebSocket newWebSocket(okhttp3.Request,okhttp3.WebSocketListener)
 io.reactivex.internal.operators.completable.CompletableDefer:
@@ -10136,8 +10177,6 @@ com.just.agentweb.action.Action:
     public static final transient int ACTION_PERMISSION
     public static final transient int ACTION_FILE
     public static final transient int ACTION_CAMERA
-com.xuexiang.xui.widget.imageview.edit.BrushViewChangeListener:
-    public abstract void onViewRemoved(com.xuexiang.xui.widget.imageview.edit.BrushDrawingView)
 com.bumptech.glide.load.model.LazyHeaders$Builder:
     private java.util.List getFactories(java.lang.String)
     private void copyIfNecessary()
@@ -10147,6 +10186,8 @@ com.bumptech.glide.load.model.LazyHeaders$Builder:
     public com.bumptech.glide.load.model.LazyHeaders$Builder setHeader(java.lang.String,java.lang.String)
     public com.bumptech.glide.load.model.LazyHeaders$Builder setHeader(java.lang.String,com.bumptech.glide.load.model.LazyHeaderFactory)
     private static final java.lang.String USER_AGENT_HEADER
+com.xuexiang.xui.widget.imageview.edit.BrushViewChangeListener:
+    public abstract void onViewRemoved(com.xuexiang.xui.widget.imageview.edit.BrushDrawingView)
 com.bumptech.glide.load.resource.gif.GifFrameLoader$FrameLoaderCallback:
     static final int MSG_DELAY
     static final int MSG_CLEAR
@@ -10156,6 +10197,9 @@ com.bumptech.glide.load.engine.GlideException$IndentedAppendable:
 com.xuexiang.xui.widget.dialog.strategy.impl.MaterialDialogStrategy$1:
     void <init>(com.xuexiang.xui.widget.dialog.strategy.impl.MaterialDialogStrategy,android.content.DialogInterface$OnClickListener)
     final synthetic com.xuexiang.xui.widget.dialog.strategy.impl.MaterialDialogStrategy this$0
+com.android.volley.toolbox.Authenticator:
+    public abstract java.lang.String getAuthToken()
+    public abstract void invalidateAuthToken(java.lang.String)
 android.support.v4.media.session.MediaSessionCompat$3:
     void <init>(android.support.v4.media.session.MediaSessionCompat)
     final synthetic android.support.v4.media.session.MediaSessionCompat this$0
@@ -10287,11 +10331,11 @@ io.reactivex.internal.subscribers.BlockingBaseSubscriber:
 com.bumptech.glide.util.ViewPreloadSizeProvider:
     public void <init>(android.view.View)
     public void setView(android.view.View)
+com.bumptech.glide.load.model.UriLoader$StreamFactory:
+    public void teardown()
 com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy$2:
     void <init>(com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy,com.xuexiang.xui.widget.imageview.strategy.ILoadListener)
     final synthetic com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy this$0
-com.bumptech.glide.load.model.UriLoader$StreamFactory:
-    public void teardown()
 com.xuexiang.xaop.cache.XDiskCache:
     public com.xuexiang.xaop.cache.XDiskCache init(com.xuexiang.xaop.cache.XCache$Builder)
     public java.lang.Object load(java.lang.String)
@@ -10338,6 +10382,19 @@ com.xuexiang.xui.utils.SpanUtils$CustomDynamicDrawableSpan:
     static final int ALIGN_TOP
 com.zzhoujay.richtext.parser.CachedSpannedParser:
     private void clearCachedMark(android.text.SpannableStringBuilder)
+com.yiflyplan.app.GlideApp:
+    public static java.io.File getPhotoCacheDir(android.content.Context)
+    public static java.io.File getPhotoCacheDir(android.content.Context,java.lang.String)
+    public static com.bumptech.glide.Glide get(android.content.Context)
+    public static void init(com.bumptech.glide.Glide)
+    public static void init(android.content.Context,com.bumptech.glide.GlideBuilder)
+    public static void tearDown()
+    public static com.yiflyplan.app.GlideRequests with(android.content.Context)
+    public static com.yiflyplan.app.GlideRequests with(android.app.Activity)
+    public static com.yiflyplan.app.GlideRequests with(androidx.fragment.app.FragmentActivity)
+    public static com.yiflyplan.app.GlideRequests with(androidx.fragment.app.Fragment)
+    public static com.yiflyplan.app.GlideRequests with(android.app.Fragment)
+    public static com.yiflyplan.app.GlideRequests with(android.view.View)
 io.github.inflationx.viewpump.internal.-ViewPumpLayoutInflater:
     public android.view.View onActivityCreateView(android.view.View,android.view.View,java.lang.String,android.content.Context,android.util.AttributeSet)
 kotlin.UnsignedKt:
@@ -10811,6 +10868,8 @@ com.xuexiang.xpage.core.CoreConfig:
     public static void init(android.content.Context)
     public static void init(android.content.Context,com.xuexiang.xpage.model.PageInfo)
     public static void readConfig(java.lang.String)
+com.bumptech.glide.load.data.mediastore.ThumbnailStreamOpener:
+    private static final java.lang.String TAG
 com.xuexiang.xui.widget.layout.XUIRelativeLayout:
     public void updateTopDivider(int,int,int,int)
     public void updateBottomDivider(int,int,int,int)
@@ -10822,8 +10881,6 @@ com.xuexiang.xui.widget.layout.XUIRelativeLayout:
     public void onlyShowRightDivider(int,int,int,int)
     public boolean setWidthLimit(int)
     public boolean setHeightLimit(int)
-com.bumptech.glide.load.data.mediastore.ThumbnailStreamOpener:
-    private static final java.lang.String TAG
 com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper:
     public void <init>(int)
     public int getHGap()
@@ -11132,6 +11189,11 @@ kotlin.jvm.JvmClassMappingKt:
     public static final kotlin.reflect.KClass getAnnotationClass(java.lang.annotation.Annotation)
 com.xuexiang.xutil.system.KeyboardUtils$2:
     void <init>(android.app.Activity,android.view.View,int)
+com.android.volley.toolbox.ImageLoader:
+    public void <init>(com.android.volley.RequestQueue,com.android.volley.toolbox.ImageLoader$ImageCache)
+    public static com.android.volley.toolbox.ImageLoader$ImageListener getImageListener(android.widget.ImageView,int,int)
+    public boolean isCached(java.lang.String,int,int)
+    public void setBatchedResponseDelay(int)
 io.reactivex.internal.operators.maybe.MaybeEqualSingle:
     public void <init>(io.reactivex.MaybeSource,io.reactivex.MaybeSource,io.reactivex.functions.BiPredicate)
 kotlin.HashCodeKt:
@@ -11144,7 +11206,6 @@ com.xuexiang.xui.utils.WidgetUtils:
     public static void setTabLayoutTextFont(com.google.android.material.tabs.TabLayout)
     public static void setTabLayoutTextFont(com.google.android.material.tabs.TabLayout,android.graphics.Typeface)
     public static void initGridRecyclerView(androidx.recyclerview.widget.RecyclerView,int)
-    public static void initGridRecyclerView(androidx.recyclerview.widget.RecyclerView,int,int)
     public static void initGridRecyclerView(androidx.recyclerview.widget.RecyclerView,int,int,int)
     public static void initGridRecyclerView(androidx.recyclerview.widget.RecyclerView,boolean,int,int,int)
     public static void initRecyclerView(androidx.recyclerview.widget.RecyclerView)
@@ -11162,6 +11223,8 @@ io.reactivex.internal.operators.completable.CompletableFromSingle:
     public void <init>(io.reactivex.SingleSource)
 io.reactivex.internal.operators.maybe.MaybeMergeArray:
     public void <init>(io.reactivex.MaybeSource[])
+com.yiflyplan.app.core.http.MyHttp$2:
+    void <init>(com.yiflyplan.app.core.http.MyHttp$Callback)
 kotlin.sequences.SequencesKt___SequencesKt$asIterable$$inlined$Iterable$1:
     public void <init>(kotlin.sequences.Sequence)
 com.xuexiang.xupdate.widget.NumberProgressBar:
@@ -11238,6 +11301,9 @@ com.yiflyplan.app.utils.MMKVUtils:
     public static double getDouble(java.lang.String,double)
     public static android.os.Parcelable getObject(java.lang.String,java.lang.Class)
     public static android.os.Parcelable getObject(java.lang.String,java.lang.Class,android.os.Parcelable)
+com.xuexiang.xhttp2.callback.CallBack:
+    public java.lang.reflect.Type getType()
+    public java.lang.reflect.Type getRawType()
 com.xuexiang.xqrcode.camera.AutoFocusCallback:
     public static final long AUTO_FOCUS_INTERVAL_MS
 com.meituan.android.walle.Pair:
@@ -11278,7 +11344,6 @@ com.bumptech.glide.load.engine.prefill.PreFillType:
     void <init>(int,int,android.graphics.Bitmap$Config,int)
     int getWeight()
 com.yiflyplan.app.utils.service.JsonSerializationService:
-    public java.lang.String object2Json(java.lang.Object)
     public java.lang.Object parseObject(java.lang.String,java.lang.reflect.Type)
 io.reactivex.internal.operators.flowable.FlowableConcatWithMaybe:
     public void <init>(io.reactivex.Flowable,io.reactivex.MaybeSource)
@@ -11318,6 +11383,8 @@ com.bumptech.glide.load.engine.SourceGenerator:
     private static final java.lang.String TAG
 kotlin.jvm.functions.Function8:
     public abstract java.lang.Object invoke(java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
+com.yiflyplan.app.fragment.organization.BaseHomeFragment:
+    public com.yiflyplan.app.activity.MainActivity getContainer()
 kotlin.collections.MovingSubList:
     public void <init>(java.util.List)
     public final void move(int,int)
@@ -11413,6 +11480,9 @@ com.bumptech.glide.disklrucache.StrictLineReader:
 io.reactivex.internal.functions.Functions:
     public static io.reactivex.functions.Action futureAction(java.util.concurrent.Future)
     public static io.reactivex.functions.Consumer boundedConsumer(int)
+com.yiflyplan.app.core.http.entity.CodeImag:
+    public java.lang.String getImg()
+    public void setImg(java.lang.String)
 com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy$1:
     void <init>(com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy,com.xuexiang.xui.widget.imageview.strategy.ILoadListener)
     final synthetic com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy this$0
@@ -11630,8 +11700,20 @@ com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool:
     public abstract void setSizeMultiplier(float)
 io.reactivex.internal.operators.maybe.MaybeLift:
     public void <init>(io.reactivex.MaybeSource,io.reactivex.MaybeOperator)
+com.android.volley.toolbox.Volley:
+    public static com.android.volley.RequestQueue newRequestQueueInDisk(android.content.Context,java.lang.String,com.android.volley.toolbox.HttpStack)
+    private static final java.lang.String DEFAULT_CACHE_DIR
 com.xuexiang.xutil.display.ViewUtils$1:
     void <init>(android.view.View,int,android.view.View)
+com.android.volley.Request:
+    public void <init>(java.lang.String,com.android.volley.Response$ErrorListener)
+    public void setTag(java.lang.Object)
+    public java.lang.Object getTag()
+    public final int getSequence()
+    public final void setShouldCache(boolean)
+    private java.lang.Object mTag
+    private static final java.lang.String DEFAULT_PARAMS_ENCODING
+    private static final long SLOW_REQUEST_THRESHOLD_MS
 io.reactivex.internal.operators.flowable.FlowableTimeout:
     public void <init>(io.reactivex.Flowable,org.reactivestreams.Publisher,io.reactivex.functions.Function,org.reactivestreams.Publisher)
 kotlin.coroutines.experimental.migration.ExperimentalSuspendFunction1Migration:
@@ -11828,10 +11910,8 @@ com.xuexiang.xui.widget.progress.ratingbar.IRatingBar:
     public abstract float getStepSize()
     public abstract void setStepSize(float)
 com.yiflyplan.app.utils.SettingUtils:
-    public static boolean isFirstOpen()
-    public static void setIsFirstOpen(boolean)
-    private static final java.lang.String IS_FIRST_OPEN_KEY
-    private static final java.lang.String IS_AGREE_PRIVACY_KEY
+    public boolean isAgreePrivacy()
+    public void setIsAgreePrivacy(boolean)
 com.bumptech.glide.load.model.AssetUriLoader$StreamFactory:
     public void teardown()
 com.scwang.smartrefresh.header.MaterialHeader:
@@ -11877,6 +11957,10 @@ kotlin.text.StringsKt___StringsKt$groupingBy$1:
 com.zzhoujay.markdown.parser.TagGetter:
     public abstract java.lang.CharSequence get(int,com.zzhoujay.markdown.parser.Line,int)
     public abstract java.lang.CharSequence get(int,java.lang.CharSequence,int)
+com.android.volley.toolbox.JsonArrayRequest:
+    public void <init>(java.lang.String,com.android.volley.Response$Listener,com.android.volley.Response$ErrorListener)
+com.yiflyplan.app.core.http.MyHttp$1:
+    void <init>(com.yiflyplan.app.core.http.MyHttp$Callback)
 kotlin.sequences.TakeSequence:
     public void <init>(kotlin.sequences.Sequence,int)
     public kotlin.sequences.Sequence drop(int)
@@ -11905,7 +11989,6 @@ com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder:
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder titleColorAttr(int)
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder typeface(android.graphics.Typeface,android.graphics.Typeface)
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder icon(android.graphics.drawable.Drawable)
-    public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder iconRes(int)
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder iconAttr(int)
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder content(int)
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder content(int,boolean)
@@ -11992,11 +12075,9 @@ com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder:
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder cancelListener(android.content.DialogInterface$OnCancelListener)
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder keyListener(android.content.DialogInterface$OnKeyListener)
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder stackingBehavior(com.xuexiang.xui.widget.dialog.materialdialog.StackingBehavior)
-    public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder input(java.lang.CharSequence,java.lang.CharSequence,boolean,com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$InputCallback)
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder input(java.lang.CharSequence,java.lang.CharSequence,com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$InputCallback)
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder input(int,int,boolean,com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$InputCallback)
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder input(int,int,com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$InputCallback)
-    public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder inputType(int)
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder inputRange(int,int)
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder inputRange(int,int,int)
     public com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog$Builder inputRangeRes(int,int,int)
@@ -12116,6 +12197,9 @@ io.reactivex.internal.util.QueueDrainHelper:
 com.bumptech.glide.request.target.CustomViewTarget$SizeDeterminer:
     void <init>(android.view.View)
     private static final int PENDING_SIZE
+com.yiflyplan.app.fragment.components.DrawablePreviewFragment:
+    public static final java.lang.String DRAWABLE_ID
+    public static final java.lang.String BITMAP
 io.reactivex.internal.operators.flowable.FlowableSampleTimed:
     public void <init>(io.reactivex.Flowable,long,java.util.concurrent.TimeUnit,io.reactivex.Scheduler,boolean)
 okio.Pipe$PipeSink:
@@ -12137,10 +12221,6 @@ kotlin.UShortArray:
     public boolean add-xj2QHRw(short)
 com.bumptech.glide.provider.EncoderRegistry:
     public synchronized void prepend(java.lang.Class,com.bumptech.glide.load.Encoder)
-com.xuexiang.xhttp2.interceptor.CacheInterceptor:
-    public void <init>(android.content.Context)
-    protected static final int maxStale
-    protected static final int maxStaleOnline
 com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool:
     public void <init>(long,java.util.Set)
     public long hitCount()
@@ -12149,6 +12229,10 @@ com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool:
     public long getCurrentSize()
     public synchronized void setSizeMultiplier(float)
     private static final java.lang.String TAG
+com.xuexiang.xhttp2.interceptor.CacheInterceptor:
+    public void <init>(android.content.Context)
+    protected static final int maxStale
+    protected static final int maxStaleOnline
 io.reactivex.internal.operators.parallel.ParallelConcatMap:
     public void <init>(io.reactivex.parallel.ParallelFlowable,io.reactivex.functions.Function,int,io.reactivex.internal.util.ErrorMode)
 com.bumptech.glide.load.engine.bitmap_recycle.IntegerArrayAdapter:
@@ -12365,8 +12449,6 @@ android.support.v4.media.session.MediaSessionCompat$MediaSessionImpl:
     public abstract java.lang.Object getRemoteControlClient()
     public abstract java.lang.String getCallingPackage()
 com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet:
-    public void <init>(android.content.Context)
-    public void setOnBottomSheetShowListener(com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$OnBottomSheetShowListener)
     public android.view.View getContentView()
     private static final int ANIMATION_DURATION
 android.support.v4.media.MediaMetadataCompat$Builder:
@@ -12379,8 +12461,6 @@ android.support.v4.media.MediaMetadataCompat$Builder:
     public android.support.v4.media.MediaMetadataCompat$Builder putRating(java.lang.String,android.support.v4.media.RatingCompat)
     public android.support.v4.media.MediaMetadataCompat$Builder putBitmap(java.lang.String,android.graphics.Bitmap)
     public android.support.v4.media.MediaMetadataCompat build()
-com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder$ListAdapter:
-    public void <init>(com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder,boolean)
 com.xuexiang.xui.widget.edittext.ValidatorEditText:
     public com.xuexiang.xui.widget.edittext.ValidatorEditText setExtraClickAreaSize(int)
     public com.xuexiang.xui.widget.edittext.ValidatorEditText addValidator(com.xuexiang.xui.widget.edittext.materialedittext.validation.METValidator)
@@ -12417,7 +12497,6 @@ com.jakewharton.disklrucache.DiskLruCache$Editor:
 com.xuexiang.xutil.display.ImageUtils:
     public static byte[] bitmap2Bytes(android.graphics.Bitmap,android.graphics.Bitmap$CompressFormat)
     public static android.graphics.Bitmap bytes2Bitmap(byte[])
-    public static android.graphics.Bitmap drawable2Bitmap(android.graphics.drawable.Drawable)
     public static android.graphics.drawable.Drawable bitmap2Drawable(android.graphics.Bitmap)
     public static byte[] drawable2Bytes(android.graphics.drawable.Drawable,android.graphics.Bitmap$CompressFormat)
     public static android.graphics.drawable.Drawable bytes2Drawable(byte[])
@@ -12483,10 +12562,8 @@ com.xuexiang.xutil.display.ImageUtils:
     public static android.graphics.Bitmap stackBlur(android.graphics.Bitmap,int)
     public static android.graphics.Bitmap stackBlur(android.graphics.Bitmap,int,boolean)
     public static boolean save(android.view.View,java.lang.String,android.graphics.Bitmap$CompressFormat)
-    public static boolean save(android.graphics.Bitmap,java.lang.String,android.graphics.Bitmap$CompressFormat)
     public static boolean save(android.graphics.Bitmap,java.io.File,android.graphics.Bitmap$CompressFormat)
     public static boolean save(android.graphics.Bitmap,java.lang.String,android.graphics.Bitmap$CompressFormat,boolean)
-    public static boolean save(android.graphics.Bitmap,java.io.File,android.graphics.Bitmap$CompressFormat,boolean)
     public static boolean save(android.graphics.Bitmap,java.io.OutputStream,android.graphics.Bitmap$CompressFormat)
     public static boolean save(android.graphics.Bitmap,java.io.OutputStream,android.graphics.Bitmap$CompressFormat,boolean)
     public static boolean isImage(java.io.File)
@@ -12500,7 +12577,6 @@ com.xuexiang.xutil.display.ImageUtils:
     private static boolean isGIF(byte[])
     private static boolean isPNG(byte[])
     private static boolean isBMP(byte[])
-    private static boolean isEmptyBitmap(android.graphics.Bitmap)
     public static android.graphics.Bitmap compressByScale(android.graphics.Bitmap,int,int)
     public static android.graphics.Bitmap compressByScale(android.graphics.Bitmap,int,int,boolean)
     public static android.graphics.Bitmap compressByScale(android.graphics.Bitmap,float,float)
@@ -12513,10 +12589,6 @@ com.xuexiang.xutil.display.ImageUtils:
     public static android.graphics.Bitmap compressBySampleSize(android.graphics.Bitmap,int,boolean)
     public static android.graphics.Bitmap compressBySampleSize(android.graphics.Bitmap,int,int)
     public static android.graphics.Bitmap compressBySampleSize(android.graphics.Bitmap,int,int,boolean)
-    private static java.io.File getFileByPath(java.lang.String)
-    private static boolean createFileByDeleteOldFile(java.io.File)
-    private static boolean createOrExistsDir(java.io.File)
-    private static boolean isSpace(java.lang.String)
     private static int calculateInSampleSize(android.graphics.BitmapFactory$Options,int,int)
     private static byte[] input2Byte(java.io.InputStream)
 com.xuexiang.xui.widget.tabbar.TabSegment:
@@ -12714,6 +12786,8 @@ android.support.v4.os.ResultReceiver:
     public void <init>(android.os.Handler)
 kotlin.coroutines.experimental.jvm.internal.CoroutineIntrinsics:
     public static final kotlin.coroutines.experimental.Continuation normalizeContinuation(kotlin.coroutines.experimental.Continuation)
+com.android.volley.toolbox.ImageLoader$1:
+    void <init>(int,android.widget.ImageView,int)
 com.bumptech.glide.load.model.FileLoader:
     private static final java.lang.String TAG
 io.reactivex.internal.operators.completable.CompletableMergeDelayErrorIterable:
@@ -12723,9 +12797,13 @@ com.xuexiang.xupdate.proxy.impl.DefaultUpdateChecker$2:
 org.aspectj.internal.lang.reflect.PointcutExpressionImpl:
     public void <init>(java.lang.String)
 com.xuexiang.xui.widget.dialog.BaseDialog:
+    public void <init>(android.content.Context,int)
     public void <init>(android.content.Context,android.view.View)
     public void <init>(android.content.Context)
+    public void <init>(android.content.Context,int,int)
     public void <init>(android.content.Context,int,android.view.View)
+    private void init(android.view.View)
+    public void init(int)
     public com.xuexiang.xui.widget.dialog.BaseDialog setDialogSize(int,int)
     public java.lang.String getString(int)
     public android.graphics.drawable.Drawable getDrawable(int)
@@ -12766,6 +12844,9 @@ com.xuexiang.xui.widget.imageview.edit.PhotoEditor$2:
 com.zzhoujay.richtext.LinkHolder:
     public void setColor(int)
     public void setUnderLine(boolean)
+com.android.volley.toolbox.RequestFuture:
+    public static com.android.volley.toolbox.RequestFuture newFuture()
+    public void setRequest(com.android.volley.Request)
 com.bumptech.glide.request.target.ThumbnailImageViewTarget:
     public void <init>(android.widget.ImageView)
     public void <init>(android.widget.ImageView,boolean)
@@ -13097,7 +13178,13 @@ kotlin.jvm.JvmName:
 io.reactivex.internal.operators.flowable.FlowableTake:
     public void <init>(io.reactivex.Flowable,long)
 com.xuexiang.xui.utils.CountDownButtonHelper:
+    public void <init>(android.widget.TextView,int)
+    public void <init>(android.widget.TextView,int,int)
+    private void initCountDownTimer()
+    public void start()
     public com.xuexiang.xui.utils.CountDownButtonHelper setOnCountDownListener(com.xuexiang.xui.utils.CountDownButtonHelper$OnCountDownListener)
+    private int mCountDownTime
+    private int mInterval
 com.xuexiang.xui.widget.tabbar.XUIItemViewsAdapter:
     public void replaceItem(int,java.lang.Object)
 com.xuexiang.xui.widget.popupwindow.bar.Cookie:
@@ -13137,6 +13224,8 @@ android.support.v4.media.session.MediaControllerCompat$TransportControlsApi21:
     protected final java.lang.Object mControlsObj
 io.reactivex.internal.operators.flowable.FlowableSerialized:
     public void <init>(io.reactivex.Flowable)
+com.android.volley.toolbox.ClearCacheRequest:
+    public void <init>(com.android.volley.Cache,java.lang.Runnable)
 com.yiflyplan.app.core.http.subscriber.TipRequestSubscriber:
     public void <init>(com.xuexiang.xhttp2.model.XHttpRequest)
     public void <init>(java.lang.String)
@@ -13326,6 +13415,9 @@ com.xuexiang.xaop.annotation.BuildConfig:
     public static final java.lang.String FLAVOR
     public static final int VERSION_CODE
     public static final java.lang.String VERSION_NAME
+com.android.volley.toolbox.NoCache:
+    public void invalidate(java.lang.String,boolean)
+    public void remove(java.lang.String)
 kotlin.collections.ArraysKt___ArraysKt$asIterable$$inlined$Iterable$9:
     public void <init>(char[])
 com.zzhoujay.richtext.spans.LongClickableURLSpan:
@@ -13351,11 +13443,9 @@ io.reactivex.internal.operators.maybe.MaybeFlatMapIterableObservable:
 io.reactivex.internal.operators.flowable.FlowableDistinctUntilChanged:
     public void <init>(io.reactivex.Flowable,io.reactivex.functions.Function,io.reactivex.functions.BiPredicate)
 com.xuexiang.xui.widget.guidview.GuideCaseQueue:
-    public com.xuexiang.xui.widget.guidview.GuideCaseQueue add(com.xuexiang.xui.widget.guidview.GuideCaseView)
     public void cancel(boolean)
     public com.xuexiang.xui.widget.guidview.GuideCaseQueue setCompleteListener(com.xuexiang.xui.widget.guidview.OnCompleteListener)
 com.xuexiang.xui.adapter.recyclerview.XRecyclerAdapter:
-    public void <init>(java.util.Collection)
     public void <init>(java.lang.Object[])
     public boolean isEmpty()
     public java.util.List getData()
@@ -13369,7 +13459,6 @@ com.xuexiang.xui.adapter.recyclerview.XRecyclerAdapter:
     public com.xuexiang.xui.adapter.recyclerview.XRecyclerAdapter loadMore(java.util.Collection)
     public com.xuexiang.xui.adapter.recyclerview.XRecyclerAdapter loadMore(java.lang.Object[])
     public com.xuexiang.xui.adapter.recyclerview.XRecyclerAdapter load(java.lang.Object)
-    public com.xuexiang.xui.adapter.recyclerview.XRecyclerAdapter setOnItemClickListener(com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder$OnItemClickListener)
     public com.xuexiang.xui.adapter.recyclerview.XRecyclerAdapter setOnItemLongClickListener(com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder$OnItemLongClickListener)
     public int getSelectPosition()
     public com.xuexiang.xui.adapter.recyclerview.XRecyclerAdapter setSelectPosition(int)
@@ -13627,6 +13716,10 @@ com.alibaba.android.vlayout.ExposeLinearLayoutManagerEx:
     private static final float MAX_SCROLL_FACTOR
     static final int FLAG_INVALID
     static final int FLAG_UPDATED
+com.yiflyplan.app.fragment.organization.OrganizationPageConfig:
+    public java.util.List getPages()
+    public java.util.List getUtils()
+    public java.util.List getExpands()
 butterknife.BindView:
     public abstract int value()
 org.aspectj.internal.lang.reflect.StringToType$1:
@@ -13772,6 +13865,21 @@ okhttp3.FormBody:
     public java.lang.String value(int)
 io.reactivex.internal.operators.mixed.MaybeFlatMapPublisher:
     public void <init>(io.reactivex.MaybeSource,io.reactivex.functions.Function)
+com.yiflyplan.app.utils.CaptchaUtil:
+    public static android.graphics.Bitmap createBitmap(java.lang.String)
+    private static void drawLine(android.graphics.Canvas,android.graphics.Paint)
+    private static int randomColor()
+    private static void randomTextStyle(android.graphics.Paint)
+    private static final int DEFAULT_CODE_LENGTH
+    private static final int DEFAULT_FONT_SIZE
+    private static final int DEFAULT_LINE_NUMBER
+    private static final int BASE_PADDING_LEFT
+    private static final int RANGE_PADDING_LEFT
+    private static final int BASE_PADDING_TOP
+    private static final int RANGE_PADDING_TOP
+    private static final int DEFAULT_WIDTH
+    private static final int DEFAULT_HEIGHT
+    private static final int DEFAULT_COLOR
 kotlin.text.Charsets:
     public final java.nio.charset.Charset UTF32()
     public final java.nio.charset.Charset UTF32_LE()
@@ -13912,6 +14020,7 @@ com.xuexiang.xui.widget.actionbar.TitleBar:
     public com.xuexiang.xui.widget.actionbar.TitleBar setLeftVisible(boolean)
     public com.xuexiang.xui.widget.actionbar.TitleBar disableLeftView()
     public com.xuexiang.xui.widget.actionbar.TitleBar setSubTitle(java.lang.CharSequence)
+    public com.xuexiang.xui.widget.actionbar.TitleBar setCenterClickListener(android.view.View$OnClickListener)
     public com.xuexiang.xui.widget.actionbar.TitleBar setTitle(int)
     public com.xuexiang.xui.widget.actionbar.TitleBar setTitleColor(int)
     public com.xuexiang.xui.widget.actionbar.TitleBar setTitleSize(float)
@@ -14006,9 +14115,7 @@ com.xuexiang.xpage.base.XPageFragment:
     public void popToBackForResult(com.xuexiang.xpage.base.XPageFragment$PopCallback)
     public com.xuexiang.xpage.base.XPageFragment setSwitcher(com.xuexiang.xpage.core.CoreSwitcher)
     public boolean isFragmentTop(java.lang.String)
-    public com.xuexiang.xpage.base.XPageFragment openPage(java.lang.Class)
     public com.xuexiang.xpage.base.XPageFragment openPage(java.lang.Class,boolean)
-    public com.xuexiang.xpage.base.XPageFragment openPage(java.lang.Class,android.os.Bundle)
     public com.xuexiang.xpage.base.XPageFragment openPage(java.lang.Class,android.os.Bundle,com.xuexiang.xpage.enums.CoreAnim)
     public androidx.fragment.app.Fragment openPage(java.lang.String,android.os.Bundle)
     public final androidx.fragment.app.Fragment openPage(java.lang.String,android.os.Bundle,int[])
@@ -14086,6 +14193,8 @@ com.xuexiang.xui.widget.XUIWrapContentListView:
     public void <init>(android.content.Context,int)
 com.yiflyplan.app.activity.MainActivity_ViewBinding:
     public void <init>(com.yiflyplan.app.activity.MainActivity)
+com.yiflyplan.app.core.http.MyHttp$3:
+    void <init>(int,java.lang.String,com.android.volley.Response$Listener,com.android.volley.Response$ErrorListener,java.util.LinkedHashMap,java.lang.String)
 com.xuexiang.xutil.display.ScreenUtils:
     public static int getScreenWidth()
     public static int getScreenHeight()
@@ -14325,6 +14434,8 @@ com.xuexiang.xui.widget.picker.widget.WheelOptions:
     private float lineSpacingMultiplier
 io.reactivex.android.MainThreadDisposable:
     public static void verifyMainThread()
+com.android.volley.NetworkResponse:
+    public void <init>(byte[])
 okhttp3.internal.platform.AndroidPlatform:
     protected javax.net.ssl.X509TrustManager trustManager(javax.net.ssl.SSLSocketFactory)
     private static final int MAX_LOG_LENGTH
@@ -14350,6 +14461,8 @@ com.xuexiang.xui.widget.flowlayout.BaseTagAdapter:
     public com.xuexiang.xui.widget.flowlayout.BaseTagAdapter setSelectedPosition(java.lang.Integer)
     public varargs com.xuexiang.xui.widget.flowlayout.BaseTagAdapter setSelectedPositions(java.lang.Integer[])
     public com.xuexiang.xui.widget.flowlayout.BaseTagAdapter setSelectedPositions(java.util.List)
+com.yiflyplan.app.activity.SearchViewActivity_ViewBinding:
+    public void <init>(com.yiflyplan.app.activity.SearchViewActivity)
 com.xuexiang.xutil.file.FileUtils$OnReplaceListener:
     public abstract boolean onReplace()
 org.aspectj.runtime.reflect.InitializerSignatureImpl:
@@ -14489,7 +14602,11 @@ com.xuexiang.xui.adapter.recyclerview.DividerItemDecoration:
     public void <init>(android.content.Context,int,int,int,int)
     public com.xuexiang.xui.adapter.recyclerview.DividerItemDecoration setDivider(android.graphics.drawable.Drawable)
 com.xuexiang.xhttp2.callback.CallBackProxy:
+    public void <init>(com.xuexiang.xhttp2.callback.CallBack)
+    public com.xuexiang.xhttp2.callback.CallBack getCallBack()
     public java.lang.reflect.Type getType()
+    public java.lang.reflect.Type getRawType()
+    com.xuexiang.xhttp2.callback.CallBack mCallBack
 io.reactivex.observers.ResourceCompletableObserver:
     public final void add(io.reactivex.disposables.Disposable)
 okio.HashingSink:
@@ -14540,14 +14657,14 @@ com.alibaba.android.vlayout.DelegateAdapter:
     public void removeAdapters(java.util.List)
     public int getAdaptersCount()
     public int findOffsetPosition(int)
-com.xuexiang.xui.widget.textview.autofit.AutoFitLayout:
-    public com.xuexiang.xui.widget.textview.autofit.AutoFitHelper getAutofitHelper(android.widget.TextView)
-    public com.xuexiang.xui.widget.textview.autofit.AutoFitHelper getAutofitHelper(int)
 com.bumptech.glide.GenericTransitionOptions:
     public static com.bumptech.glide.GenericTransitionOptions withNoTransition()
     public static com.bumptech.glide.GenericTransitionOptions with(int)
     public static com.bumptech.glide.GenericTransitionOptions with(com.bumptech.glide.request.transition.ViewPropertyTransition$Animator)
     public static com.bumptech.glide.GenericTransitionOptions with(com.bumptech.glide.request.transition.TransitionFactory)
+com.xuexiang.xui.widget.textview.autofit.AutoFitLayout:
+    public com.xuexiang.xui.widget.textview.autofit.AutoFitHelper getAutofitHelper(android.widget.TextView)
+    public com.xuexiang.xui.widget.textview.autofit.AutoFitHelper getAutofitHelper(int)
 io.reactivex.internal.operators.completable.CompletableTimer:
     public void <init>(long,java.util.concurrent.TimeUnit,io.reactivex.Scheduler)
 io.reactivex.internal.operators.maybe.MaybeUnsubscribeOn:
@@ -14788,6 +14905,10 @@ com.xuexiang.xutil.security.EncodeUtils:
     public static java.lang.CharSequence htmlDecode(java.lang.String)
 com.bumptech.glide.load.resource.bitmap.CenterInside:
     private static final java.lang.String ID
+com.android.volley.RequestQueue$RequestFilter:
+    public abstract boolean apply(com.android.volley.Request)
+com.xuexiang.xui.widget.actionbar.TitleBar$ImageAction:
+    public void <init>(int)
 kotlin.ranges.ClosedFloatRange:
     public void <init>(float,float)
     public boolean lessThanOrEquals(float,float)
@@ -14874,6 +14995,8 @@ com.xuexiang.xutil.data.ConvertTools:
     public static void fillUnsignedShortToBytesBigEndian(int,byte[],int)
     public static short bytesToShortLittleEndian(byte[],int)
     public static short bytesToShortBigEndian(byte[],int)
+com.android.volley.toolbox.BasicNetwork:
+    protected void logError(java.lang.String,java.lang.String,long)
 android.support.v4.media.session.MediaSessionCompat$MediaSessionImplApi28:
     void <init>(android.content.Context,java.lang.String,android.os.Bundle)
     void <init>(java.lang.Object)
@@ -15158,6 +15281,8 @@ com.xuexiang.xupdate.service.DownloadService:
     private static final java.lang.String CHANNEL_ID
 io.reactivex.internal.operators.flowable.FlowableRetryBiPredicate:
     public void <init>(io.reactivex.Flowable,io.reactivex.functions.BiPredicate)
+com.bumptech.glide.util.ExceptionCatchingInputStream:
+    static void clearQueue()
 org.aspectj.internal.lang.reflect.AjTypeImpl:
     private boolean isReallyAMethod(java.lang.reflect.Method)
     private org.aspectj.lang.reflect.Pointcut asPointcut(java.lang.reflect.Method)
@@ -15234,12 +15359,83 @@ org.aspectj.internal.lang.reflect.AjTypeImpl:
     public boolean isMemberAspect()
     public boolean isPrivileged()
     private static final java.lang.String ajcMagic
-com.bumptech.glide.util.ExceptionCatchingInputStream:
-    static void clearQueue()
 io.reactivex.internal.operators.flowable.FlowableUnsubscribeOn:
     public void <init>(io.reactivex.Flowable,io.reactivex.Scheduler)
 kotlin.Experimental:
     public abstract kotlin.Experimental$Level level()
+com.yiflyplan.app.GlideOptions:
+    public static com.yiflyplan.app.GlideOptions sizeMultiplierOf(float)
+    public static com.yiflyplan.app.GlideOptions diskCacheStrategyOf(com.bumptech.glide.load.engine.DiskCacheStrategy)
+    public static com.yiflyplan.app.GlideOptions priorityOf(com.bumptech.glide.Priority)
+    public static com.yiflyplan.app.GlideOptions placeholderOf(android.graphics.drawable.Drawable)
+    public static com.yiflyplan.app.GlideOptions placeholderOf(int)
+    public static com.yiflyplan.app.GlideOptions errorOf(android.graphics.drawable.Drawable)
+    public static com.yiflyplan.app.GlideOptions errorOf(int)
+    public static com.yiflyplan.app.GlideOptions skipMemoryCacheOf(boolean)
+    public static com.yiflyplan.app.GlideOptions overrideOf(int,int)
+    public static com.yiflyplan.app.GlideOptions overrideOf(int)
+    public static com.yiflyplan.app.GlideOptions signatureOf(com.bumptech.glide.load.Key)
+    public static com.yiflyplan.app.GlideOptions fitCenterTransform()
+    public static com.yiflyplan.app.GlideOptions centerInsideTransform()
+    public static com.yiflyplan.app.GlideOptions centerCropTransform()
+    public static com.yiflyplan.app.GlideOptions circleCropTransform()
+    public static com.yiflyplan.app.GlideOptions bitmapTransform(com.bumptech.glide.load.Transformation)
+    public static com.yiflyplan.app.GlideOptions noTransformation()
+    public static com.yiflyplan.app.GlideOptions option(com.bumptech.glide.load.Option,java.lang.Object)
+    public static com.yiflyplan.app.GlideOptions decodeTypeOf(java.lang.Class)
+    public static com.yiflyplan.app.GlideOptions formatOf(com.bumptech.glide.load.DecodeFormat)
+    public static com.yiflyplan.app.GlideOptions frameOf(long)
+    public static com.yiflyplan.app.GlideOptions downsampleOf(com.bumptech.glide.load.resource.bitmap.DownsampleStrategy)
+    public static com.yiflyplan.app.GlideOptions timeoutOf(int)
+    public static com.yiflyplan.app.GlideOptions encodeQualityOf(int)
+    public static com.yiflyplan.app.GlideOptions encodeFormatOf(android.graphics.Bitmap$CompressFormat)
+    public static com.yiflyplan.app.GlideOptions noAnimation()
+    public com.yiflyplan.app.GlideOptions useUnlimitedSourceGeneratorsPool(boolean)
+    public com.yiflyplan.app.GlideOptions onlyRetrieveFromCache(boolean)
+    public com.yiflyplan.app.GlideOptions placeholder(int)
+    public com.yiflyplan.app.GlideOptions fallback(android.graphics.drawable.Drawable)
+    public com.yiflyplan.app.GlideOptions fallback(int)
+    public com.yiflyplan.app.GlideOptions theme(android.content.res.Resources$Theme)
+    public com.yiflyplan.app.GlideOptions override(int)
+    public com.yiflyplan.app.GlideOptions encodeFormat(android.graphics.Bitmap$CompressFormat)
+    public com.yiflyplan.app.GlideOptions encodeQuality(int)
+    public com.yiflyplan.app.GlideOptions frame(long)
+    public com.yiflyplan.app.GlideOptions format(com.bumptech.glide.load.DecodeFormat)
+    public com.yiflyplan.app.GlideOptions disallowHardwareConfig()
+    public com.yiflyplan.app.GlideOptions optionalCircleCrop()
+    public final varargs com.yiflyplan.app.GlideOptions transform(com.bumptech.glide.load.Transformation[])
+    public final varargs com.yiflyplan.app.GlideOptions transforms(com.bumptech.glide.load.Transformation[])
+    public com.yiflyplan.app.GlideOptions optionalTransform(com.bumptech.glide.load.Transformation)
+    public com.yiflyplan.app.GlideOptions optionalTransform(java.lang.Class,com.bumptech.glide.load.Transformation)
+    public com.yiflyplan.app.GlideOptions transform(java.lang.Class,com.bumptech.glide.load.Transformation)
+    public com.yiflyplan.app.GlideOptions dontTransform()
+    public com.yiflyplan.app.GlideOptions dontAnimate()
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions dontAnimate()
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions dontTransform()
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions transform(java.lang.Class,com.bumptech.glide.load.Transformation)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions optionalTransform(java.lang.Class,com.bumptech.glide.load.Transformation)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions optionalTransform(com.bumptech.glide.load.Transformation)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions transforms(com.bumptech.glide.load.Transformation[])
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions transform(com.bumptech.glide.load.Transformation[])
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions optionalCircleCrop()
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions disallowHardwareConfig()
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions format(com.bumptech.glide.load.DecodeFormat)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions frame(long)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions encodeQuality(int)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions encodeFormat(android.graphics.Bitmap$CompressFormat)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions override(int)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions theme(android.content.res.Resources$Theme)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions fallback(int)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions fallback(android.graphics.drawable.Drawable)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions placeholder(int)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions onlyRetrieveFromCache(boolean)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions useUnlimitedSourceGeneratorsPool(boolean)
+    private static com.yiflyplan.app.GlideOptions fitCenterTransform0
+    private static com.yiflyplan.app.GlideOptions centerInsideTransform1
+    private static com.yiflyplan.app.GlideOptions centerCropTransform2
+    private static com.yiflyplan.app.GlideOptions circleCropTransform3
+    private static com.yiflyplan.app.GlideOptions noTransformation4
+    private static com.yiflyplan.app.GlideOptions noAnimation5
 kotlin.io.FilesKt__FileReadWriteKt:
     private static final java.io.InputStreamReader reader(java.io.File,java.nio.charset.Charset)
     static synthetic java.io.InputStreamReader reader$default(java.io.File,java.nio.charset.Charset,int,java.lang.Object)
@@ -15410,6 +15606,11 @@ io.reactivex.internal.operators.observable.ObservablePublishAlt:
     public io.reactivex.ObservableSource source()
 io.github.inflationx.viewpump.internal.-ViewPumpLayoutInflater$ActivityViewCreator:
     public void <init>(io.github.inflationx.viewpump.internal.-ViewPumpLayoutInflater,android.view.View)
+com.android.volley.RequestQueue:
+    public com.android.volley.Cache getCache()
+    public void cancelAll(com.android.volley.RequestQueue$RequestFilter)
+    public void cancelAll(java.lang.Object)
+    private static final int DEFAULT_NETWORK_THREAD_POOL_SIZE
 com.scwang.smartrefresh.header.flyrefresh.MountainSceneView:
     protected static final int WIDTH
     protected static final int HEIGHT
@@ -15532,7 +15733,6 @@ com.xuexiang.xrouter.launcher._XRouter:
     protected java.lang.Object navigation(android.app.Fragment,com.xuexiang.xrouter.facade.Postcard,int,com.xuexiang.xrouter.facade.callback.NavigationCallback)
     protected java.lang.Object navigation(androidx.fragment.app.Fragment,com.xuexiang.xrouter.facade.Postcard,int,com.xuexiang.xrouter.facade.callback.NavigationCallback)
 com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter:
-    public void <init>(int,com.alibaba.android.vlayout.LayoutHelper)
     public void <init>(int,com.alibaba.android.vlayout.LayoutHelper,java.lang.Object[])
 com.xuexiang.xhttp2.utils.HttpUtils:
     public static okhttp3.RequestBody getJsonRequestBody(java.lang.Object)
@@ -16050,32 +16250,17 @@ org.aspectj.internal.lang.reflect.DeclareParentsImpl:
 com.xuexiang.xui.utils.ViewUtils$5:
     void <init>(android.view.animation.Animation$AnimationListener,android.view.View)
 com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder:
-    public void <init>(android.content.Context)
-    public void <init>(android.content.Context,boolean)
-    private android.view.View buildViews()
-    private boolean needToScroll()
-    public com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder addItem(java.lang.String)
     public com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder addItem(android.graphics.drawable.Drawable,java.lang.String)
     public com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder addItem(java.lang.String,java.lang.String)
     public com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder addItem(int,java.lang.String,java.lang.String)
     public com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder addItem(int,java.lang.String,java.lang.String,boolean)
     public com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder addItem(int,java.lang.String,java.lang.String,boolean,boolean)
-    public com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder setOnSheetItemClickListener(com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder$OnSheetItemClickListener)
     public com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder setOnBottomDialogDismissListener(android.content.DialogInterface$OnDismissListener)
     public com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder addHeaderView(android.view.View)
     public com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder setTitle(java.lang.String)
     public com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder setTitle(int)
     public com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder setIsCenter(boolean)
-    public com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet build()
-    protected int getListMaxHeight()
     public void notifyDataSetChanged()
-    protected int getContentViewLayoutId()
-    private android.widget.BaseAdapter mAdapter
-    private java.util.List mHeaderViews
-    private java.lang.String mTitle
-    private boolean mIsCenter
-    private android.widget.TextView mTitleTv
-    private android.content.DialogInterface$OnDismissListener mOnBottomDialogDismissListener
 io.reactivex.internal.operators.flowable.FlowableSkipUntil:
     public void <init>(io.reactivex.Flowable,org.reactivestreams.Publisher)
 com.xuexiang.xui.widget.picker.widget.builder.OptionsPickerBuilder:
@@ -16138,7 +16323,6 @@ com.just.agentweb.widget.indicator.WebIndicator:
     public static final int STARTED
     public static final int FINISH
 com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet$BottomListSheetBuilder$BottomSheetListItemData:
-    public void <init>(java.lang.String,java.lang.String)
     public void <init>(android.graphics.drawable.Drawable,java.lang.String,java.lang.String)
     public void <init>(android.graphics.drawable.Drawable,java.lang.String,java.lang.String,boolean)
     public void <init>(android.graphics.drawable.Drawable,java.lang.String,java.lang.String,boolean,boolean)
@@ -16187,6 +16371,9 @@ com.xuexiang.xui.widget.imageview.edit.MultiTouchListener:
     void setOnMultiTouchListener(com.xuexiang.xui.widget.imageview.edit.MultiTouchListener$OnMultiTouchListener)
     void setOnGestureControl(com.xuexiang.xui.widget.imageview.edit.MultiTouchListener$OnGestureControl)
     private static final int INVALID_POINTER_ID
+com.android.volley.toolbox.HttpClientStack:
+    private static java.util.List getPostParameterPairs(java.util.Map)
+    private static final java.lang.String HEADER_CONTENT_TYPE
 com.xuexiang.xui.utils.DividerUtils:
     public static void drawTop(android.graphics.Canvas,android.graphics.drawable.Drawable,android.view.View,android.view.ViewGroup$MarginLayoutParams)
     public static void drawBottom(android.graphics.Canvas,android.graphics.drawable.Drawable,android.view.View,android.view.ViewGroup$MarginLayoutParams)
@@ -16279,6 +16466,15 @@ io.reactivex.observers.BaseTestConsumer:
     protected boolean timeout
 com.bumptech.glide.load.engine.cache.ExternalPreferredCacheDiskCacheFactory$1:
     void <init>(android.content.Context,java.lang.String)
+com.yiflyplan.app.utils.ReflectUtil$TypeDefaultValueEnum:
+    private static final byte BYTE_DEFAULT
+    private static final boolean BOOLEAN_DEFAULT
+    private static final short SHORT_DEFAULT
+    private static final int INT_DEFAULT
+    private static final float FLOAT_DEFAULT
+    private static final double DOUBLE_DEFAULT
+    private static final long LONG_DEFAULT
+    private static final java.lang.String STRING_DEFAULT
 com.bumptech.glide.load.ImageHeaderParser:
     public abstract int getOrientation(java.nio.ByteBuffer,com.bumptech.glide.load.engine.bitmap_recycle.ArrayPool)
     public static final int UNKNOWN_ORIENTATION
@@ -16318,6 +16514,9 @@ butterknife.internal.ListenerClass:
     public abstract java.lang.String type()
     public abstract java.lang.Class callbacks()
     public abstract butterknife.internal.ListenerMethod[] method()
+com.xuexiang.xhttp2.request.CustomRequest$1:
+    void <init>(com.xuexiang.xhttp2.request.CustomRequest,com.xuexiang.xhttp2.callback.CallBack)
+    final synthetic com.xuexiang.xhttp2.request.CustomRequest this$0
 android.support.v4.media.session.MediaSessionCompat$QueueItem:
     public void <init>(android.support.v4.media.MediaDescriptionCompat,long)
     public long getQueueId()
@@ -16329,6 +16528,11 @@ kotlin.collections.AbstractList:
     public abstract int getSize()
 android.support.v4.media.session.MediaSessionCompat$Callback$StubApi21:
     public void onSetRating(java.lang.Object,android.os.Bundle)
+com.yarolegovich.slidingrootnav.SlidingRootNav:
+    public abstract boolean isMenuClosed()
+    public abstract boolean isMenuLocked()
+    public abstract void closeMenu(boolean)
+    public abstract void openMenu(boolean)
 io.reactivex.internal.operators.maybe.MaybeFromFuture:
     public void <init>(java.util.concurrent.Future,long,java.util.concurrent.TimeUnit)
 com.xuexiang.xupdate.UpdateManager$Builder:
@@ -16633,7 +16837,6 @@ com.alibaba.android.vlayout.LayoutHelper:
 kotlin.jvm.functions.Function3:
     public abstract java.lang.Object invoke(java.lang.Object,java.lang.Object,java.lang.Object)
 com.xuexiang.xui.adapter.recyclerview.XGridLayoutManager:
-    public void <init>(android.content.Context,int)
     public void <init>(android.content.Context,int,int,boolean)
     public com.xuexiang.xui.adapter.recyclerview.XGridLayoutManager setScrollEnabled(boolean)
 com.bumptech.glide.load.data.HttpUrlFetcher:
@@ -16798,7 +17001,6 @@ com.xuexiang.xutil.system.DeviceUtils:
     public static java.lang.String getSDKVersionName()
     public static int getSDKVersionCode()
     public static java.lang.String getDeviceBrand()
-    public static java.lang.String getAndroidID()
     public static java.lang.String getManufacturer()
     public static java.lang.String getHardware()
     public static java.lang.String getProduct()
@@ -16827,11 +17029,8 @@ com.xuexiang.xui.utils.KeyboardUtils:
     public static void setSoftInputAdjustNothing(android.app.Activity)
     public static void setSoftInputAdjustResize(android.app.Activity)
     public static void setSoftInputAdjustPan(android.app.Activity)
-    public static boolean isSoftInputShow(android.app.Activity)
     public static void dispatchTouchEvent(android.view.MotionEvent,android.app.Activity)
     public static boolean isShouldHideKeyboard(android.view.View,android.view.MotionEvent)
-    public static void toggleSoftInput()
-    public static void showSoftInputForce(android.app.Activity)
     public static void showSoftInput(android.widget.EditText)
     public static void fixSoftInputLeaks(android.content.Context)
 kotlin.jvm.internal.TypeIntrinsics:
@@ -16984,7 +17183,6 @@ com.xuexiang.xui.widget.button.shinebutton.ShineButton$OnClickListenWrapper:
     public void <init>(com.xuexiang.xui.widget.button.shinebutton.ShineButton,android.view.View$OnClickListener)
 com.xuexiang.xutil.file.CloseUtils:
     public static varargs void closeIO(java.io.Closeable[])
-    public static varargs void closeIOQuietly(java.io.Closeable[])
 org.aspectj.lang.reflect.DeclareParents:
     public abstract org.aspectj.lang.reflect.AjType getDeclaringType()
     public abstract org.aspectj.lang.reflect.TypePattern getTargetTypesPattern()
@@ -17830,6 +18028,12 @@ com.xuexiang.xui.widget.tabbar.TabControlView:
     public com.xuexiang.xui.widget.tabbar.TabControlView setStretch(boolean)
 butterknife.BindArray:
     public abstract int value()
+com.yiflyplan.app.activity.MainActivity:
+    private static final int POS_ORGANIZATION
+    private static final int POS_INPUT
+    private static final int POS_NOTICES
+    private static final int POS_ABOUT
+    private static final int POS_LOGOUT
 com.xuexiang.xui.widget.slideback.dispatcher.ISlideTouchEventDispatcher:
     public abstract com.xuexiang.xui.widget.slideback.dispatcher.ISlideTouchEventDispatcher init(com.xuexiang.xui.widget.slideback.SlideInfo,com.xuexiang.xui.widget.slideback.callback.SlideCallBack,com.xuexiang.xui.widget.slideback.dispatcher.OnSlideUpdateListener)
     public abstract void updateSlideLength(boolean,float)
@@ -18023,6 +18227,8 @@ com.xuexiang.xui.widget.imageview.nine.NineGridImageView:
     public static final int TOPCOLSPAN
     public static final int BOTTOMCOLSPAN
     public static final int LEFTROWSPAN
+com.yiflyplan.app.utils.MD5Util:
+    public static void main(java.lang.String[])
 butterknife.OnTextChanged:
     public abstract int[] value()
     public abstract butterknife.OnTextChanged$Callback callback()
@@ -18098,6 +18304,93 @@ com.bumptech.glide.util.ContentLengthInputStream:
     private static final int UNKNOWN
 com.xuexiang.xaop.annotation.SingleClick:
     public static final long DEFAULT_INTERVAL_MILLIS
+com.yiflyplan.app.GlideRequest:
+    void <init>(java.lang.Class,com.bumptech.glide.RequestBuilder)
+    protected com.yiflyplan.app.GlideRequest getDownloadOnlyRequest()
+    public com.yiflyplan.app.GlideRequest useUnlimitedSourceGeneratorsPool(boolean)
+    public com.yiflyplan.app.GlideRequest onlyRetrieveFromCache(boolean)
+    public com.yiflyplan.app.GlideRequest placeholder(int)
+    public com.yiflyplan.app.GlideRequest fallback(android.graphics.drawable.Drawable)
+    public com.yiflyplan.app.GlideRequest fallback(int)
+    public com.yiflyplan.app.GlideRequest theme(android.content.res.Resources$Theme)
+    public com.yiflyplan.app.GlideRequest override(int)
+    public com.yiflyplan.app.GlideRequest encodeFormat(android.graphics.Bitmap$CompressFormat)
+    public com.yiflyplan.app.GlideRequest encodeQuality(int)
+    public com.yiflyplan.app.GlideRequest frame(long)
+    public com.yiflyplan.app.GlideRequest format(com.bumptech.glide.load.DecodeFormat)
+    public com.yiflyplan.app.GlideRequest disallowHardwareConfig()
+    public com.yiflyplan.app.GlideRequest timeout(int)
+    public com.yiflyplan.app.GlideRequest centerCrop()
+    public com.yiflyplan.app.GlideRequest fitCenter()
+    public com.yiflyplan.app.GlideRequest centerInside()
+    public com.yiflyplan.app.GlideRequest optionalCircleCrop()
+    public com.yiflyplan.app.GlideRequest circleCrop()
+    public varargs com.yiflyplan.app.GlideRequest transform(com.bumptech.glide.load.Transformation[])
+    public varargs com.yiflyplan.app.GlideRequest transforms(com.bumptech.glide.load.Transformation[])
+    public com.yiflyplan.app.GlideRequest optionalTransform(com.bumptech.glide.load.Transformation)
+    public com.yiflyplan.app.GlideRequest optionalTransform(java.lang.Class,com.bumptech.glide.load.Transformation)
+    public com.yiflyplan.app.GlideRequest transform(java.lang.Class,com.bumptech.glide.load.Transformation)
+    public com.yiflyplan.app.GlideRequest dontTransform()
+    public com.yiflyplan.app.GlideRequest dontAnimate()
+    public com.yiflyplan.app.GlideRequest transition(com.bumptech.glide.TransitionOptions)
+    public com.yiflyplan.app.GlideRequest error(com.bumptech.glide.RequestBuilder)
+    public com.yiflyplan.app.GlideRequest thumbnail(com.bumptech.glide.RequestBuilder)
+    public final varargs com.yiflyplan.app.GlideRequest thumbnail(com.bumptech.glide.RequestBuilder[])
+    public com.yiflyplan.app.GlideRequest thumbnail(float)
+    public com.yiflyplan.app.GlideRequest load(android.graphics.Bitmap)
+    public com.yiflyplan.app.GlideRequest load(android.graphics.drawable.Drawable)
+    public com.yiflyplan.app.GlideRequest load(android.net.Uri)
+    public com.yiflyplan.app.GlideRequest load(java.io.File)
+    public com.yiflyplan.app.GlideRequest load(java.lang.Integer)
+    public com.yiflyplan.app.GlideRequest load(java.net.URL)
+    public com.yiflyplan.app.GlideRequest load(byte[])
+    protected synthetic bridge com.bumptech.glide.RequestBuilder getDownloadOnlyRequest()
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(byte[])
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(java.net.URL)
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(java.lang.Integer)
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(java.io.File)
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(android.net.Uri)
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(android.graphics.drawable.Drawable)
+    public synthetic bridge com.bumptech.glide.RequestBuilder load(android.graphics.Bitmap)
+    public synthetic bridge com.bumptech.glide.RequestBuilder thumbnail(float)
+    public synthetic bridge com.bumptech.glide.RequestBuilder thumbnail(com.bumptech.glide.RequestBuilder[])
+    public synthetic bridge com.bumptech.glide.RequestBuilder thumbnail(com.bumptech.glide.RequestBuilder)
+    public synthetic bridge com.bumptech.glide.RequestBuilder error(com.bumptech.glide.RequestBuilder)
+    public synthetic bridge com.bumptech.glide.RequestBuilder transition(com.bumptech.glide.TransitionOptions)
+    public synthetic bridge java.lang.Object load(java.lang.Object)
+    public synthetic bridge java.lang.Object load(byte[])
+    public synthetic bridge java.lang.Object load(java.net.URL)
+    public synthetic bridge java.lang.Object load(java.lang.Integer)
+    public synthetic bridge java.lang.Object load(java.io.File)
+    public synthetic bridge java.lang.Object load(android.net.Uri)
+    public synthetic bridge java.lang.Object load(java.lang.String)
+    public synthetic bridge java.lang.Object load(android.graphics.drawable.Drawable)
+    public synthetic bridge java.lang.Object load(android.graphics.Bitmap)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions dontAnimate()
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions dontTransform()
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions transform(java.lang.Class,com.bumptech.glide.load.Transformation)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions optionalTransform(java.lang.Class,com.bumptech.glide.load.Transformation)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions optionalTransform(com.bumptech.glide.load.Transformation)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions transforms(com.bumptech.glide.load.Transformation[])
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions transform(com.bumptech.glide.load.Transformation[])
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions circleCrop()
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions optionalCircleCrop()
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions centerInside()
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions fitCenter()
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions centerCrop()
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions timeout(int)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions disallowHardwareConfig()
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions format(com.bumptech.glide.load.DecodeFormat)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions frame(long)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions encodeQuality(int)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions encodeFormat(android.graphics.Bitmap$CompressFormat)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions override(int)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions theme(android.content.res.Resources$Theme)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions fallback(int)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions fallback(android.graphics.drawable.Drawable)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions placeholder(int)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions onlyRetrieveFromCache(boolean)
+    public synthetic bridge com.bumptech.glide.request.BaseRequestOptions useUnlimitedSourceGeneratorsPool(boolean)
 okhttp3.internal.cache.DiskLruCache$Snapshot:
     public java.lang.String key()
     public long getLength(int)
@@ -18117,6 +18410,8 @@ org.aspectj.internal.lang.reflect.DeclareSoftImpl:
     private org.aspectj.lang.reflect.AjType declaringType
 io.reactivex.internal.operators.flowable.FlowableThrottleFirstTimed:
     public void <init>(io.reactivex.Flowable,long,java.util.concurrent.TimeUnit,io.reactivex.Scheduler)
+com.yarolegovich.slidingrootnav.transform.ScaleTransformation:
+    private static final float START_SCALE
 com.xuexiang.xui.widget.picker.widget.configure.PickerOptions:
     public void <init>(int)
     public com.xuexiang.xui.widget.picker.widget.listener.OnOptionsSelectChangeListener optionsSelectChangeListener
@@ -18187,6 +18482,10 @@ com.xuexiang.xui.widget.actionbar.TitleUtils$2:
     void <init>(android.app.Activity)
 kotlin.text.StringsKt___StringsKt$asSequence$$inlined$Sequence$1:
     public void <init>(java.lang.CharSequence)
+com.yiflyplan.app.activity.SplashActivity:
+    private void loginOrGoMainPage()
+    public static final java.lang.String KEY_IS_DISPLAY
+    public static final java.lang.String KEY_ENABLE_ALPHA_ANIM
 kotlin.SinceKotlin:
     public abstract java.lang.String version()
 com.tencent.mmkv.NativeBuffer:
@@ -18323,10 +18622,15 @@ kotlin.contracts.SimpleEffect:
 kotlin.jvm.functions.Function6:
     public abstract java.lang.Object invoke(java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object)
 com.xuexiang.xhttp2.request.CustomRequest:
+    private void checkValidate()
+    public java.lang.Object create(java.lang.Class)
     public io.reactivex.Observable apiCall(io.reactivex.Observable)
+    public io.reactivex.disposables.Disposable apiCall(io.reactivex.Observable,com.xuexiang.xhttp2.callback.CallBack)
     public io.reactivex.Observable call(io.reactivex.Observable)
     public void call(io.reactivex.Observable,com.xuexiang.xhttp2.callback.CallBack)
     public void call(io.reactivex.Observable,io.reactivex.Observer)
+    public io.reactivex.disposables.Disposable call(io.reactivex.Observable,com.xuexiang.xhttp2.callback.CallBackProxy)
+    protected io.reactivex.Observable toObservable(io.reactivex.Observable,com.xuexiang.xhttp2.callback.CallBackProxy)
 com.scwang.smartrefresh.header.StoreHouseHeader:
     public com.scwang.smartrefresh.header.StoreHouseHeader setLoadingAniDuration(int)
     public com.scwang.smartrefresh.header.StoreHouseHeader setLineWidth(int)
@@ -18466,7 +18770,6 @@ com.xuexiang.xutil.net.JSONUtils:
     public static java.util.Map parseKeyAndValueToMap(java.lang.String)
     public static final boolean isPrintException
 com.yiflyplan.app.adapter.base.delegate.BaseDelegateAdapter:
-    public void <init>(java.lang.Class)
     public void <init>(java.lang.Object[],java.lang.Class)
 com.xuexiang.xhttp2.cache.core.CacheCore:
     public com.xuexiang.xhttp2.cache.core.CacheCore setICache(com.xuexiang.xhttp2.cache.core.ICache)
@@ -18508,7 +18811,6 @@ kotlin.jvm.internal.CharCompanionObject:
 kotlin.text.DelimitedRangesSequence:
     public void <init>(java.lang.CharSequence,int,int,kotlin.jvm.functions.Function2)
 com.xuexiang.xrouter.facade.service.SerializationService:
-    public abstract java.lang.String object2Json(java.lang.Object)
     public abstract java.lang.Object parseObject(java.lang.String,java.lang.reflect.Type)
 kotlin.collections.ArraysKt___ArraysKt$asSequence$$inlined$Sequence$7:
     public void <init>(double[])
@@ -19089,7 +19391,6 @@ org.aspectj.runtime.reflect.SignatureImpl:
     static final char SEP
     static final java.lang.String INNER_SEP
 com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter:
-    public void <init>(int,com.alibaba.android.vlayout.LayoutHelper)
     public void <init>(int,com.alibaba.android.vlayout.LayoutHelper,java.lang.Object[])
     public void recycle()
 com.xuexiang.xui.adapter.FragmentStateAdapter:
@@ -19300,8 +19601,6 @@ android.support.v4.media.session.MediaControllerCompat$TransportControlsApi24:
     public void prepareFromMediaId(java.lang.String,android.os.Bundle)
     public void prepareFromSearch(java.lang.String,android.os.Bundle)
     public void prepareFromUri(android.net.Uri,android.os.Bundle)
-kotlin.Result:
-    private static final java.lang.Object getOrNull-impl(java.lang.Object)
 kotlin.KotlinVersion:
     public void <init>(int,int)
     public final boolean isAtLeast(int,int)
@@ -19310,6 +19609,8 @@ kotlin.KotlinVersion:
     public final int getMinor()
     public final int getPatch()
     public static final int MAX_COMPONENT_VALUE
+kotlin.Result:
+    private static final java.lang.Object getOrNull-impl(java.lang.Object)
 com.bumptech.glide.GlideBuilder:
     public com.bumptech.glide.GlideBuilder setBitmapPool(com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool)
     public com.bumptech.glide.GlideBuilder setArrayPool(com.bumptech.glide.load.engine.bitmap_recycle.ArrayPool)
@@ -19341,6 +19642,8 @@ com.xuexiang.xupdate.utils.ShellUtils$CommandResult:
     public java.lang.String errorMsg
 kotlin.ranges.UIntProgression:
     public static final kotlin.ranges.UIntProgression$Companion Companion
+com.yiflyplan.app.adapter.entity.OrganizationInfo:
+    private java.lang.String title
 com.xuexiang.xui.widget.behavior.BaseBehavior:
     protected final int mTouchSlop
 com.xuexiang.xui.widget.searchview.SearchAdapter$SuggestionsViewHolder:
@@ -19382,6 +19685,8 @@ org.aspectj.runtime.reflect.StringMaker:
 com.xuexiang.xui.widget.picker.widget.utils.LunarCalendarUtils:
     private static int[] solar_1_1
     private static int[] lunar_month_days
+com.yiflyplan.app.fragment.QRCodeFragment$2:
+    final synthetic com.yiflyplan.app.fragment.QRCodeFragment this$0
 io.reactivex.internal.operators.maybe.MaybeEmpty:
     public static final io.reactivex.internal.operators.maybe.MaybeEmpty INSTANCE
 com.just.agentweb.core.AgentWeb$AgentBuilder:
@@ -19406,7 +19711,6 @@ com.yiflyplan.app.fragment.news.NewsFragment$3:
 com.xuexiang.xui.widget.imageview.edit.ScaleGestureDetector:
     private long mTimeDelta
 com.xuexiang.xui.utils.SnackbarUtils:
-    private static int sColorInfo
     private static int sColorConfirm
     private static int sColorWarning
     private static int sColorDanger
@@ -19535,12 +19839,12 @@ kotlin.UShort:
     public static final kotlin.UShort$Companion Companion
 com.yiflyplan.app.adapter.base.delegate.XDelegateAdapter:
     protected int mSelectPosition
+com.yiflyplan.app.MyApp:
+    private static android.app.Application application
 com.xuexiang.xrouter.launcher._XRouter$6:
     final synthetic com.xuexiang.xrouter.launcher._XRouter this$0
 com.zzhoujay.richtext.RichText:
     private com.zzhoujay.richtext.RichState state
-com.xuexiang.xui.adapter.recyclerview.GridDividerItemDecoration:
-    private static final int[] ATTRS
 io.reactivex.schedulers.Schedulers:
     static final io.reactivex.Scheduler NEW_THREAD
 com.xuexiang.xutil.file.FileIOUtils:
@@ -19587,8 +19891,6 @@ android.support.v4.media.MediaBrowserCompat$MediaBrowserImplApi21:
     private android.os.Bundle mNotifyChildrenChangedOptions
 com.xuexiang.xui.widget.imageview.crop.CropImageType:
     public static int ROTATE_NINETY_DEGREES
-com.xuexiang.xhttp2.request.CustomRequest$2:
-    final synthetic com.xuexiang.xhttp2.request.CustomRequest this$0
 com.bumptech.glide.load.engine.cache.SafeKeyGenerator$1:
     final synthetic com.bumptech.glide.load.engine.cache.SafeKeyGenerator this$0
 com.xuexiang.xui.widget.banner.recycler.BannerLayout$IndicatorAdapter$1:
@@ -19647,6 +19949,8 @@ kotlin.collections.AbstractMap:
     public static final kotlin.collections.AbstractMap$Companion Companion
 com.zzhoujay.richtext.RichTextConfig:
     private final java.util.HashMap argsPool
+com.yiflyplan.app.fragment.LoginFragment:
+    private final java.lang.String CURRENTUSER
 okhttp3.ConnectionSpec:
     public static final okhttp3.ConnectionSpec RESTRICTED_TLS
     public static final okhttp3.ConnectionSpec COMPATIBLE_TLS
@@ -19688,8 +19992,12 @@ com.xuexiang.xpage.utils.TitleBar:
     private int mActionTextColor
 com.xuexiang.xqrcode.ui.CaptureFragment$1:
     final synthetic com.xuexiang.xqrcode.ui.CaptureFragment this$0
+com.android.volley.toolbox.ImageLoader$BatchedImageRequest:
+    final synthetic com.android.volley.toolbox.ImageLoader this$0
 com.just.agentweb.core.client.MiddlewareWebClientBase:
     private static java.lang.String TAG
+com.yiflyplan.app.fragment.LoginFragment_ViewBinding$8:
+    final synthetic com.yiflyplan.app.fragment.LoginFragment_ViewBinding this$0
 com.xuexiang.xui.utils.SpanUtils$CustomImageSpan:
     final synthetic com.xuexiang.xui.utils.SpanUtils this$0
 com.scwang.smartrefresh.layout.adapter.SmartViewHolder:
@@ -19709,6 +20017,8 @@ com.bumptech.glide.util.LruCache:
     private final long initialMaxSize
 com.xuexiang.xutil.common.ClickUtils:
     private static long[] sHits
+com.yiflyplan.app.fragment.organization.components.Share$2:
+    final synthetic com.yiflyplan.app.fragment.organization.components.Share this$0
 com.bumptech.glide.load.engine.ActiveResources:
     private final java.util.concurrent.Executor monitorClearedResourcesExecutor
 kotlin.coroutines.jvm.internal.RunSuspend:
@@ -19719,8 +20029,6 @@ com.zzhoujay.markdown.MarkDownParser$1:
     final synthetic com.zzhoujay.markdown.MarkDownParser this$0
 com.just.agentweb.core.web.controller.DefaultUIController$4:
     final synthetic com.just.agentweb.core.web.controller.DefaultUIController this$0
-com.yiflyplan.app.utils.TokenUtils:
-    private static java.lang.String sToken
 org.aspectj.lang.Aspects:
     private static final java.lang.Class[] EMPTY_CLASS_ARRAY
     private static final java.lang.Class[] PEROBJECT_CLASS_ARRAY
@@ -19802,6 +20110,8 @@ okhttp3.internal.connection.ConnectInterceptor:
     public final okhttp3.OkHttpClient client
 com.bumptech.glide.request.target.ViewTarget:
     private static boolean isTagUsedAtLeastOnce
+com.yiflyplan.app.fragment.organization.components.Transfer:
+    private int visible
 com.xuexiang.xui.widget.progress.loading.RotateLoadingView:
     private boolean mIsAutoMode
 com.xuexiang.xui.widget.imageview.preview.ui.BasePhotoFragment:
@@ -19811,6 +20121,8 @@ com.bumptech.glide.load.resource.bitmap.Downsampler:
 com.xuexiang.xhttp2.request.BaseRequest:
     protected android.content.Context mContext
     protected okhttp3.HttpUrl mHttpUrl
+com.yiflyplan.app.fragment.organization.components.PersonalWarehouse$1:
+    final synthetic com.yiflyplan.app.fragment.organization.components.PersonalWarehouse this$0
 com.just.agentweb.core.client.DefaultWebClient$1:
     final synthetic com.just.agentweb.core.client.DefaultWebClient this$0
 com.just.agentweb.core.web.AgentWebPermissions:
@@ -19829,6 +20141,8 @@ com.xuexiang.xui.widget.layout.linkage.PosIndicator:
     private static int SCROLL_ORIENTATION_HORIZONTAL
 com.xuexiang.xrouter.core.InterceptorServiceImpl$1:
     final synthetic com.xuexiang.xrouter.core.InterceptorServiceImpl this$0
+com.yiflyplan.app.activity.SearchViewActivity$2:
+    final synthetic com.yiflyplan.app.activity.SearchViewActivity this$0
 com.xuexiang.xutil.app.ActivityLifecycleHelper:
     private final java.lang.Object mLock
 kotlin.coroutines.SafeContinuation$Companion:
@@ -19909,8 +20223,6 @@ com.bumptech.glide.load.model.Headers:
     public static final com.bumptech.glide.load.model.Headers NONE
 io.github.inflationx.viewpump.internal.-ReflectiveFallbackViewCreator$Companion:
     public synthetic void <init>(kotlin.jvm.internal.DefaultConstructorMarker)
-com.yiflyplan.app.fragment.organization.OrganizationFragment$1:
-    final synthetic com.yiflyplan.app.fragment.organization.OrganizationFragment this$0
 com.yiflyplan.app.core.webview.AgentWebFragment$8:
     final synthetic com.yiflyplan.app.core.webview.AgentWebFragment this$0
 com.xuexiang.xutil.common.CollectionUtils:
@@ -19967,12 +20279,18 @@ io.reactivex.internal.functions.Functions:
     public static final io.reactivex.functions.Consumer REQUEST_MAX
 com.yiflyplan.app.core.webview.XPageWebViewFragment_ViewBinding$2:
     final synthetic com.yiflyplan.app.core.webview.XPageWebViewFragment_ViewBinding this$0
+com.yiflyplan.app.fragment.organization.components.Receive$1:
+    final synthetic com.yiflyplan.app.fragment.organization.components.Receive this$0
 org.aspectj.runtime.reflect.JoinPointImpl$StaticPartImpl:
     private int id
 io.github.inflationx.viewpump.internal.-ReflectiveFallbackViewCreator:
     public static final io.github.inflationx.viewpump.internal.-ReflectiveFallbackViewCreator$Companion Companion
 com.yiflyplan.app.core.webview.XPageWebViewFragment_ViewBinding$3:
     final synthetic com.yiflyplan.app.core.webview.XPageWebViewFragment_ViewBinding this$0
+com.yiflyplan.app.utils.SettingUtils:
+    private final java.lang.String IS_USE_APP_THEME_KEY
+    private final java.lang.String IS_FIRST_OPEN_KEY
+    private final java.lang.String IS_AGREE_PRIVACY_KEY
 android.support.v4.media.session.MediaSessionCompat$MediaSessionImplApi18:
     private static boolean sIsMbrPendingIntentSupported
 com.bumptech.glide.load.model.ByteArrayLoader$ByteBufferFactory$1:
@@ -19981,10 +20299,10 @@ kotlin.ULong:
     public static final kotlin.ULong$Companion Companion
 com.yiflyplan.app.fragment.LoginFragment_ViewBinding$5:
     final synthetic com.yiflyplan.app.fragment.LoginFragment_ViewBinding this$0
-com.xuexiang.xhttp2.interceptor.CacheInterceptor:
-    protected java.lang.String cacheControlValue_Online
 com.bumptech.glide.load.engine.bitmap_recycle.LruBitmapPool:
     private final long initialMaxSize
+com.xuexiang.xhttp2.interceptor.CacheInterceptor:
+    protected java.lang.String cacheControlValue_Online
 com.xuexiang.xqrcode.util.QRCodeProduceUtils:
     private static int DEFAULT_MARGIN
     private static float DEFAULT_DATA_DOT_SCALE
@@ -20055,12 +20373,17 @@ okhttp3.MultipartBody:
     public static final okhttp3.MediaType ALTERNATIVE
     public static final okhttp3.MediaType DIGEST
     public static final okhttp3.MediaType PARALLEL
+com.yiflyplan.app.fragment.organization.OrganizationPageConfig:
+    private java.util.List mUtils
+    private java.util.List mExpands
 kotlin.coroutines.SafeContinuation:
     public static final kotlin.coroutines.SafeContinuation$Companion Companion
 com.xuexiang.xui.widget.dialog.strategy.impl.MaterialDialogStrategy$4:
     final synthetic com.xuexiang.xui.widget.dialog.strategy.impl.MaterialDialogStrategy this$0
 okhttp3.internal.http1.Http1ExchangeCodec$UnknownLengthSource:
     final synthetic okhttp3.internal.http1.Http1ExchangeCodec this$0
+com.yiflyplan.app.fragment.organization.components.OrganizationUser$3:
+    final synthetic com.yiflyplan.app.fragment.organization.components.OrganizationUser this$0
 okhttp3.internal.cache.DiskLruCache$2:
     static final synthetic boolean $assertionsDisabled
 com.just.agentweb.core.web.controller.DefaultUIController$2:
@@ -20069,6 +20392,8 @@ com.yiflyplan.app.core.webview.XPageWebViewFragment$8:
     final synthetic com.yiflyplan.app.core.webview.XPageWebViewFragment this$0
 com.yiflyplan.app.core.webview.AgentWebFragment$9:
     final synthetic com.yiflyplan.app.core.webview.AgentWebFragment this$0
+com.yiflyplan.app.utils.CaptchaUtil:
+    private static final java.util.Random mRandom
 kotlin.text.Charsets:
     public static final java.nio.charset.Charset UTF_8
     public static final java.nio.charset.Charset UTF_16
@@ -20102,6 +20427,8 @@ android.support.v4.media.session.MediaControllerCompat$PlaybackInfo:
     private final int mCurrentVolume
 com.xuexiang.xui.widget.dialog.strategy.impl.MaterialDialogStrategy$5:
     final synthetic com.xuexiang.xui.widget.dialog.strategy.impl.MaterialDialogStrategy this$0
+com.yiflyplan.app.fragment.LoginFragment_ViewBinding$7:
+    final synthetic com.yiflyplan.app.fragment.LoginFragment_ViewBinding this$0
 com.yiflyplan.app.core.http.loader.ProgressLoader:
     private static com.yiflyplan.app.core.http.loader.IProgressLoaderFactory sIProgressLoaderFactory
 com.xuexiang.xupdate._XUpdate:
@@ -20127,6 +20454,8 @@ okhttp3.internal.http2.Http2Connection:
     static final synthetic boolean $assertionsDisabled
 com.xuexiang.xui.widget.behavior.TranslateAnimateHelper:
     public float mStartY
+com.android.volley.NetworkResponse:
+    public final int statusCode
 okhttp3.internal.platform.AndroidPlatform:
     private final java.lang.Class sslParametersClass
 com.tencent.mmkv.MMKV:
@@ -20137,6 +20466,8 @@ kotlin.sequences.DropSequence$iterator$1:
     final synthetic kotlin.sequences.DropSequence this$0
 com.xuexiang.xutil.system.PermissionUtils$1:
     final synthetic com.xuexiang.xutil.system.PermissionUtils this$0
+com.yiflyplan.app.fragment.organization.OrganizationFragment:
+    private final java.lang.String RELATIONSHIPS
 com.xuexiang.xui.adapter.recyclerview.DividerItemDecoration:
     private static final int[] ATTRS
 com.just.agentweb.core.web.controller.DefaultUIController$3:
@@ -20167,6 +20498,8 @@ com.xuexiang.xaop.aspectj.PermissionAspectJ$1:
     final synthetic com.xuexiang.xaop.aspectj.PermissionAspectJ this$0
 okhttp3.internal.ws.WebSocketWriter:
     final okhttp3.internal.ws.WebSocketWriter$FrameSink frameSink
+com.android.volley.ExecutorDelivery$ResponseDeliveryRunnable:
+    final synthetic com.android.volley.ExecutorDelivery this$0
 com.yiflyplan.app.fragment.notices.ChartRoomFragment$1:
     final synthetic com.yiflyplan.app.fragment.notices.ChartRoomFragment this$0
 com.xuexiang.xui.widget.guidview.Calculator:
@@ -20219,6 +20552,8 @@ kotlin.jvm.internal.BooleanCompanionObject:
     public static final kotlin.jvm.internal.BooleanCompanionObject INSTANCE
 com.xuexiang.xrouter.launcher._XRouter:
     private static volatile boolean monitorMode
+com.yiflyplan.app.fragment.organization.components.OrganizationUser$1:
+    final synthetic com.yiflyplan.app.fragment.organization.components.OrganizationUser this$0
 com.scwang.smartrefresh.header.storehouse.StoreHouseBarItem:
     public int index
 com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog:
@@ -20258,8 +20593,6 @@ io.reactivex.internal.operators.completable.CompletableNever:
     public static final io.reactivex.Completable INSTANCE
 io.reactivex.observers.BaseTestConsumer:
     protected java.lang.Thread lastThread
-com.xuexiang.xhttp2.request.CustomRequest$1:
-    final synthetic com.xuexiang.xhttp2.request.CustomRequest this$0
 com.bumptech.glide.RequestManager:
     private static final com.bumptech.glide.request.RequestOptions DOWNLOAD_ONLY_OPTIONS
 com.xuexiang.xhttp2.subsciber.DownloadSubscriber$1:
@@ -20297,8 +20630,13 @@ okhttp3.CacheControl:
     public static final okhttp3.CacheControl FORCE_NETWORK
 com.bumptech.glide.disklrucache.Util:
     static final java.nio.charset.Charset UTF_8
+com.yiflyplan.app.fragment.organization.components.PersonalWarehouse:
+    private int visible
 com.bumptech.glide.signature.ApplicationVersionSignature:
     private static final java.util.concurrent.ConcurrentMap PACKAGE_NAME_TO_KEY
+com.yiflyplan.app.activity.MainActivity:
+    private final java.lang.String CURRENTUSER
+    com.yiflyplan.app.adapter.VO.OrganizationVO organizationVO
 com.xuexiang.xutil.common.MapUtils:
     private static final java.lang.Object LOCK
 io.reactivex.internal.operators.completable.CompletableEmpty:
@@ -20340,8 +20678,6 @@ kotlin.math.Constants:
     public static final kotlin.math.Constants INSTANCE
 com.zzhoujay.richtext.ig.DefaultImageGetter:
     public static final java.lang.String GLOBAL_ID
-com.yiflyplan.app.fragment.notices.ChartRoomFragment$2:
-    final synthetic com.yiflyplan.app.fragment.notices.ChartRoomFragment this$0
 kotlin.UByte:
     public static final kotlin.UByte$Companion Companion
 com.bumptech.glide.load.engine.ActiveResources$1$1:
@@ -20350,6 +20686,8 @@ com.bumptech.glide.module.RegistersComponents:
     public abstract void registerComponents(android.content.Context,com.bumptech.glide.Glide,com.bumptech.glide.Registry)
 com.alibaba.android.vlayout.VirtualLayoutManager$3:
     final synthetic com.alibaba.android.vlayout.VirtualLayoutManager this$0
+com.android.volley.ExecutorDelivery$1:
+    final synthetic com.android.volley.ExecutorDelivery this$0
 org.aspectj.runtime.internal.cflowstack.ThreadStackImpl11:
     private java.util.Hashtable stacks
     private int change_count
@@ -20363,6 +20701,8 @@ com.yiflyplan.app.fragment.LoginFragment_ViewBinding$3:
 org.aspectj.runtime.reflect.SignatureImpl:
     static java.lang.String[] EMPTY_STRING_ARRAY
     static java.lang.Class[] EMPTY_CLASS_ARRAY
+com.yiflyplan.app.fragment.organization.components.ProductQRCode$2:
+    final synthetic com.yiflyplan.app.fragment.organization.components.ProductQRCode this$0
 com.xuexiang.xui.utils.DeviceUtils:
     private static boolean sIsTabletChecked
     private static boolean sIsTabletValue

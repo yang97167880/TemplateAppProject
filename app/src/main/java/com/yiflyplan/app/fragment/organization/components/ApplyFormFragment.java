@@ -49,8 +49,8 @@ import static com.yiflyplan.app.utils.ImageConversionUtil.base64ToBitmap;
 /**
  * 申请加入机构表单页
  */
-@Page(name="机构")
-public class ApplyFormFragment extends BaseFragment implements View.OnClickListener{
+@Page(name = "机构")
+public class ApplyFormFragment extends BaseFragment implements View.OnClickListener {
 
     @BindView(R.id.or_avatar)
     RadiusImageView orAvatar;
@@ -98,6 +98,7 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
         orTypeName.setText("机构类型："+organizationVO.getTypeName());
         orLevel.setText("机构等级："+organizationVO.getLevel());
 
+
         /**
          * 检查用户是否已经加入该机构
          */
@@ -108,12 +109,13 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
             @Override
             public void success(JSONObject data) throws JSONException {
                 belongsTo = data.getBoolean("belongsTo");
-                if(belongsTo) {
+                if (belongsTo) {
                     btnApplyOr.setText(R.string.joined);
                     btnApplyOr.setEnabled(false);
                     btnApplyOr.setBackgroundResource(R.color.xui_btn_gray_select_color);
                 }
             }
+
             @Override
             public void fail(JSONObject error) {
 
@@ -133,23 +135,23 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
         switch (v.getId()) {
             case R.id.btn_apply_or:
 
-                  LinkedHashMap<String,String> params = new  LinkedHashMap<>();
-                  params.put("organizationId", String.valueOf(organizationId));
-                  MyHttp.postJson("/organization/applyToJoinOrganization", TokenUtils.getToken(), params, new MyHttp.Callback() {
-                      @Override
-                      public void success(JSONObject data) throws JSONException {
-                          btnApplyOr.setText(R.string.check_pending);
-                          btnApplyOr.setEnabled(false);
-                          btnApplyOr.setBackgroundResource(R.color.xui_btn_gray_select_color);
+                LinkedHashMap<String, String> params = new LinkedHashMap<>();
+                params.put("organizationId", String.valueOf(organizationId));
+                MyHttp.postJson("/organization/applyToJoinOrganization", TokenUtils.getToken(), params, new MyHttp.Callback() {
+                    @Override
+                    public void success(JSONObject data) throws JSONException {
+                        btnApplyOr.setText(R.string.check_pending);
+                        btnApplyOr.setEnabled(false);
+                        btnApplyOr.setBackgroundResource(R.color.xui_btn_gray_select_color);
 
-                      }
-                      @Override
-                      public void fail(JSONObject error) {
-                      }
-                  });
+                    }
 
-
+                    @Override
+                    public void fail(JSONObject error) {
+                    }
+                });
                 break;
+            default:
         }
     }
 }

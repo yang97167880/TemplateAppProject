@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2021 xuexiangjys(xuexiangjys@163.com)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +14,7 @@
   ~ limitations under the License.
   ~
   -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -25,218 +23,234 @@
     <TextView
         android:id="@+id/item_createTime"
         style="@style/TextStyle.Explain"
+        android:layout_gravity="start"
+        android:layout_marginLeft="@dimen/config_margin_16dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="@dimen/config_margin_16dp"
-        android:layout_gravity="start"
-        android:text="创建时间：2021-03-04 12:00:00"
-        />
+        android:text="创建时间：2021-03-04 12:00:00" />
 
-<androidx.cardview.widget.CardView
-    android:id="@+id/product_view"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardBackgroundColor="@color/xui_config_color_white"
-    app:cardPreventCornerOverlap="true"
-    app:contentPaddingBottom="18dp"
-    app:contentPaddingLeft="16dp"
-    app:contentPaddingRight="16dp"
-    app:contentPaddingTop="10dp">
-
-    <LinearLayout
+    <androidx.cardview.widget.CardView
+        android:id="@+id/product_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        app:cardBackgroundColor="@color/xui_config_color_white"
+        app:cardPreventCornerOverlap="true"
+        app:contentPaddingBottom="18dp"
+        app:contentPaddingLeft="16dp"
+        app:contentPaddingRight="16dp"
+        app:contentPaddingTop="10dp">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.xuexiang.xui.widget.imageview.RadiusImageView
-                    android:id="@+id/iv_avatar"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    app:srcCompat="@drawable/ic_product"
-                    app:riv_is_circle="true" />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/product_name"
-                    style="@style/TextStyle.Explain"
-                    android:layout_weight="1"
-                    android:textSize="@dimen/config_margin_15dp"
-                    android:layout_gravity="start|top"
-                    android:layout_marginStart="4dp"
-                    android:text="病理性医疗废品"
-                    android:textColor="@color/xui_config_color_pure_black" />
-
-                <TextView
-                    android:id="@+id/product_from"
-                    style="@style/TextStyle.Explain"
-                    android:layout_gravity="bottom"
-                    android:layout_marginStart="4dp"
-                    android:text="厦门中医院 | 门诊部"
-                    android:textSize="@dimen/config_margin_12dp" />
-
-            </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/expand"
-                        android:text="详情"
-                        android:textSize="@dimen/config_margin_12dp"
-                        android:layout_gravity="center_vertical"
-                        android:background="@color/white"
-                        android:textColor="@color/colorAccent"
-                        android:drawableEnd="@drawable/ic_expand"/>
-                </LinearLayout>
-            </LinearLayout>
-
-        </FrameLayout>
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:id="@+id/expand_info"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/config_margin_8dp"
-            android:paddingBottom="@dimen/config_margin_8dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/item_weight"
-                    style="@style/TextStyle.Content"
-                    android:textSize="14dp"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:gravity="start|center_vertical"
-                    android:maxLines="2"
-                    android:singleLine="false"
-                    android:textColor="@color/xui_config_color_pure_black" />
+            android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/item_package"
-                    style="@style/TextStyle.Explain"
-                    android:layout_weight="1"
-                    android:textColor="@color/xui_config_color_pure_black"
-                    />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
 
-                <TextView
-                    android:id="@+id/item_pollution"
-                    style="@style/TextStyle.Explain"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:textColor="@color/xui_config_color_pure_black"
-                    />
-            </LinearLayout>
-            <LinearLayout
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/item_checked"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
+
+                    <com.xuexiang.xui.widget.imageview.RadiusImageView
+                        android:id="@+id/iv_avatar"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        app:riv_is_circle="true"
+                        app:srcCompat="@drawable/ic_product" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/item_Coding"
+                            style="@style/TextStyle.Explain"
+                            android:layout_gravity="start|top"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/xui_config_color_pure_black"
+                            android:textSize="@dimen/config_margin_12dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/product_from"
+                                style="@style/TextStyle.Explain"
+                                android:layout_gravity="bottom"
+                                android:layout_marginStart="4dp"
+                                android:layout_weight="1"
+                                android:gravity="start"
+                                android:text="厦门中医院 | 门诊部"
+                                android:textSize="@dimen/config_margin_12dp" />
+
+                            <Button
+                                android:id="@+id/expand"
+                                android:layout_width="wrap_content"
+                                android:layout_height="15dp"
+                                android:layout_gravity="center_vertical"
+                                android:background="@color/white"
+                                android:drawableEnd="@drawable/ic_expand"
+                                android:text="详情"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="@dimen/config_margin_12dp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/config_margin_8dp">
-                <TextView
-                    android:id="@+id/item_1"
-                    style="@style/TextStyle.Explain"
-                    android:gravity="start"
-                    android:textColor="@color/xui_config_color_pure_black"
-                    android:text="创建人："
-                    />
-                <TextView
-                    android:id="@+id/item_create"
-                    style="@style/TextStyle.Explain"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/config_margin_5dp"
-                android:paddingBottom="@dimen/config_margin_5dp">
-                <TextView
-                    android:id="@+id/item_2"
-                    style="@style/TextStyle.Explain"
-                    android:gravity="start"
-                    android:textColor="@color/xui_config_color_pure_black"
-                    android:text="最近流转时间："
-                    />
-                <TextView
-                    android:id="@+id/item_updateTime"
-                    style="@style/TextStyle.Explain"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/config_margin_5dp"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/item_3"
-                    style="@style/TextStyle.Explain"
-                    android:gravity="start"
-                    android:textColor="@color/xui_config_color_pure_black"
-                    android:text="操作者："
-                    />
-                <TextView
-                    android:id="@+id/item_updateName"
-                    style="@style/TextStyle.Explain"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    />
-                <TextView
-                    android:id="@+id/item_infor"
-                    style="@style/TextStyle.Explain"
-                    android:gravity="end"
-                    android:text="查看流转信息"
-                    android:textColor="@color/xui_config_color_waring"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/item_4"
-                    style="@style/TextStyle.Explain"
-                    android:gravity="start"
-                    android:textColor="@color/xui_config_color_pure_black"
-                    android:text="生产序号："
-                    />
-                <TextView
-                    android:id="@+id/item_Coding"
-                    style="@style/TextStyle.Explain"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    />
-            </LinearLayout>
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/expand_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/config_margin_8dp"
+                    android:paddingBottom="@dimen/config_margin_8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/item_weight"
+                            style="@style/TextStyle.Content"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:gravity="start|center_vertical"
+                            android:maxLines="2"
+                            android:singleLine="false"
+                            android:textColor="@color/xui_config_color_pure_black"
+                            android:textSize="14dp" />
+
+                        <TextView
+                            android:id="@+id/item_package"
+                            style="@style/TextStyle.Explain"
+                            android:layout_weight="1"
+                            android:textColor="@color/xui_config_color_pure_black" />
+
+                        <TextView
+                            android:id="@+id/item_pollution"
+                            style="@style/TextStyle.Explain"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textColor="@color/xui_config_color_pure_black" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingTop="@dimen/config_margin_8dp">
+
+                        <TextView
+                            android:id="@+id/item_1"
+                            style="@style/TextStyle.Explain"
+                            android:gravity="start"
+                            android:text="创建人："
+                            android:textColor="@color/xui_config_color_pure_black" />
+
+                        <TextView
+                            android:id="@+id/item_create"
+                            style="@style/TextStyle.Explain"
+                            android:layout_weight="1"
+                            android:gravity="start" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingTop="@dimen/config_margin_5dp"
+                        android:paddingBottom="@dimen/config_margin_5dp">
+
+                        <TextView
+                            android:id="@+id/item_2"
+                            style="@style/TextStyle.Explain"
+                            android:gravity="start"
+                            android:text="最近流转时间："
+                            android:textColor="@color/xui_config_color_pure_black" />
+
+                        <TextView
+                            android:id="@+id/item_updateTime"
+                            style="@style/TextStyle.Explain"
+                            android:layout_weight="1"
+                            android:gravity="start" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="@dimen/config_margin_5dp">
+
+                        <TextView
+                            android:id="@+id/item_3"
+                            style="@style/TextStyle.Explain"
+                            android:gravity="start"
+                            android:text="操作者："
+                            android:textColor="@color/xui_config_color_pure_black" />
+
+                        <TextView
+                            android:id="@+id/item_updateName"
+                            style="@style/TextStyle.Explain"
+                            android:layout_weight="1"
+                            android:gravity="start" />
+
+                        <TextView
+                            android:id="@+id/item_infor"
+                            style="@style/TextStyle.Explain"
+                            android:gravity="end"
+                            android:text="查看流转信息"
+                            android:textColor="@color/xui_config_color_waring" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/item_4"
+                            style="@style/TextStyle.Explain"
+                            android:gravity="start"
+                            android:text="物品类型："
+                            android:textColor="@color/xui_config_color_pure_black" />
+
+                        <TextView
+                            android:id="@+id/product_name"
+                            style="@style/TextStyle.Explain"
+                            android:layout_weight="1"
+                            android:gravity="start" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </FrameLayout>
+
         </LinearLayout>
-
-        </FrameLayout>
-
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

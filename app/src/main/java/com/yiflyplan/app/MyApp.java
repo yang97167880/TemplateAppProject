@@ -35,10 +35,10 @@ public class MyApp extends Application {
 
     private static Context context;
     private static Application application;
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        //解决4.x运行崩溃的问题
         MultiDex.install(this);
     }
 
@@ -53,6 +53,7 @@ public class MyApp extends Application {
     public static Context getContext() {
         return context;
     }
+
     /**
      * 初始化基础库
      */

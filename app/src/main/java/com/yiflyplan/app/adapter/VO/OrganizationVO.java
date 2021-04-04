@@ -21,25 +21,38 @@ import java.io.Serializable;
 
 public class OrganizationVO implements Serializable {
 
-    private int id;
 
-    private String name;
+    public int getId() {
+        return id;
+    }
 
-    private String cityName;
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    private String avatar;
+    public String getOrganizationName() {
+        return organizationName;
+    }
 
-    private String level;
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
+    }
 
-    private String abbreviation;
+    public String getOrganizationAvatar() {
+        return organizationAvatar;
+    }
 
-    private int typeId;
+    public void setOrganizationAvatar(String organizationAvatar) {
+        this.organizationAvatar = organizationAvatar;
+    }
 
-    private String typeName;
+    public String getOrganizationCityId() {
+        return organizationCityId;
+    }
 
-    private String roleName;
-
-    private String time;
+    public void setOrganizationCityId(String organizationCityId) {
+        this.organizationCityId = organizationCityId;
+    }
 
     public String getCityName() {
         return cityName;
@@ -49,89 +62,79 @@ public class OrganizationVO implements Serializable {
         this.cityName = cityName;
     }
 
-    public String getTime() {
-        return "申请时间："+time;
+    public String getOrganizationLevel() {
+        return organizationLevel;
     }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
-    public int getId() {
-        return id;
+    public void setOrganizationLevel(String organizationLevel) {
+        this.organizationLevel = organizationLevel;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getOrganizationAbbreviation() {
+        return "编号：" + organizationAbbreviation;
     }
 
-    public String getName() {
-        return name;
+    public void setOrganizationAbbreviation(String organizationAbbreviation) {
+        this.organizationAbbreviation = organizationAbbreviation;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public int getOrganizationTypeId() {
+        return organizationTypeId;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public void setOrganizationTypeId(int organizationTypeId) {
+        this.organizationTypeId = organizationTypeId;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public String getOrganizationTypeName() {
+        return organizationTypeName;
     }
 
-    public String getLevel() {
-        return level;
+    public void setOrganizationTypeName(String organizationTypeName) {
+        this.organizationTypeName = organizationTypeName;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public String getCreateTime() {
+        return createTime;
     }
 
-    public String getAbbreviation() {
-        return "编号："+abbreviation;
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
-    public void setAbbreviation(String abbreviation) {
-        this.abbreviation = abbreviation;
-    }
+    private int id;
 
-    public int getTypeId() {
-        return typeId;
-    }
+    private String organizationName;
 
-    public void setTypeId(int typeId) {
-        this.typeId = typeId;
-    }
+    private String organizationAvatar;
 
-    public String getTypeName() {
-        return typeName;
-    }
+    private String organizationCityId;
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
-    }
+    private String cityName;
 
-    public String getRoleName() {
-        return roleName;
-    }
+    private String organizationLevel;
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
+    private String organizationAbbreviation;
+
+    private int organizationTypeId;
+
+    private String organizationTypeName;
+
+    private String createTime;
 
     @Override
     public String toString() {
         return "OrganizationVO{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", level='" + level + '\'' +
-                ", abbreviation='" + abbreviation + '\'' +
-                ", typeId=" + typeId +
-                ", typeName='" + typeName + '\'' +
-                ", roleName='" + roleName + '\'' +
-                ", time='" + time + '\'' +
+                ", organizationName='" + organizationName + '\'' +
+                ", organizationAvatar='" + organizationAvatar + '\'' +
+                ", organizationCityId='" + organizationCityId + '\'' +
+                ", cityName='" + cityName + '\'' +
+                ", organizationLevel='" + organizationLevel + '\'' +
+                ", organizationAbbreviation='" + organizationAbbreviation + '\'' +
+                ", organizationTypeId=" + organizationTypeId +
+                ", organizationTypeName='" + organizationTypeName + '\'' +
+                ", createTime='" + createTime + '\'' +
                 '}';
     }
 }
