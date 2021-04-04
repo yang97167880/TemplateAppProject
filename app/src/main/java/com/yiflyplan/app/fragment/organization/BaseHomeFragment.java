@@ -39,6 +39,7 @@ import com.yiflyplan.app.adapter.WidgetItemAdapter;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.fragment.organization.components.OrganizationUser;
 import com.yiflyplan.app.fragment.organization.components.PersonalWarehouse;
+import com.yiflyplan.app.fragment.organization.components.Receive;
 import com.yiflyplan.app.fragment.organization.components.Share;
 import com.yiflyplan.app.fragment.organization.components.Transfer;
 
@@ -115,6 +116,10 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
                     break;
                 case "产品转移":
                     openNewPage(Transfer.class,"id",organizationVO.getId());
+                    break;
+                case "产品接收":
+                    openNewPage(Receive.class,"id",organizationVO.getId());
+                    break;
                 default:
             }
 
