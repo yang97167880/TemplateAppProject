@@ -103,8 +103,6 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     private String[] mTitles;
 
     private final String CURRENTUSER = "currentUser";
-    private final String ORGANIZATION = "currentOrganization";
-    private final String RELATIONSHIPS = "relationships";
     private SlidingRootNav mSlidingRootNav;
     private String[] mMenuTitles;
     private Drawable[] mMenuIcons;
@@ -207,19 +205,19 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 //                .placeholder(R.drawable.icon_head_default)
 //                .diskCacheStrategy(DiskCacheStrategy.ALL);
         TextView userName = findViewById(R.id.tv_name);
-        userName.setText(userVO.getName());
+        userName.setText(userVO.getUserName());
 
         RadiusImageView userAvatar = findViewById(R.id.iv_avatar);
         //String url = "https://light-plant.oss-cn-beijing.aliyuncs.com/2021/03/22/2fac6a7f3a764dec8eae65046924296d.jpg";
         //Glide.with(this).load(url).into(userAvatar);
         GlideImageLoadStrategy lodeImg = new GlideImageLoadStrategy();
-        lodeImg.loadImage(userAvatar,userVO.getAvatar());
+        lodeImg.loadImage(userAvatar,userVO.getUserAvatar());
 
         LinearLayout mLLMenu = mSlidingRootNav.getLayout().findViewById(R.id.ll_menu);
         final AppCompatImageView ivQrcode = mSlidingRootNav.getLayout().findViewById(R.id.iv_qrcode);
         Bundle bundle = new Bundle();
-        bundle.putString("userAvatar",userVO.getAvatar());
-        bundle.putString("userName",userVO.getName());
+        bundle.putString("userAvatar",userVO.getUserAvatar());
+        bundle.putString("userName",userVO.getUserName());
         ivQrcode.setOnClickListener(v -> openNewPage(QRCodeFragment.class,bundle));
 
         final AppCompatImageView ivSetting = mSlidingRootNav.getLayout().findViewById(R.id.iv_setting);

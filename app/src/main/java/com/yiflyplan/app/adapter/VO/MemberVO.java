@@ -21,44 +21,45 @@ import java.io.Serializable;
 
 public class MemberVO implements Serializable {
 
-    public int getId() {
-        return id;
+
+    public int getUserId() {
+        return userId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public String getUserAvatar() {
+        return userAvatar;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
     }
 
-    public String getTel() {
-        return tel;
+    public String getUserTel() {
+        return userTel;
     }
 
-    public void setTel(String tel) {
-        this.tel = tel;
+    public void setUserTel(String userTel) {
+        this.userTel = userTel;
     }
 
-    public int getCityId() {
-        return cityId;
+    public int getUserCityId() {
+        return userCityId;
     }
 
-    public void setCityId(int cityId) {
-        this.cityId = cityId;
+    public void setUserCityId(int userCityId) {
+        this.userCityId = userCityId;
     }
 
     public String getRoleName() {
@@ -72,24 +73,24 @@ public class MemberVO implements Serializable {
     @Override
     public String toString() {
         return "MemberVO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", tel='" + tel + '\'' +
-                ", cityId=" + cityId +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userAvatar='" + userAvatar + '\'' +
+                ", userTel='" + userTel + '\'' +
+                ", usersCityId=" + userCityId +
                 ", roleName='" + roleName + '\'' +
                 '}';
     }
 
-    private int id;
+    private int userId;
 
-    private String name;
+    private String userName;
 
-    private String avatar;
+    private String userAvatar;
 
-    private String tel;
+    private String userTel;
 
-    private int cityId;
+    private int userCityId;
 
     private String roleName;
 }

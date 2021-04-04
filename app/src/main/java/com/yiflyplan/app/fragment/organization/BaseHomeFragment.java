@@ -69,7 +69,7 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
     protected void initViews() {
         Bundle bundle = getArguments();
         organizationVO = (OrganizationVO) bundle.getSerializable("organization");
-        toolbar.setTitle(organizationVO.getName());
+        toolbar.setTitle(organizationVO.getOrganizationName());
         toolbar.setNavigationOnClickListener(v ->{
             popToBack();
         });

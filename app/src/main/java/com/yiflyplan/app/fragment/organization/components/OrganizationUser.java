@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -44,6 +45,7 @@ import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
+import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 
 import org.json.JSONArray;
@@ -72,7 +74,7 @@ public class OrganizationUser extends BaseFragment {
     @BindView(R.id.member_count)
     TextView memberCount;
 
-    private int totalPage  = 1;
+    private int totalPage = 1;
     private int pageNo = 1;
     private int pageSize = 5;
     private List<MemberVO> memberVOS = new ArrayList<>();
@@ -95,26 +97,26 @@ public class OrganizationUser extends BaseFragment {
         recyclerView.setRecycledViewPool(viewPool);
         viewPool.setMaxRecycledViews(0, 10);
 
-        mMemberAdapter = new BroccoliSimpleDelegateAdapter<MemberVO>(R.layout.adapter_member,new LinearLayoutHelper()){
+        mMemberAdapter = new BroccoliSimpleDelegateAdapter<MemberVO>(R.layout.adapter_member, new LinearLayoutHelper()) {
 
             @Override
             protected void onBindData(MyRecyclerViewHolder holder, MemberVO model, int position) {
-                if(model!=null){
+                if (model != null) {
                     holder.bindDataToViewById(view -> {
                         RadiusImageView avatar = (RadiusImageView) view;
                         GlideImageLoadStrategy img = new GlideImageLoadStrategy();
-                        img.loadImage(avatar, Uri.parse(model.getAvatar()));
-                    },R.id.member_avatar);
+                        img.loadImage(avatar, Uri.parse(model.getUserAvatar()));
+                    }, R.id.member_avatar);
 
                     holder.bindDataToViewById(view -> {
                         TextView name = (TextView) view;
-                        name.setText(model.getName());
-                    },R.id.member_name);
+                        name.setText(model.getUserName());
+                    }, R.id.member_name);
 
                     holder.bindDataToViewById(view -> {
                         TextView role = (TextView) view;
                         role.setText(model.getRoleName());
-                    },R.id.member_roleName);
+                    }, R.id.member_roleName);
                 }
             }
 
@@ -132,11 +134,11 @@ public class OrganizationUser extends BaseFragment {
         recyclerView.setAdapter(delegateAdapter);
     }
 
-    protected void initSearchView(){
+    protected void initSearchView() {
         mSearchView.setBackIcon(getResources().getDrawable(R.drawable.ic_login_close));
         mSearchView.setVoiceSearch(false);
         mSearchView.setEllipsize(true);
-       // mSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
+        // mSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
         mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -163,6 +165,7 @@ public class OrganizationUser extends BaseFragment {
         });
         mSearchView.setSubmitOnClick(true);
     }
+
     @Override
     public void onDestroyView() {
         if (mSearchView.isSearchOpen()) {
@@ -186,15 +189,19 @@ public class OrganizationUser extends BaseFragment {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
     @Override
     protected void initListeners() {
         //下拉刷新
         refreshLayout.setOnRefreshListener(refreshLayout -> {
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
-                Bundle build = getArguments();
-                int id = build.getInt("id");
-                apiGetMemberVOList(String.valueOf(id),"refresh");
+                if(pageNo == 1){
+                    Bundle build = getArguments();
+                    int id = build.getInt("id");
+                    apiLoadMoreMember(String.valueOf(id));
+                }
+                mMemberAdapter.refresh(memberVOS);
                 refreshLayout.finishRefresh();
             }, 500);
         });
@@ -204,54 +211,39 @@ public class OrganizationUser extends BaseFragment {
             refreshLayout.getLayout().postDelayed(() -> {
                 Bundle build = getArguments();
                 int id = build.getInt("id");
-                apiGetMemberVOList(String.valueOf(id),"loadMore");
+                apiLoadMoreMember(String.valueOf(id));
                 refreshLayout.finishLoadMore();
             }, 500);
         });
         refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
     }
 
-    protected void apiGetMemberVOList(String id,String flag){
-        LinkedHashMap<String,String> params = new  LinkedHashMap<>();
-        params.put("organizationId",id);
+    protected void apiLoadMoreMember(String id) {
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("organizationId", id);
         params.put("pageNo", String.valueOf(pageNo));
-        params.put("pageSize",String.valueOf(pageSize));
-        if(pageNo<=totalPage){
-            if(pageNo>1 && flag == "refresh"){
-                mMemberAdapter.refresh(memberVOS);
-            }else{
-                MyHttp.postJson("/organization/getMembersOfAnOrganization", TokenUtils.getToken(), params, new MyHttp.Callback() {
-                    @Override
-                    public void success(JSONObject data) throws JSONException {
-                        JSONArray members = new JSONArray(data.getString("list"));
-                        for(int i = 0;i<members.length();i++){
-                            MemberVO temp = new MemberVO();
-                            temp.setId( members.getJSONObject(i).getInt("userId"));
-                            temp.setName(members.getJSONObject(i).getString("userName"));
-                            temp.setAvatar(members.getJSONObject(i).getString("userAvatar"));
-                            temp.setRoleName(members.getJSONObject(i).getString("roleName"));
-                            temp.setCityId(members.getJSONObject(i).getInt("userCityId"));
-                            memberVOS.add(temp);
-                        }
-                        memberCount.setText("成员数 ("+members.length()+"人)");
-                        switch(flag){
-                            case "refresh":
-                                mMemberAdapter.refresh(memberVOS);
-                                break;
-                            case "loadMore":
-                                mMemberAdapter.loadMore(memberVOS);
-                                break;
-                        }
-                        pageNo +=1;
-                    }
+        params.put("pageSize", String.valueOf(pageSize));
 
-                    @Override
-                    public void fail(JSONObject error) {
-                        refreshLayout.finishRefresh();
-                    }
-                });
+        MyHttp.postJson("/organization/getMembersOfAnOrganization", TokenUtils.getToken(), params, new MyHttp.Callback() {
+            @Override
+            public void success(JSONObject data) throws JSONException {
+                JSONArray members = new JSONArray(data.getString("list"));
+                Log.e("Res", data.toString());
+                List<MemberVO> newList = new ArrayList<>();
+                newList = ReflectUtil.convertToList(members, MemberVO.class);
+                memberCount.setText("成员数 (" + members.length() + "人)");
+                if (pageNo <= totalPage) {
+                    memberVOS.addAll(newList);
+                    mMemberAdapter.loadMore(newList);
+                    pageNo += 1;
+                }
             }
 
-        }
+            @Override
+            public void fail(JSONObject error) {
+                refreshLayout.finishRefresh();
+            }
+        });
     }
+
 }

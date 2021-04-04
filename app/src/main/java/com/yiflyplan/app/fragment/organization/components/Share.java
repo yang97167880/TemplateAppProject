@@ -72,7 +72,6 @@ public class Share extends BaseFragment implements View.OnClickListener, View.On
 
     @Override
     protected void initViews() {
-
         ivOrganizationQrcode.setImageBitmap(qrCode);;
     }
 
