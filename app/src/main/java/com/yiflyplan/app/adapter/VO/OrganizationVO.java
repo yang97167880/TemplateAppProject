@@ -21,6 +21,7 @@ import java.io.Serializable;
 
 public class OrganizationVO implements Serializable {
 
+
     public int getId() {
         return id;
     }

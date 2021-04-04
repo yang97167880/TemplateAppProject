@@ -29,31 +29,46 @@
         android:layout_height="wrap_content"
         android:background="@color/config_color_select_bg">
 
+
+
         <Button
             android:id="@+id/btn_search_or"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:background="@color/xui_transparent"
+            android:background="@color/xui_config_color_transparent"
             android:textColor="@color/xui_config_color_blue"
             android:textSize="@dimen/config_margin_20dp"
             android:text="@string/menu_search" />
 
+
         <EditText
             android:id="@+id/edt_search_organization"
-            android:layout_width="270dp"
+            android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="@dimen/config_margin_10dp"
             android:layout_marginEnd="0dp"
             android:layout_marginBottom="@dimen/config_margin_10dp"
             android:layout_toStartOf="@+id/btn_search_or"
             android:background="@drawable/edt_rounded_rectangle"
             android:inputType="text"
+            android:hint="@string/hint_search_or"
+            android:paddingStart="40dp"
             android:paddingEnd="@dimen/config_margin_20dp"
-            android:paddingStart="@dimen/config_margin_20dp"
-            android:textAlignment="center"
-            android:textSize="@dimen/config_margin_20dp" />
+            android:textCursorDrawable="@null"
+            android:textAlignment="textStart"
+            android:textSize="@dimen/config_margin_15dp" />
+
+        <ImageView
+            android:layout_width="@dimen/config_margin_20dp"
+            android:layout_height="@dimen/config_margin_20dp"
+            android:layout_alignStart="@+id/edt_search_organization"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/ico_search" />
 
     </RelativeLayout>
 
@@ -81,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never"
-            tools:listitem="@layout/adapter_organization_list_item" />
+            tools:listitem="@layout/adapter_search_organization_list_item" />
 
         <!--    注意修改包名时，这里也需要修改    -->
         <com.yiflyplan.app.widget.MaterialFooter

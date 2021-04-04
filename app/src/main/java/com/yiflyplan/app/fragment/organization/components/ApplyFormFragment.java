@@ -29,6 +29,7 @@ import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
 import com.yiflyplan.app.R;
+import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.organization.OrganizationFragment;
@@ -74,6 +75,7 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
 
     private int organizationId;
     private Boolean belongsTo;
+    private OrganizationVO organizationVO;
 
 
     @Override
@@ -81,47 +83,29 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
         return R.layout.fragment_add;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void initViews() {
-        Bundle build = getArguments();
-        String organizationInfo = build.getString("organizationInfo");
-        Log.d("rrrr", organizationInfo);
-        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("pageNo", "1");
-        params.put("pageSize", "5");
-        params.put("searchKey", organizationInfo);
-        MyHttp.postJson("/organization/getAllOrganizationBaseInfo", TokenUtils.getToken(), params, new MyHttp.Callback() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void success(JSONObject data) throws JSONException {
-                JSONArray organizationInfo = new JSONArray(data.getString("list"));
-                Log.d("eee", organizationInfo.toString());
-                organizationId = organizationInfo.getJSONObject(0).getInt("id");
-                RadiusImageView radiusImageView = findViewById(R.id.or_avatar);
-                GlideImageLoadStrategy lodeImg = new GlideImageLoadStrategy();
-                lodeImg.loadImage(radiusImageView, organizationInfo.getJSONObject(0).getString("organizationAvatar"));
-                orName.setText(organizationInfo.getJSONObject(0).getString("organizationName"));
-                orCity.setText("城市：" + organizationInfo.getJSONObject(0).getString("cityName"));
-                orCode.setText("编号：" + organizationInfo.getJSONObject(0).getString("organizationAbbreviation"));
-                orTypeName.setText("机构类型：" + organizationInfo.getJSONObject(0).getString("organizationTypeName"));
-                orLevel.setText("机构等级：：" + organizationInfo.getJSONObject(0).getString("organizationLevel"));
+        Bundle bundle = getArguments();
+        organizationVO = (OrganizationVO) bundle.getSerializable("organization");
+        organizationId = organizationVO.getId();
+        RadiusImageView radiusImageView = findViewById(R.id.or_avatar);
+        GlideImageLoadStrategy lodeImg = new GlideImageLoadStrategy();
+        lodeImg.loadImage(radiusImageView,organizationVO.getAvatar());
+        orName.setText(organizationVO.getName());
+        orCity.setText("城市："+organizationVO.getCityName());
+        orCode.setText(organizationVO.getAbbreviation());
+        orTypeName.setText("机构类型："+organizationVO.getTypeName());
+        orLevel.setText("机构等级："+organizationVO.getLevel());
 
-            }
-
-            @Override
-            public void fail(JSONObject error) {
-                openPage(OrganizationFragment.class);
-                XToastUtils.toast("未找到机构");
-            }
-        });
 
         /**
          * 检查用户是否已经加入该机构
          */
 
-        LinkedHashMap<String, String> params1 = new LinkedHashMap<>();
-        params1.put("organizationId", String.valueOf(organizationId));
-        MyHttp.get("/organization/checkUserBelongsToOrganization", TokenUtils.getToken(), params1, new MyHttp.Callback() {
+        LinkedHashMap<String,String> params = new  LinkedHashMap<>();
+        params.put("organizationId", String.valueOf(organizationId));
+        MyHttp.get("/organization/checkUserBelongsToOrganization", TokenUtils.getToken(), params, new MyHttp.Callback() {
             @Override
             public void success(JSONObject data) throws JSONException {
                 belongsTo = data.getBoolean("belongsTo");
