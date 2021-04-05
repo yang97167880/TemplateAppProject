@@ -16,8 +16,8 @@
  */
 
 package com.yiflyplan.app.activity.blueTooth;
-
 import com.yiflyplan.app.core.BaseActivity;
+
 
 /**
  * 蓝牙页面
@@ -25,4 +25,6 @@ import com.yiflyplan.app.core.BaseActivity;
  * @author xhy
  */
 public class BlueToothActivity extends BaseActivity {
+
+
 }
