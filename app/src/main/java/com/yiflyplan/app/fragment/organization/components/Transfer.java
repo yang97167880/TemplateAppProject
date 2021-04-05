@@ -72,6 +72,7 @@ public class Transfer extends BaseFragment {
     private int visible = View.GONE;
     private int num = 0;
     private List<String> organizationId = new ArrayList<>();
+    private List<Integer> checkId = new ArrayList<>();
     private BroccoliSimpleDelegateAdapter<ProductVO> mProductAdapter;
 
     @Override
@@ -95,9 +96,11 @@ public class Transfer extends BaseFragment {
                         CheckBox box = (CheckBox) v;
                         if (box.isChecked()) {
                             num++;
+                            checkId.add(position);
                             organizationId.add(String.valueOf(model.getId()));
                         } else {
                             num = num - 1;
+                            checkId.remove(position);
                             organizationId.remove(String.valueOf(model.getId()));
                         }
                         ImageView imageView = new ImageView(getContext());
@@ -127,7 +130,14 @@ public class Transfer extends BaseFragment {
                             }
                         });
                     }, R.id.expand_info);
-
+                    holder.bindDataToViewById(view -> {
+                        CheckBox checkBox = (CheckBox) view;
+                        if(checkId.indexOf( position )>0 -1){
+                            checkBox.setChecked(true);
+                        }else{
+                            checkBox.setChecked(false);
+                        }
+                    },R.id.item_checked);
                     holder.bindDataToViewById(view -> {
                         TextView name = (TextView) view;
                         name.setText(model.getItemTypeName());

@@ -45,6 +45,7 @@ import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xqrcode.XQRCode;
 import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
+import com.yiflyplan.app.fragment.blueTooth.BlueToothFragment;
 import com.yiflyplan.app.utils.XToastUtils;
 
 import butterknife.BindView;
@@ -96,6 +97,7 @@ public class InputFragment extends BaseFragment {
      * 定制化扫描界面Request Code
      */
     public static final int REQUEST_CUSTOM_SCAN = 113;
+
     /**
      * @return 返回为 null意为不需要导航栏
      */
@@ -121,11 +123,10 @@ public class InputFragment extends BaseFragment {
     protected void initViews() {
         scanView.setOnClickListener(v -> startScan());
         blueToothView.setOnClickListener(v -> startBlueTooth());
-        queryButton.setOnClickListener(v -> startQuery() );
-        scanCardInstructionsTextView.setOnClickListener(v ->scanCardInstructions() );
-        bluetoothCardInstructionsTextView.setOnClickListener(v ->bluetoothCardInstructions() );
+        queryButton.setOnClickListener(v -> startQuery());
+        scanCardInstructionsTextView.setOnClickListener(v -> scanCardInstructions());
+        bluetoothCardInstructionsTextView.setOnClickListener(v -> bluetoothCardInstructions());
     }
-
 
 
     /**
@@ -182,7 +183,7 @@ public class InputFragment extends BaseFragment {
      * 开启蓝牙录入
      */
     private void startBlueTooth() {
-
+        openNewPage(BlueToothFragment.class);
     }
 
     @Override
