@@ -95,6 +95,9 @@
     <string name="instructions">说明</string>
     <string name="user_qrcode_ins">欢迎长按或扫码关注</string>
     <string name="hint_search_or">机构名称/城市</string>
+    <string name="title_type_select">类型选择</string>
+    <string name="title_package_select">包装选择</string>
+    <string name="title_pollution_select">污染选择</string>
 
 
 </resources>

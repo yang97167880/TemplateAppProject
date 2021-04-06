@@ -19,9 +19,13 @@ package com.yiflyplan.app.fragment.blueTooth;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -34,8 +38,8 @@ import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.widget.button.ButtonView;
+import com.xuexiang.xutil.app.ActivityUtils;
 import com.yiflyplan.app.R;
-import com.yiflyplan.app.adapter.VO.MemberVO;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter;
@@ -43,6 +47,7 @@ import com.yiflyplan.app.adapter.entity.DeviceEntity;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.utils.XToastUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,11 +59,12 @@ import me.samlss.broccoli.Broccoli;
  */
 @Page(name = "蓝牙")
 public class BlueToothFragment extends BaseFragment {
+    public static final String MAC = "mac";
     private final Integer REQUEST_CODE = 200;
     private BluetoothAdapter bluetoothAdapter;
 
-    private List<DeviceEntity> pairDataList;
-    private List<DeviceEntity> unPairDataList;
+    private List<DeviceEntity> pairDataList = new ArrayList<>();
+    private List<DeviceEntity> unPairDataList = new ArrayList<>();
 
     private boolean tryConnect = false;
 
@@ -81,6 +87,7 @@ public class BlueToothFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
+        initBT();
         mButton.setOnClickListener(view -> {
             bluetoothLayout.setEnableRefresh(true);
             bluetoothLayout.autoRefresh();
@@ -127,7 +134,25 @@ public class BlueToothFragment extends BaseFragment {
             @Override
             protected void onBindData(MyRecyclerViewHolder holder, DeviceEntity model, int position) {
                 if(model != null){
+                    holder.bindDataToViewById(view -> {
+                        TextView name = (TextView) view;
+                        name.setText(model.getName());
+                    },R.id.bluetooth_name);
 
+                    holder.bindDataToViewById(view -> {
+                        TextView address = (TextView) view;
+                        address.setText(model.getAddress());
+                    },R.id.bluetooth_address);
+                    holder.click(R.id.bluetooth_item_view,view -> {
+                        if (!tryConnect) {
+                            bluetoothAdapter.cancelDiscovery();
+                            XToastUtils.info("正在连接，请等待...");
+                            tryConnect = true;
+                            openNewPage(EntryGarbageFragment.class,MAC, model.getAddress());
+                        } else {
+                            XToastUtils.info("连接失败！请刷新后重试...");
+                        }
+                    });
                 }
             }
 
@@ -156,7 +181,7 @@ public class BlueToothFragment extends BaseFragment {
                 bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
                 if (bluetoothAdapter == null) {
-                    XToastUtils.info("该设备可能不支持蓝牙!");
+                    XToastUtils.error("该设备可能不支持蓝牙!");
                     return;
                 }
                 if (!bluetoothAdapter.isEnabled()) {
@@ -164,12 +189,37 @@ public class BlueToothFragment extends BaseFragment {
                 }
                 discoveryDevice();
 
-                mDeviceAdapter1.refresh(pairDataList);
-                mDeviceAdapter2.refresh(unPairDataList);
+                mDeviceAdapter1.refresh(unPairDataList);
+                mDeviceAdapter2.refresh(pairDataList);
                 bluetoothLayout.setEnableRefresh(false);
-            },500);
+            },1000);
             bluetoothLayout.finishRefresh();
         });
+    }
+
+    private void addDeviceToList(BluetoothDevice device) {
+       DeviceEntity deviceEntity = new DeviceEntity(device.getName(), device.getAddress());
+        //如果不是配对过的设备
+        if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
+            if(pairDataList.indexOf(deviceEntity)<0){
+                pairDataList.add(deviceEntity);
+            }
+//            }
+
+        } else {
+            //
+            unPairDataList.add(deviceEntity);
+//            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (bluetoothAdapter != null) {
+            bluetoothAdapter.cancelDiscovery();
+        }
+        this.getActivity().unregisterReceiver(receiver);
     }
 
     private void discoveryDevice() {
@@ -182,6 +232,53 @@ public class BlueToothFragment extends BaseFragment {
                 bluetoothAdapter.cancelDiscovery();
             }
             bluetoothAdapter.startDiscovery();
+        }
+    }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            //如果找到设备
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                if (device != null) {
+                    addDeviceToList(device);
+                } else {
+                    XToastUtils.error("设备出错！");
+                }
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                XToastUtils.error("附近没有设备！");
+            }
+        }
+    };
+
+    private void initBT() {
+        this.getActivity().registerReceiver(receiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+        this.getActivity().registerReceiver(receiver, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
+        this.getActivity().registerReceiver(receiver, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED));
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        if (bluetoothAdapter == null) {
+            XToastUtils.error("该设备可能不支持蓝牙！");
+            return;
+        }
+        if (!bluetoothAdapter.isEnabled()) {
+            bluetoothAdapter.enable();
+        }
+
+        discoveryDevice();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                discoveryDevice();
+            } else {
+                this.getActivity().finish();
+            }
         }
     }
 }
