@@ -191,7 +191,7 @@
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="@dimen/config_margin_8dp"
                 android:gravity="center"
-                android:text="扫码查看"
+                android:text="扫一扫"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/config_margin_20dp" />
 
