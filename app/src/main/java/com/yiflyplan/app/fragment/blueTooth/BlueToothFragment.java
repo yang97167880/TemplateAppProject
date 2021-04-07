@@ -146,11 +146,12 @@ public class BlueToothFragment extends BaseFragment {
                     holder.click(R.id.bluetooth_item_view,view -> {
                         if (!tryConnect) {
                             bluetoothAdapter.cancelDiscovery();
-                            XToastUtils.info("正在连接，请等待...");
+//                            XToastUtils.info("正在连接，请等待...",200);
                             tryConnect = true;
                             openNewPage(EntryGarbageFragment.class,MAC, model.getAddress());
                         } else {
                             XToastUtils.info("连接失败！请刷新后重试...");
+                            tryConnect = false;
                         }
                     });
                 }
@@ -248,7 +249,7 @@ public class BlueToothFragment extends BaseFragment {
                     XToastUtils.error("设备出错！");
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                XToastUtils.error("附近没有设备！");
+               // XToastUtils.info("搜索结束");
             }
         }
     };
