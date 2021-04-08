@@ -186,6 +186,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 new NoticesFragment(),
         };
         fragments[0].setArguments( organizationBundle);
+        fragments[1].setArguments( organizationBundle);
         FragmentAdapter<BaseFragment> adapter = new FragmentAdapter<>(getSupportFragmentManager(), fragments);
         viewPager.setOffscreenPageLimit(mTitles.length - 1);
         viewPager.setAdapter(adapter);

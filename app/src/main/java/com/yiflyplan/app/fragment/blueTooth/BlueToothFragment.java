@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,7 @@ import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.widget.button.ButtonView;
 import com.xuexiang.xutil.app.ActivityUtils;
 import com.yiflyplan.app.R;
+import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter;
@@ -47,6 +49,7 @@ import com.yiflyplan.app.adapter.entity.DeviceEntity;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.utils.XToastUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -59,7 +62,7 @@ import me.samlss.broccoli.Broccoli;
  */
 @Page(name = "蓝牙")
 public class BlueToothFragment extends BaseFragment {
-    public static final String MAC = "mac";
+    public static final String PARAMS = "params";
     private final Integer REQUEST_CODE = 200;
     private BluetoothAdapter bluetoothAdapter;
 
@@ -87,6 +90,11 @@ public class BlueToothFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
+        Bundle bundle = this.getArguments();
+        OrganizationVO organizationVO = (OrganizationVO) bundle.getSerializable("organization");
+        Params params = new Params();
+        params.setDepartmentId(organizationVO.getDepartmentId());
+        params.setOrganizationId(organizationVO.getOrganizationId());
         initBT();
         mButton.setOnClickListener(view -> {
             bluetoothLayout.setEnableRefresh(true);
@@ -146,9 +154,10 @@ public class BlueToothFragment extends BaseFragment {
                     holder.click(R.id.bluetooth_item_view,view -> {
                         if (!tryConnect) {
                             bluetoothAdapter.cancelDiscovery();
-//                            XToastUtils.info("正在连接，请等待...",200);
+//                          XToastUtils.info("正在连接，请等待...",200);
                             tryConnect = true;
-                            openNewPage(EntryGarbageFragment.class,MAC, model.getAddress());
+                            params.setAddress( model.getAddress());
+                            openNewPage(EntryGarbageFragment.class,PARAMS,params);
                         } else {
                             XToastUtils.info("连接失败！请刷新后重试...");
                             tryConnect = false;
@@ -280,6 +289,44 @@ public class BlueToothFragment extends BaseFragment {
             } else {
                 this.getActivity().finish();
             }
+        }
+    }
+
+    public class Params implements Serializable{
+        private String address;
+        private int departmentId;
+        private int organizationId;
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public int getDepartmentId() {
+            return departmentId;
+        }
+
+        public void setDepartmentId(int departmentId) {
+            this.departmentId = departmentId;
+        }
+
+        public int getOrganizationId() {
+            return organizationId;
+        }
+
+        public void setOrganizationId(int organizationId) {
+            this.organizationId = organizationId;
+        }
+        @Override
+        public String toString() {
+            return "Params{" +
+                    "address='" + address + '\'' +
+                    ", departmentId=" + departmentId +
+                    ", organizationId=" + organizationId +
+                    '}';
         }
     }
 }

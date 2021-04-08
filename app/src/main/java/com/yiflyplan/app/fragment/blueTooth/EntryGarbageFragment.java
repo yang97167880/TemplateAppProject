@@ -18,21 +18,27 @@
 package com.yiflyplan.app.fragment.blueTooth;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.AppCompatEditText;
 
 import com.google.gson.JsonArray;
 import com.xuexiang.xpage.annotation.Page;
@@ -59,6 +65,7 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.ScheduledExecutorService;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -69,6 +76,9 @@ import butterknife.OnClick;
  */
 @Page(name = "物品录入")
 public class EntryGarbageFragment extends BaseFragment {
+
+    @BindView(R.id.garbage_weight)
+    AppCompatEditText garbageWeight;
     @BindView(R.id.btn_type)
     Button btnType;
     @BindView(R.id.btn_package)
@@ -78,8 +88,11 @@ public class EntryGarbageFragment extends BaseFragment {
     @BindView(R.id.uploadData)
     ButtonView uploadData;
     private String[] mTypeOption;
+    private String[] mTypeOptionId;
     private String[] mPackageOption;
+    private String[] mPackageOptionId;
     private String[] mPollutionOption;
+    private String[] mPollutionOptionId;
 
     private int typeSelectOption = 0;
     private int packageSelectOption = 0;
@@ -92,11 +105,17 @@ public class EntryGarbageFragment extends BaseFragment {
     private BluetoothSocket bluetoothSocket;
     private boolean hasConnect = false;
 
+    private AlertDialog entry_info_dialog;
+    private TextView entry_message;
+
+    private ScrollView message_scroll;
+
     private Timer timer = new Timer();
 
     private final Integer RECEIVE_CODE = 1; //接受数据成功状态码
     private final Integer RE_RECEIVE_CODE = 2;//接受数据失败，冲录入状态码
 
+    BlueToothFragment.Params nextParams;
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_entry_garbage;
@@ -110,14 +129,22 @@ public class EntryGarbageFragment extends BaseFragment {
         getPollutionOption();
 
         Bundle bundle = this.getArguments();
-        mac = bundle.getString("mac");
+        if (bundle == null) {throw new AssertionError();}
+        nextParams = (BlueToothFragment.Params) bundle.getSerializable("params");
+        if (nextParams == null){ throw new AssertionError();}
+        mac= nextParams.getAddress();
         if (mac == null) {
             XToastUtils.info("找不到该蓝牙，请重试...");
             popToBack();
         }
-        initBT();
-        //createEntryInfoDialog();
-        setUploadEvent();
+        try{
+            initBT();
+            createEntryInfoDialog();
+            setUploadEvent();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     //初始化蓝牙
@@ -147,7 +174,7 @@ public class EntryGarbageFragment extends BaseFragment {
             e.printStackTrace();
             XToastUtils.error("连接失败");
             closeBlueSocket();
-            this.getActivity().finish();
+            Objects.requireNonNull(this.getActivity()).finish();
         }
         //接收数据线程接受输入流
         try {
@@ -177,7 +204,31 @@ public class EntryGarbageFragment extends BaseFragment {
         closeBlueSocket();
     }
 
-    private ReadThread readThread = new ReadThread();
+    private void createEntryInfoDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+        @SuppressLint("InflateParams")
+        View view = LayoutInflater.from(this.getActivity()).inflate(R.layout.entry_info_dialog, null);
+        entry_message = view.findViewById(R.id.entry_message);
+        message_scroll = view.findViewById(R.id.message_scroll);
+        builder.setView(view);
+
+        entry_info_dialog = builder.create();
+        entry_info_dialog.setCanceledOnTouchOutside(false);
+        entry_info_dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    entry_info_dialog.dismiss();
+                    Objects.requireNonNull(EntryGarbageFragment.this.getActivity()).finish();
+                    return true;
+                }
+                return false;
+            }
+        });
+        entry_info_dialog.show();
+    }
+
+    private final ReadThread readThread = new ReadThread();
 
     class ReadThread extends Thread {
         private volatile boolean running;//线程是否在运行
@@ -266,7 +317,7 @@ public class EntryGarbageFragment extends BaseFragment {
         }
     }
 
-    private MessageReceiveHandler handler = new MessageReceiveHandler();
+    private final MessageReceiveHandler handler = new MessageReceiveHandler();
 
     @SuppressLint("HandlerLeak")
     class MessageReceiveHandler extends Handler {
@@ -275,40 +326,40 @@ public class EntryGarbageFragment extends BaseFragment {
         public synchronized void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             //接收到数据后，刷新用户界面
-//            String message = entry_message.getText().toString();
-//            message += "\nserver:~$ ";
-//            message += msg.obj;
-//
-//            String weight = readThread.getBluetoothMessage();
-//            while (weight == null) {
-//                weight = readThread.getBluetoothMessage();
-//            }
-//
-//            entry_message.setText(message);
-//            message_scroll.fullScroll(ScrollView.FOCUS_DOWN);
-//            if (msg.what != RE_RECEIVE_CODE) {
-//                garbageWeight.setText(readThread.getBluetoothMessage());
-//            }
-//
-//
-//            if (msg.what == RECEIVE_CODE) {
-//                message += "\nserver:~$ ";
-//                message += "请开始选择其他字段";
-//                entry_message.setText(message);
-//                message_scroll.fullScroll(ScrollView.FOCUS_DOWN);
-//
-//                timer.schedule(new TimerTask() {
-//                    @Override
-//                    public void run() {
-//
-//                        entry_info_dialog.dismiss();
-//
-//                        this.cancel();
-//
-//                    }
-//                }, 1000);
-//                trashType.performClick();
-//            }
+            String message = entry_message.getText().toString();
+            message += "\nserver:~$ ";
+            message += msg.obj;
+
+            String weight = readThread.getBluetoothMessage();
+            while (weight == null) {
+                weight = readThread.getBluetoothMessage();
+            }
+
+            entry_message.setText(message);
+            message_scroll.fullScroll(ScrollView.FOCUS_DOWN);
+            if (msg.what != RE_RECEIVE_CODE) {
+                garbageWeight.setText(readThread.getBluetoothMessage());
+            }
+
+
+            if (msg.what == RECEIVE_CODE) {
+                message += "\nserver:~$ ";
+                message += "请开始选择其他字段";
+                entry_message.setText(message);
+                message_scroll.fullScroll(ScrollView.FOCUS_DOWN);
+
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+
+                        entry_info_dialog.dismiss();
+
+                        this.cancel();
+
+                    }
+                }, 1000);
+                btnType.performClick();
+            }
 
         }
 
@@ -331,42 +382,44 @@ public class EntryGarbageFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (checkSelectValues()) {
-//                    entry_info_dialog.show();
-//                    //发送显示消息，进行显示刷新
-//                    Message message = new Message();
-//                    message.obj = "正在上传数据....";
-//                    handler.sendMessage(message);
-//
-//                    LinkedHashMap<String, String> params = new LinkedHashMap<>();
-//                    params.put(MyJsonConst.PollutionLevel, mTypeOption[typeSelectOption]);
-//                    params.put(MyJsonConst.TrashType, GarbageTypeInfoConstant.trashTypesAct[trashTypeIndex]);
-//                    params.put(MyJsonConst.Weight, garbageWeight.getText().toString());
-//                    params.put(MyJsonConst.BagType, GarbageTypeInfoConstant.bagTypesAct[bagTypeIndex]);
-////                    Log.e("TAG", params.toString());
-////                    Toast.makeText(EntryGarbageActivity.this, "上传中...", Toast.LENGTH_SHORT).show();
-//                    MyHttp.postJson(MyJsonConst.Url_AddTrashInfo, params, new MyHttp.Callback() {
-//                        @Override
-//                        public void success(JSONObject data) throws JSONException {
-//                            sendMessageToRemoteBluetooth(data.getString("trashCode"));
-////                            Toast.makeText(EntryGarbageActivity.this, "上传成功,请继续...", Toast.LENGTH_SHORT).show();
-//
-//                            //发送显示消息，进行显示刷新
-//                            Message message = new Message();
-//                            message.obj = "上传成功...";
-//                            handler.sendMessage(message);
-//                            message = new Message();
-//                            message.obj = "【您可以继续录入/退出请按返回键】";
-//                            handler.sendMessage(message);
-//                           // resetThisPage();
-//                        }
-//
-//                        @Override
-//                        public void fail(JSONObject error) {
-//                            Message message = new Message();
-//                            message.obj = "上传失败，请重试....";
-//                            handler.sendMessage(message);
-//                        }
-//                    });
+                    entry_info_dialog.show();
+                    //发送显示消息，进行显示刷新
+                    Message message = new Message();
+                    message.obj = "正在上传数据....";
+                    handler.sendMessage(message);
+
+                    LinkedHashMap<String, String> params = new LinkedHashMap<>();
+                    params.put("departmentId",String.valueOf(nextParams.getDepartmentId()));
+                    params.put("organizationId",String.valueOf(nextParams.getOrganizationId()));
+                    params.put("itemWeight", garbageWeight.getText().toString());
+                    params.put("itemTypeId", mTypeOptionId[typeSelectOption]);
+                    params.put("bagTypeId", mPackageOptionId[packageSelectOption]);
+                    params.put("pollutionLevelId", mPollutionOptionId[pollutionSelectOption]);
+//                    Log.e("TAG", params.toString());
+//                    Toast.makeText(EntryGarbageActivity.this, "上传中...", Toast.LENGTH_SHORT).show();
+                    MyHttp.postJson( "/product/createProduct",TokenUtils.getToken(), params, new MyHttp.Callback() {
+                        @Override
+                        public void success(JSONObject data) throws JSONException {
+                            sendMessageToRemoteBluetooth(data.getString("trashCode"));
+//                            Toast.makeText(EntryGarbageActivity.this, "上传成功,请继续...", Toast.LENGTH_SHORT).show();
+
+                            //发送显示消息，进行显示刷新
+                            Message message = new Message();
+                            message.obj = "上传成功...";
+                            handler.sendMessage(message);
+                            message = new Message();
+                            message.obj = "【您可以继续录入/退出请按返回键】";
+                            handler.sendMessage(message);
+                           // resetThisPage();
+                        }
+
+                        @Override
+                        public void fail(JSONObject error) {
+                            Message message = new Message();
+                            message.obj = "上传失败，请重试....";
+                            handler.sendMessage(message);
+                        }
+                    });
 
 
                 } else {
@@ -432,8 +485,10 @@ public class EntryGarbageFragment extends BaseFragment {
             public void success(JSONObject data) throws JSONException {
                 JSONArray options = new JSONArray(data.getString("data"));
                 mTypeOption = new String[options.length()];
+                mTypeOptionId = new String[options.length()];
                 for(int i=0;i<options.length();i++){
                     mTypeOption[i] = options.getJSONObject(i).getString("itemTypeName");
+                    mTypeOptionId[i] = options.getJSONObject(i).getString("id");
                 }
             }
 
@@ -450,8 +505,10 @@ public class EntryGarbageFragment extends BaseFragment {
             public void success(JSONObject data) throws JSONException {
                 JSONArray options = new JSONArray(data.getString("data"));
                 mPackageOption = new String[options.length()];
+                mPackageOptionId = new String[options.length()];
                 for(int i=0;i<options.length();i++){
                     mPackageOption[i] = options.getJSONObject(i).getString("bagTypeName");
+                    mPackageOptionId[i] = options.getJSONObject(i).getString("id");
                 }
             }
 
@@ -468,8 +525,10 @@ public class EntryGarbageFragment extends BaseFragment {
             public void success(JSONObject data) throws JSONException {
                 JSONArray options = new JSONArray(data.getString("data"));
                 mPollutionOption = new String[options.length()];
+                mPollutionOptionId = new String[options.length()];
                 for(int i=0;i<options.length();i++){
                     mPollutionOption[i] = options.getJSONObject(i).getString("pollutionLevelName");
+                    mPollutionOptionId[i] = options.getJSONObject(i).getString("id");
                 }
             }
 
