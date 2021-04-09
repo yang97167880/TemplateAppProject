@@ -17,9 +17,16 @@
 
 package com.yiflyplan.app.fragment.organization;
 
+import android.accessibilityservice.AccessibilityService;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,12 +42,14 @@ import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
+import com.yiflyplan.app.adapter.VO.ProductVO;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.organization.components.ApplyFormFragment;
 import com.yiflyplan.app.fragment.organization.components.ComponentsFragment;
+import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
@@ -61,7 +70,7 @@ import me.samlss.broccoli.Broccoli;
  * 搜索机构页面
  * */
 @Page(name = "查找机构")
-public class SearchOrganizationFragment extends BaseFragment implements View.OnClickListener {
+public class SearchOrganizationFragment extends BaseFragment implements View.OnClickListener, TextWatcher {
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.organization_recyclerView)
@@ -76,6 +85,9 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
 
     @BindView(R.id.btn_search_or)
     Button btnSearchOr;
+
+    @BindView(R.id.tv_no_data)
+    TextView tvNoData;
 
     private int totalPage = 1;
     private int pageNo = 1;
@@ -107,10 +119,6 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
         RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
         recyclerView.setRecycledViewPool(viewPool);
         viewPool.setMaxRecycledViews(0, 10);
-//
-//
-//        Bundle bundle = getArguments();
-//        List<CurrentUserVO> list = (List<CurrentUserVO>) bundle.getSerializable("currentUser");
         mOrganizationAdapter = new BroccoliSimpleDelegateAdapter<OrganizationVO>(R.layout.adapter_search_organization_list_item, new LinearLayoutHelper()) {
 
             @Override
@@ -134,12 +142,13 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
                         TextView level = (TextView) view;
                         level.setText(model.getOrganizationLevel());
                     },R.id.or_level);
-                    holder.click(R.id.btn_join_or,v ->{
+                    holder.click(R.id.card_view,v ->{
                         openNewPage(ApplyFormFragment.class,"organization",model);
                     });
                 }
 
             }
+
 
             @Override
             protected void onBindBroccoli(MyRecyclerViewHolder holder, Broccoli broccoli) {
@@ -160,12 +169,21 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
     protected void initListeners() {
 
         btnSearchOr.setOnClickListener(this);
+        edtSearchOrganization.addTextChangedListener(this);
+
+
 
         //下拉刷新
         refreshLayout.setOnRefreshListener(refreshLayout -> {
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
-                apiGetOrganizationVOList("once");
+                organizationInfo = edtSearchOrganization.getText().toString();
+                if(pageNo == 1 && organizationInfo.length()!=0){
+                    apiGetOrganizationVOList("once");
+                }else {
+                    organizationVOS.clear();
+                    mOrganizationAdapter.refresh(organizationVOS);
+                }
                 refreshLayout.finishRefresh();
             }, 500);
         });
@@ -173,6 +191,7 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
         refreshLayout.setOnLoadMoreListener(refreshLayout -> {
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
+                pageNo += 1;
                 apiGetOrganizationVOList("more");
                 refreshLayout.finishLoadMore();
             }, 500);
@@ -184,7 +203,6 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
         params.put("pageNo",String.valueOf(pageNo));
         params.put("pageSize",String.valueOf(pageSize));
         params.put("searchKey",organizationInfo);
-        if(pageNo<=totalPage){
             if(pageNo>1 && flag == "refresh"){
                 mOrganizationAdapter.refresh(organizationVOS);
             }else{
@@ -192,29 +210,31 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void success(JSONObject data) throws JSONException {
-                        JSONArray organizationInfo = new JSONArray(data.getString("list"));
+                        JSONArray organizationBaseInfo = new JSONArray(data.getString("list"));
                         List<OrganizationVO> voList = new ArrayList<>();
-                        for(int i = 0;i<organizationInfo.length();i++){
-                            OrganizationVO temp = new OrganizationVO();
-                            temp.setOrganizationId( organizationInfo.getJSONObject(i).getInt("id"));
-                            temp.setOrganizationName(organizationInfo.getJSONObject(i).getString("organizationName"));
-                            temp.setOrganizationAvatar(organizationInfo.getJSONObject(i).getString("organizationAvatar"));
-                            temp.setCityName(organizationInfo.getJSONObject(i).getString("cityName"));
-                            temp.setOrganizationAbbreviation(organizationInfo.getJSONObject(i).getString("organizationAbbreviation"));
-                            temp.setOrganizationLevel(organizationInfo.getJSONObject(i).getString("organizationLevel"));
-                            temp.setOrganizationTypeName(organizationInfo.getJSONObject(i).getString("organizationTypeName"));
-                            voList.add(temp);
+                        voList = ReflectUtil.convertToList(organizationBaseInfo, OrganizationVO.class);
+                        totalPage = data.getInt("totalPage");
+
+                        if(organizationBaseInfo.length()==0 && organizationInfo.length()!=0)
+                        {
+                            tvNoData.setVisibility(View.VISIBLE);
+                        }else {
+                            tvNoData.setVisibility(View.INVISIBLE);
                         }
-                        organizationVOS.clear();
-                        organizationVOS.addAll(voList);
+
                         switch(flag){
                             case "once":
-                                mOrganizationAdapter.refresh(organizationVOS);
+                                organizationVOS.clear();
+                                organizationVOS.addAll(voList);
                                 break;
                             case "more":
-                                mOrganizationAdapter.loadMore(organizationVOS);
+                                if (pageNo <= totalPage) {
+                                    organizationVOS.addAll(voList);
+                                    mOrganizationAdapter.loadMore(voList);
+                                 }
                                 break;
                         }
+                        mOrganizationAdapter.refresh(organizationVOS);
                     }
                     @Override
                     public void fail(JSONObject error) {
@@ -224,7 +244,7 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
             }
 
         }
-    }
+
 
     @Override
     public void onClick(View v) {
@@ -235,12 +255,35 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
                     XToastUtils.toast("请输入您想查找的内容");
                 }else {
                     apiGetOrganizationVOList("once");
+                    refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
                 }
 
                 break;
             default:
 
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        organizationInfo = s.toString();
+        if(s.length()==0){
+            organizationVOS.clear();
+            mOrganizationAdapter.refresh(organizationVOS);
+            tvNoData.setVisibility(View.INVISIBLE);
+        }else {
+            apiGetOrganizationVOList("once");
+            refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
     }
 }
 

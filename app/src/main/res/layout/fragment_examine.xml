@@ -17,7 +17,35 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/examine_refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srlEnableAutoLoadMore="true"
+        app:srlEnableLoadMore="true">
+
+
+        <com.scwang.smartrefresh.header.WaterDropHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/examine_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            tools:listitem="@layout/adapter_examine_item" />
+
+        <!--    注意修改包名时，这里也需要修改    -->
+        <com.yiflyplan.app.widget.MaterialFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </com.yiflyplan.app.widget.MaterialFooter>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>
