@@ -109,10 +109,11 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
             @Override
             public void success(JSONObject data) throws JSONException {
                 belongsTo = data.getBoolean("belongsTo");
+                Log.d("belongsTo", String.valueOf(belongsTo));
                 if (belongsTo) {
-                    btnApplyOr.setText(R.string.joined);
-                    btnApplyOr.setEnabled(false);
-                    btnApplyOr.setBackgroundResource(R.color.xui_btn_gray_select_color);
+                    btnApplyOr.setText(R.string.into_organization);
+                }else {
+                    btnApplyOr.setText(R.string.join_organization);
                 }
             }
 
@@ -135,6 +136,9 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
         switch (v.getId()) {
             case R.id.btn_apply_or:
 
+            if (belongsTo) {
+
+            }else {
                 LinkedHashMap<String, String> params = new LinkedHashMap<>();
                 params.put("organizationId", String.valueOf(organizationId));
                 MyHttp.postJson("/organization/applyToJoinOrganization", TokenUtils.getToken(), params, new MyHttp.Callback() {
@@ -143,13 +147,13 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
                         btnApplyOr.setText(R.string.check_pending);
                         btnApplyOr.setEnabled(false);
                         btnApplyOr.setBackgroundResource(R.color.xui_btn_gray_select_color);
-
                     }
 
                     @Override
                     public void fail(JSONObject error) {
                     }
                 });
+            }
                 break;
             default:
         }

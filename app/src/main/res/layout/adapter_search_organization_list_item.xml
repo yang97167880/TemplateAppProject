@@ -114,27 +114,9 @@
                     android:text="编码：XMZY01" />
 
 
-                <!--                <TextView-->
-<!--                    android:id="@+id/or_time"-->
-<!--                    style="@style/TextStyle.Explain"-->
-<!--                    android:layout_marginTop="5dp"-->
-<!--                    android:ellipsize="end"-->
-<!--                    android:gravity="start|center_vertical"-->
-<!--                    android:maxLines="2"-->
-<!--                    android:singleLine="false"-->
-<!--                    android:textColor="?attr/xui_config_color_content_text" />-->
             </LinearLayout>
 
 
-            <Button
-                android:id="@+id/btn_join_or"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edt_rounded_rectangle"
-                android:text="@string/join"
-                android:textColor="@color/black"
-                android:textSize="@dimen/config_margin_15dp"
-                />
 
 
         </LinearLayout>
