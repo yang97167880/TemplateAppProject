@@ -17,6 +17,8 @@
 
 package com.yiflyplan.app.fragment.organization.components;
 
+import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,10 +28,22 @@ import android.widget.TextView;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
+import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.ExamineVO;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.core.BaseFragment;
+import com.yiflyplan.app.core.http.MyHttp;
+import com.yiflyplan.app.utils.ReflectUtil;
+import com.yiflyplan.app.utils.TokenUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -68,28 +82,72 @@ public class ExamineDetailFragment  extends BaseFragment implements View.OnClick
         if(bundle!=null){
             examineVO = (ExamineVO) bundle.getSerializable("ExamineUserInfo");
             if (examineVO!=null){
+                GlideImageLoadStrategy img = new GlideImageLoadStrategy();
+                img.loadImage(memberAvatar, Uri.parse(examineVO.getApplyUserAvatar()));
                 memberName.setText(examineVO.getApplyUserName());
                 ApplyStatus = examineVO.getApplyStatus();
-                if(ApplyStatus == 2){
-                    linearLayout.setVisibility(View.GONE);
-                    txtRefused.setText("已同意申请");
+                switch (ApplyStatus){
+                    case 0:
+                        linearLayout.setVisibility(View.GONE);
+                        txtRefused.setText("已拒绝申请");
+                        break;
+                    case 1:
+                        txtRefused.setVisibility(View.GONE);
+                        break;
+                    case 2:
+                        linearLayout.setVisibility(View.GONE);
+                        txtRefused.setText("已同意申请");
+                        break;
                 }
+
             }
 
         }
-
-
-
 
     }
 
     @Override
     protected void initListeners() {
         super.initListeners();
+        refusedJoinOr.setOnClickListener(this);
+        agreeJoinOr.setOnClickListener(this);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.refused_join_or:
+                LinkedHashMap<String,String> params = new  LinkedHashMap<>();
+                params.put("applyId",String.valueOf(examineVO.getId()));
+                MyHttp.post("/organization/rejectJoinOrganizationApply", TokenUtils.getToken(), params, new MyHttp.Callback() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void success(JSONObject data) throws JSONException {
+
+                    }
+                    @Override
+                    public void fail(JSONObject error) {
+
+                    }
+                });
+                break;
+            case R.id.agree_join_or:
+                LinkedHashMap<String,String> params1 = new  LinkedHashMap<>();
+                params1.put("applyId",String.valueOf(examineVO.getId()));
+                MyHttp.post("/organization/rejectJoinOrganizationApply", TokenUtils.getToken(), params1, new MyHttp.Callback() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void success(JSONObject data) throws JSONException {
+
+                    }
+                    @Override
+                    public void fail(JSONObject error) {
+
+                    }
+                });
+                break;
+        }
 
     }
 

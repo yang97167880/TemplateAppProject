@@ -17,6 +17,7 @@
 
 package com.yiflyplan.app.fragment.organization.components;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -102,14 +103,47 @@ public class Examine extends BaseFragment {
                         name.setText(model.getApplyUserName());
                     }, R.id.member_name);
 
-                    holder.bindDataToViewById(view -> {
-                        TextView status = (TextView) view;
-                        status.setText(JoinOrganizationApplyStatusEnum.parse(model.getApplyStatus()));
-                    }, R.id.apply_status);
+                    holder.click(R.id.refused_join_or, v -> {
+                        LinkedHashMap<String,String> params = new  LinkedHashMap<>();
+                        params.put("applyId",String.valueOf(model.getId()));
+                        MyHttp.post("/organization/rejectJoinOrganizationApply", TokenUtils.getToken(), params, new MyHttp.Callback() {
+                            @SuppressLint("SetTextI18n")
+                            @Override
+                            public void success(JSONObject data) throws JSONException {
 
-                    holder.click(R.id.examine_member_view, v -> {
-                        openNewPage(ExamineDetailFragment.class, "ExamineUserInfo", model);
+                            }
+                            @Override
+                            public void fail(JSONObject error) {
+
+                            }
+                        });
                     });
+
+                    holder.click(R.id.agree_join_or, v -> {
+                        LinkedHashMap<String,String> params = new  LinkedHashMap<>();
+                        params.put("applyId",String.valueOf(model.getId()));
+                        MyHttp.post("/organization/approvedOrganizationApply", TokenUtils.getToken(), params, new MyHttp.Callback() {
+                            @SuppressLint("SetTextI18n")
+                            @Override
+                            public void success(JSONObject data) throws JSONException {
+
+                            }
+                            @Override
+                            public void fail(JSONObject error) {
+
+                            }
+                        });
+                    });
+
+
+//                    holder.bindDataToViewById(view -> {
+//                        TextView status = (TextView) view;
+//                        status.setText(JoinOrganizationApplyStatusEnum.parse(model.getApplyStatus()));
+//                    }, R.id.apply_status);
+
+//                    holder.click(R.id.examine_member_view, v -> {
+//                        openNewPage(ExamineDetailFragment.class, "ExamineUserInfo", model);
+//                    });
                 }
             }
 

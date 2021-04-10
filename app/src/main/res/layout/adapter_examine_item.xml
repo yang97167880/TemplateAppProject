@@ -42,8 +42,8 @@
 
             <com.xuexiang.xui.widget.imageview.RadiusImageView
                 android:id="@+id/member_avatar"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/xui_ic_default_img"
                 app:riv_border_width="0dp"
@@ -71,15 +71,26 @@
                     android:textSize="@dimen/config_margin_18dp" />
 
             </LinearLayout>
-            <TextView
-                android:id="@+id/apply_status"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/config_margin_8dp"
-                android:gravity="start|center_vertical"
-                android:text="已同意"
-                android:textColor="@color/xui_config_color_gray_6"
-                android:textSize="15dp" />
+
+            <Button
+                android:id="@+id/refused_join_or"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_rounded_rectangle"
+                android:textSize="8dp"
+                android:text="拒绝"
+                android:textColor="@color/xui_config_color_white"
+                />
+
+            <Button
+                android:id="@+id/agree_join_or"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_rounded_rectangle_agree"
+                android:layout_marginStart="@dimen/config_margin_20dp"
+                android:layout_marginEnd="@dimen/config_margin_20dp"
+                android:textSize="8dp"
+                android:text="同意"/>
 
         </LinearLayout>
 
