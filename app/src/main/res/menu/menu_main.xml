@@ -18,16 +18,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<!--    <item-->
-<!--        android:id="@+id/action_privacy"-->
-<!--        android:icon="@drawable/ic_add"-->
-<!--        android:orderInCategory="100"-->
-<!--        android:title="机构菜单"-->
-<!--        app:showAsAction="ifRoom" />-->
+    <item
+        android:id="@+id/action_change"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        android:title="TODO" />
+
 
 <!--    <item-->
 <!--        android:id="@+id/item_setting"-->
 <!--        android:title="加入机构"-->
+    ·
 <!--        app:showAsAction="never" />-->
     <item
         android:id="@+id/organization_add"
@@ -35,9 +36,9 @@
         android:icon="@drawable/ic_add"
         app:showAsAction="never" />
     <item
-        android:id="@+id/organization_scan"
+        android:id="@+id/organization_change"
         android:title="切换机构"
-        android:icon="@drawable/ic_scan_small"
+        android:icon="@drawable/ic_change"
         app:showAsAction="never" />
 
 </menu>

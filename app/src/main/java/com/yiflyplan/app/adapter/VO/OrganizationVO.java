@@ -21,14 +21,6 @@ import java.io.Serializable;
 
 public class OrganizationVO implements Serializable {
 
-    public int getDepartmentId() {
-        return departmentId;
-    }
-
-    public void setDepartmentId(int departmentId) {
-        this.departmentId = departmentId;
-    }
-
     public int getOrganizationId() {
         return organizationId;
     }
@@ -125,8 +117,6 @@ public class OrganizationVO implements Serializable {
 
     private int organizationTypeId;
 
-    private int departmentId;
-
     private String organizationTypeName;
 
     private String createTime;
@@ -135,7 +125,6 @@ public class OrganizationVO implements Serializable {
     public String toString() {
         return "OrganizationVO{" +
                 "organizationId=" + organizationId +
-                "departmentId=" + departmentId +
                 ", organizationName='" + organizationName + '\'' +
                 ", organizationAvatar='" + organizationAvatar + '\'' +
                 ", organizationCityId='" + organizationCityId + '\'' +

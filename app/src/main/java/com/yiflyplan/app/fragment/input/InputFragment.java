@@ -39,12 +39,14 @@ import com.xuexiang.xpage.core.PageOption;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 import com.xuexiang.xutil.app.PathUtils;
 import com.yiflyplan.app.R;
+import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.core.BaseFragment;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xqrcode.XQRCode;
 import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
+import com.yiflyplan.app.fragment.SearchFragment;
 import com.yiflyplan.app.fragment.blueTooth.BlueToothFragment;
 import com.yiflyplan.app.utils.XToastUtils;
 
@@ -183,7 +185,9 @@ public class InputFragment extends BaseFragment {
      * 开启蓝牙录入
      */
     private void startBlueTooth() {
-        openNewPage(BlueToothFragment.class);
+        Bundle bundle = getArguments();
+        OrganizationVO organizationVO = (OrganizationVO) bundle.getSerializable("organization");
+        openNewPage(SearchFragment.class,"organization",organizationVO);
     }
 
     @Override
