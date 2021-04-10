@@ -90,6 +90,7 @@ public class PersonalWarehouse extends BaseFragment {
                         CheckBox c = (CheckBox) view;
                         c.setVisibility(View.GONE);
                     }, R.id.item_checked);
+
                     holder.bindDataToViewById(view -> {
                         LinearLayout expandInfo = (LinearLayout) view;
                         expandInfo.setVisibility(View.GONE);
@@ -101,6 +102,10 @@ public class PersonalWarehouse extends BaseFragment {
                             }
                         });
                     }, R.id.expand_info);
+
+                    holder.click(R.id.item_infor, v -> {
+                        openNewPage(ProductItemCirculationFragment.class, "product", model);
+                    });
 
                     holder.bindDataToViewById(view -> {
                         TextView name = (TextView) view;
@@ -204,6 +209,7 @@ public class PersonalWarehouse extends BaseFragment {
             public void success(JSONObject data) throws JSONException {
                 totalPage = data.getInt("totalPage");
                 JSONArray product = new JSONArray(data.getString("list"));
+                Log.e("product",product.toString());
                 List<ProductVO> newList = new ArrayList<>();
                 newList = ReflectUtil.convertToList(product, ProductVO.class);
                 if(pageNo<=totalPage){

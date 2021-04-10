@@ -37,6 +37,7 @@ import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
+import com.yiflyplan.app.fragment.LoginFragment;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 
@@ -44,6 +45,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -67,6 +69,8 @@ public class Examine extends BaseFragment {
     private List<ExamineVO> examineVOS = new ArrayList<>();
     private SimpleDelegateAdapter<ExamineVO> mExamineAdapter;
 
+    private String userAvatar;
+    private ExamineVO examineVO;
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_examine;
@@ -87,12 +91,18 @@ public class Examine extends BaseFragment {
             @Override
             protected void onBindData(MyRecyclerViewHolder holder, ExamineVO model, int position) {
                 if (model != null) {
-//                    holder.bindDataToViewById(view -> {
-//
-//                        RadiusImageView avatar = (RadiusImageView) view;
-//                        GlideImageLoadStrategy img = new GlideImageLoadStrategy();
-//                        img.loadImage(avatar, Uri.parse(model.getApplyUserAvatar()));
-//                    }, R.id.member_avatar);
+                    holder.bindDataToViewById(view -> {
+                        RadiusImageView avatar = (RadiusImageView) view;
+                        GlideImageLoadStrategy img = new GlideImageLoadStrategy();
+
+
+                        apiGetUserAvatar(model.getApplyUserName());
+
+                        if(userAvatar==null){
+                            Log.e("userAvatar","userAvatar==null");
+                        }else
+                            img.loadImage(avatar, Uri.parse(userAvatar));
+                    }, R.id.member_avatar);
 
                     holder.bindDataToViewById(view -> {
                         TextView name = (TextView) view;
@@ -108,7 +118,7 @@ public class Examine extends BaseFragment {
                     }, R.id.apply_status);
 
                     holder.click(R.id.examine_member_view,v ->{
-                        openNewPage(ApplyFormFragment.class,"ExamineUserInfo",model);
+                        openNewPage(ExamineDetailFragment.class,"ExamineUserInfo",model);
                     });
                 }
             }
@@ -158,6 +168,10 @@ public class Examine extends BaseFragment {
 
     }
 
+    /**
+     * 获取机构的已通过的加入申请
+     */
+
     protected void apiGetApprovedOrganizationApply(String id) {
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("organizationId", id);
@@ -170,22 +184,6 @@ public class Examine extends BaseFragment {
                 JSONArray members = new JSONArray(data.getString("list"));
                 Log.e("Res", data.toString());
                 List<ExamineVO> newList = new ArrayList<>();
-//                for(int i = 0;i<members.length();i++){
-//                    ExamineVO temp = new ExamineVO();
-//                    temp.setApplyStatus(members.getJSONObject(i).getInt("applyStatus"));
-//                    temp.setApplyUserId(members.getJSONObject(i).getInt("applyUserId"));
-//                    temp.setApplyUserName(members.getJSONObject(i).getString("applyUserName"));
-//
-//
-//                    temp.setApplyUserAvatar(apiGetUserAvatar(temp.getApplyUserName()));
-//
-//
-//                    temp.setId(members.getJSONObject(i).getInt("id"));
-//                    temp.setOperaUserId(members.getJSONObject(i).getInt("operaUserId"));
-//                    temp.setOperaUserName(members.getJSONObject(i).getString("operaUserName"));
-//                    temp.setOrganizationId(members.getJSONObject(i).getInt("organizationId"));
-//                    newList.add(temp);
-//                }
                 newList = ReflectUtil.convertToList(members, ExamineVO.class);
                 Log.e("Res", newList.toString());
                 if (pageNo <= totalPage) {
@@ -200,19 +198,77 @@ public class Examine extends BaseFragment {
                 refreshLayout.finishRefresh();
             }
         });
+
+
+//        /**
+//         * 获取机构的处理中的加入申请
+//         */
+//        MyHttp.postJson("/organization/getProcessingJoinOrganizationApply", TokenUtils.getToken(), params, new MyHttp.Callback() {
+//            @Override
+//            public void success(JSONObject data) throws JSONException {
+//                JSONArray members = new JSONArray(data.getString("list"));
+//                Log.e("Processing", data.toString());
+//                List<ExamineVO> newList = new ArrayList<>();
+//                newList = ReflectUtil.convertToList(members, ExamineVO.class);
+//                Log.e("Processing", newList.toString());
+//                if (pageNo <= totalPage) {
+//                    examineVOS.addAll(newList);
+//                    mExamineAdapter.loadMore(newList);
+//                    pageNo += 1;
+//                }
+//            }
+//
+//            @Override
+//            public void fail(JSONObject error) {
+//                refreshLayout.finishRefresh();
+//            }
+//        });
+//
+//
+//
+//        /**
+//         * 获取机构的未通过的加入申请
+//         */
+//        MyHttp.postJson("/organization/getRejectedOrganizationApply", TokenUtils.getToken(), params, new MyHttp.Callback() {
+//            @Override
+//            public void success(JSONObject data) throws JSONException {
+//                JSONArray members = new JSONArray(data.getString("list"));
+//                Log.e("Rejected", data.toString());
+//                List<ExamineVO> newList = new ArrayList<>();
+//                newList = ReflectUtil.convertToList(members, ExamineVO.class);
+//                Log.e("Rejected", newList.toString());
+//                if (pageNo <= totalPage) {
+//                    examineVOS.addAll(newList);
+//                    mExamineAdapter.loadMore(newList);
+//                    pageNo += 1;
+//                }
+//            }
+//
+//            @Override
+//            public void fail(JSONObject error) {
+//                refreshLayout.finishRefresh();
+//            }
+//        });
     }
 
-    protected String apiGetUserAvatar(String UserName) {
+
+
+    protected void apiGetUserAvatar(String UserName) {
+
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("pageNo", String.valueOf(pageNo));
         params.put("pageSize", String.valueOf(pageSize));
-        params.put("searchKey", UserName);
-        final String[] userAvatar = new String[1];
+        params.put("searchKey", "SWE180572");
+
         MyHttp.postJson("/user/search", TokenUtils.getToken(), params, new MyHttp.Callback() {
             @Override
             public void success(JSONObject data) throws JSONException {
                 JSONArray members = new JSONArray(data.getString("list"));
-                userAvatar[0] = members.getJSONObject(0).getString("userAvatar");
+                Log.e("members",members.toString());
+                String uA = members.getJSONObject(0).getString("userAvatar");
+                Log.e("uA",uA);
+                userAvatar = uA;
+                Log.e("userAvatar",userAvatar);
             }
 
             @Override
@@ -220,6 +276,5 @@ public class Examine extends BaseFragment {
 
             }
         });
-        return userAvatar[0];
     }
 }
