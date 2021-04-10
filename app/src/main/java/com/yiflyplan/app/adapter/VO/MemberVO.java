@@ -19,6 +19,9 @@ package com.yiflyplan.app.adapter.VO;
 
 import java.io.Serializable;
 
+/**
+ * @author admin
+ */
 public class MemberVO implements Serializable {
 
 

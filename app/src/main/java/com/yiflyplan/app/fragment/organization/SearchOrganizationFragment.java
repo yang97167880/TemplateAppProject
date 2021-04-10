@@ -233,6 +233,8 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
                                     mOrganizationAdapter.loadMore(voList);
                                  }
                                 break;
+                            default:
+                                break;
                         }
                         mOrganizationAdapter.refresh(organizationVOS);
                     }

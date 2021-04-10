@@ -51,6 +51,7 @@ import com.xuexiang.xutil.XUtil;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
+import com.yiflyplan.app.fragment.SearchFragment;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
@@ -110,12 +111,12 @@ public class EntryGarbageFragment extends BaseFragment {
 
     private ScrollView message_scroll;
 
-    private Timer timer = new Timer();
+    private final Timer timer = new Timer();
 
     private final Integer RECEIVE_CODE = 1; //接受数据成功状态码
     private final Integer RE_RECEIVE_CODE = 2;//接受数据失败，冲录入状态码
 
-    BlueToothFragment.Params nextParams;
+    SearchFragment.UploadData upload;
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_entry_garbage;
@@ -127,20 +128,25 @@ public class EntryGarbageFragment extends BaseFragment {
         getTypeOption();
         getPackageOption();
         getPollutionOption();
-
         Bundle bundle = this.getArguments();
         if (bundle == null) {throw new AssertionError();}
-        nextParams = (BlueToothFragment.Params) bundle.getSerializable("params");
-        if (nextParams == null){ throw new AssertionError();}
-        mac= nextParams.getAddress();
+        upload = new SearchFragment.UploadData();
+        upload = (SearchFragment.UploadData) bundle.getSerializable("uploadData");
+        if (upload == null){ throw new AssertionError();}
+        mac = upload.getAddress();
         if (mac == null) {
             XToastUtils.info("找不到该蓝牙，请重试...");
             popToBack();
         }
         try{
             initBT();
-            createEntryInfoDialog();
-            setUploadEvent();
+            if(bluetoothSocket.isConnected()){
+                createEntryInfoDialog();
+                setUploadEvent();
+            }else{
+                XToastUtils.info("蓝牙通讯超时，请重试...");
+                popToBack();
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -389,8 +395,8 @@ public class EntryGarbageFragment extends BaseFragment {
                     handler.sendMessage(message);
 
                     LinkedHashMap<String, String> params = new LinkedHashMap<>();
-                    params.put("departmentId",String.valueOf(nextParams.getDepartmentId()));
-                    params.put("organizationId",String.valueOf(nextParams.getOrganizationId()));
+                    params.put("departmentId",String.valueOf(upload.getDepartmentId()));
+                    params.put("organizationId",String.valueOf(upload.getOrganizationId()));
                     params.put("itemWeight", garbageWeight.getText().toString());
                     params.put("itemTypeId", mTypeOptionId[typeSelectOption]);
                     params.put("bagTypeId", mPackageOptionId[packageSelectOption]);

@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,6 +48,7 @@ import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.entity.DeviceEntity;
 import com.yiflyplan.app.core.BaseFragment;
+import com.yiflyplan.app.fragment.SearchFragment;
 import com.yiflyplan.app.utils.XToastUtils;
 
 import java.io.Serializable;
@@ -61,8 +63,8 @@ import me.samlss.broccoli.Broccoli;
  * @author xhy
  */
 @Page(name = "蓝牙")
-public class BlueToothFragment extends BaseFragment {
-    public static final String PARAMS = "params";
+public class BlueToothFragment extends BaseFragment implements Serializable {
+    public static final String UPLOAD = "uploadData";
     private final Integer REQUEST_CODE = 200;
     private BluetoothAdapter bluetoothAdapter;
 
@@ -79,6 +81,10 @@ public class BlueToothFragment extends BaseFragment {
     SmartRefreshLayout bluetoothLayout;
     @BindView(R.id.match_bluetooth)
     ButtonView mButton;
+    @BindView(R.id.department)
+    TextView departmentView;
+    @BindView(R.id.organization)
+    TextView organizationView;
 
     private SimpleDelegateAdapter<DeviceEntity> mDeviceAdapter1;
     private SimpleDelegateAdapter<DeviceEntity> mDeviceAdapter2;
@@ -91,10 +97,9 @@ public class BlueToothFragment extends BaseFragment {
     @Override
     protected void initViews() {
         Bundle bundle = this.getArguments();
-        OrganizationVO organizationVO = (OrganizationVO) bundle.getSerializable("organization");
-        Params params = new Params();
-        params.setDepartmentId(organizationVO.getDepartmentId());
-        params.setOrganizationId(organizationVO.getOrganizationId());
+        SearchFragment.UploadData up = (SearchFragment.UploadData) bundle.getSerializable("uploadData");
+        departmentView.setText(up.getDepartmentName());
+        organizationView.setText(up.getOrganizationName());
         initBT();
         mButton.setOnClickListener(view -> {
             bluetoothLayout.setEnableRefresh(true);
@@ -114,19 +119,19 @@ public class BlueToothFragment extends BaseFragment {
         bluetoothCard2.setLayoutManager(virtualLayoutManager2);
         bluetoothCard2.setRecycledViewPool(viewPool2);
 
-        mDeviceAdapter1 = new BroccoliSimpleDelegateAdapter<DeviceEntity>(R.layout.adapter_bluetooth_item,new LinearLayoutHelper()) {
+        mDeviceAdapter1 = new BroccoliSimpleDelegateAdapter<DeviceEntity>(R.layout.adapter_bluetooth_item, new LinearLayoutHelper()) {
             @Override
             protected void onBindData(MyRecyclerViewHolder holder, DeviceEntity model, int position) {
-                if(model != null){
+                if (model != null) {
                     holder.bindDataToViewById(view -> {
                         TextView name = (TextView) view;
                         name.setText(model.getName());
-                    },R.id.bluetooth_name);
+                    }, R.id.bluetooth_name);
 
                     holder.bindDataToViewById(view -> {
                         TextView address = (TextView) view;
                         address.setText(model.getAddress());
-                    },R.id.bluetooth_address);
+                    }, R.id.bluetooth_address);
                 }
             }
 
@@ -138,26 +143,27 @@ public class BlueToothFragment extends BaseFragment {
             }
         };
 
-        mDeviceAdapter2 = new BroccoliSimpleDelegateAdapter<DeviceEntity>(R.layout.adapter_bluetooth_item,new LinearLayoutHelper()) {
+        mDeviceAdapter2 = new BroccoliSimpleDelegateAdapter<DeviceEntity>(R.layout.adapter_bluetooth_item, new LinearLayoutHelper()) {
             @Override
             protected void onBindData(MyRecyclerViewHolder holder, DeviceEntity model, int position) {
-                if(model != null){
+                if (model != null) {
                     holder.bindDataToViewById(view -> {
                         TextView name = (TextView) view;
                         name.setText(model.getName());
-                    },R.id.bluetooth_name);
+                    }, R.id.bluetooth_name);
 
                     holder.bindDataToViewById(view -> {
                         TextView address = (TextView) view;
                         address.setText(model.getAddress());
-                    },R.id.bluetooth_address);
-                    holder.click(R.id.bluetooth_item_view,view -> {
+                    }, R.id.bluetooth_address);
+                    holder.click(R.id.bluetooth_item_view, view -> {
                         if (!tryConnect) {
                             bluetoothAdapter.cancelDiscovery();
 //                          XToastUtils.info("正在连接，请等待...",200);
                             tryConnect = true;
-                            params.setAddress( model.getAddress());
-                            openNewPage(EntryGarbageFragment.class,PARAMS,params);
+
+                            up.setAddress(model.getAddress());
+                            openNewPage(EntryGarbageFragment.class, UPLOAD, up);
                         } else {
                             XToastUtils.info("连接失败！请刷新后重试...");
                             tryConnect = false;
@@ -182,12 +188,13 @@ public class BlueToothFragment extends BaseFragment {
         bluetoothCard1.setAdapter(delegateAdapter1);
         bluetoothCard2.setAdapter(delegateAdapter2);
     }
+
     @Override
     protected void initListeners() {
         //首次刷新
         bluetoothLayout.autoRefresh();
         bluetoothLayout.setOnRefreshListener(bluetoothLayout -> {
-            bluetoothLayout.getLayout().postDelayed(() ->{
+            bluetoothLayout.getLayout().postDelayed(() -> {
                 bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
                 if (bluetoothAdapter == null) {
@@ -202,16 +209,16 @@ public class BlueToothFragment extends BaseFragment {
                 mDeviceAdapter1.refresh(unPairDataList);
                 mDeviceAdapter2.refresh(pairDataList);
                 bluetoothLayout.setEnableRefresh(false);
-            },1000);
+            }, 1000);
             bluetoothLayout.finishRefresh();
         });
     }
 
     private void addDeviceToList(BluetoothDevice device) {
-       DeviceEntity deviceEntity = new DeviceEntity(device.getName(), device.getAddress());
+        DeviceEntity deviceEntity = new DeviceEntity(device.getName(), device.getAddress());
         //如果不是配对过的设备
         if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-            if(pairDataList.indexOf(deviceEntity)<0){
+            if (pairDataList.indexOf(deviceEntity) < 0) {
                 pairDataList.add(deviceEntity);
             }
 //            }
@@ -258,7 +265,7 @@ public class BlueToothFragment extends BaseFragment {
                     XToastUtils.error("设备出错！");
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-               // XToastUtils.info("搜索结束");
+                // XToastUtils.info("搜索结束");
             }
         }
     };
@@ -292,41 +299,4 @@ public class BlueToothFragment extends BaseFragment {
         }
     }
 
-    public class Params implements Serializable{
-        private String address;
-        private int departmentId;
-        private int organizationId;
-
-        public String getAddress() {
-            return address;
-        }
-
-        public void setAddress(String address) {
-            this.address = address;
-        }
-
-        public int getDepartmentId() {
-            return departmentId;
-        }
-
-        public void setDepartmentId(int departmentId) {
-            this.departmentId = departmentId;
-        }
-
-        public int getOrganizationId() {
-            return organizationId;
-        }
-
-        public void setOrganizationId(int organizationId) {
-            this.organizationId = organizationId;
-        }
-        @Override
-        public String toString() {
-            return "Params{" +
-                    "address='" + address + '\'' +
-                    ", departmentId=" + departmentId +
-                    ", organizationId=" + organizationId +
-                    '}';
-        }
-    }
 }
