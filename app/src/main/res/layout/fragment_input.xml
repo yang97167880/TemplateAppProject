@@ -148,7 +148,7 @@
             android:layout_alignBottom="@+id/medical_waste_transfer_information_code"
             android:layout_marginEnd="0dp"
             android:layout_marginBottom="0dp"
-            android:background="@drawable/btn_rounded_rectangle"
+            android:background="@drawable/btn_rounded_rectangle_search"
             android:text="@string/query"
             android:textSize="@dimen/config_margin_18dp"
 

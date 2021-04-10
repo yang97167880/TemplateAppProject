@@ -17,6 +17,7 @@
 
 package com.yiflyplan.app.fragment.organization.components;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,6 +42,7 @@ import com.yiflyplan.app.enums.JoinOrganizationApplyStatusEnum;
 import com.yiflyplan.app.fragment.LoginFragment;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
+import com.yiflyplan.app.utils.XToastUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -102,14 +104,39 @@ public class Examine extends BaseFragment {
                         name.setText(model.getApplyUserName());
                     }, R.id.member_name);
 
-                    holder.bindDataToViewById(view -> {
-                        TextView status = (TextView) view;
-                        status.setText(JoinOrganizationApplyStatusEnum.parse(model.getApplyStatus()));
-                    }, R.id.apply_status);
+                    holder.click(R.id.refused_join_or, v -> {
+                        LinkedHashMap<String,String> params = new  LinkedHashMap<>();
+                        params.put("applyId",String.valueOf(model.getId()));
+                        MyHttp.post("/organization/rejectJoinOrganizationApply", TokenUtils.getToken(), params, new MyHttp.Callback() {
+                            @SuppressLint("SetTextI18n")
+                            @Override
+                            public void success(JSONObject data) throws JSONException {
+                                XToastUtils.toast("已拒绝该用户的申请");
+                            }
+                            @Override
+                            public void fail(JSONObject error) {
 
-                    holder.click(R.id.examine_member_view, v -> {
-                        openNewPage(ExamineDetailFragment.class, "ExamineUserInfo", model);
+                            }
+                        });
                     });
+
+                    holder.click(R.id.agree_join_or, v -> {
+                        LinkedHashMap<String,String> params = new  LinkedHashMap<>();
+                        params.put("applyId",String.valueOf(model.getId()));
+                        MyHttp.post("/organization/approvedOrganizationApply", TokenUtils.getToken(), params, new MyHttp.Callback() {
+                            @SuppressLint("SetTextI18n")
+                            @Override
+                            public void success(JSONObject data) throws JSONException {
+                                XToastUtils.toast("已同意该用户的申请");
+                            }
+                            @Override
+                            public void fail(JSONObject error) {
+
+                            }
+                        });
+                    });
+
+
                 }
             }
 
@@ -188,56 +215,6 @@ public class Examine extends BaseFragment {
             }
         });
 
-
-//        /**
-//         * 获取机构的处理中的加入申请
-//         */
-//        MyHttp.postJson("/organization/getProcessingJoinOrganizationApply", TokenUtils.getToken(), params, new MyHttp.Callback() {
-//            @Override
-//            public void success(JSONObject data) throws JSONException {
-//                JSONArray members = new JSONArray(data.getString("list"));
-//                Log.e("Processing", data.toString());
-//                List<ExamineVO> newList = new ArrayList<>();
-//                newList = ReflectUtil.convertToList(members, ExamineVO.class);
-//                Log.e("Processing", newList.toString());
-//                if (pageNo <= totalPage) {
-//                    examineVOS.addAll(newList);
-//                    mExamineAdapter.loadMore(newList);
-//                    pageNo += 1;
-//                }
-//            }
-//
-//            @Override
-//            public void fail(JSONObject error) {
-//                refreshLayout.finishRefresh();
-//            }
-//        });
-//
-//
-//
-//        /**
-//         * 获取机构的未通过的加入申请
-//         */
-//        MyHttp.postJson("/organization/getRejectedOrganizationApply", TokenUtils.getToken(), params, new MyHttp.Callback() {
-//            @Override
-//            public void success(JSONObject data) throws JSONException {
-//                JSONArray members = new JSONArray(data.getString("list"));
-//                Log.e("Rejected", data.toString());
-//                List<ExamineVO> newList = new ArrayList<>();
-//                newList = ReflectUtil.convertToList(members, ExamineVO.class);
-//                Log.e("Rejected", newList.toString());
-//                if (pageNo <= totalPage) {
-//                    examineVOS.addAll(newList);
-//                    mExamineAdapter.loadMore(newList);
-//                    pageNo += 1;
-//                }
-//            }
-//
-//            @Override
-//            public void fail(JSONObject error) {
-//                refreshLayout.finishRefresh();
-//            }
-//        });
     }
 
 }
