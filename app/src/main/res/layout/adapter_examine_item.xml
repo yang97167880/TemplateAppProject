@@ -27,6 +27,7 @@
     app:contentPaddingRight="16dp"
     app:contentPaddingTop="5dp">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

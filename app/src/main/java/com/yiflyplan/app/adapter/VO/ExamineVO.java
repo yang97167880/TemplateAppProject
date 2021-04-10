@@ -26,19 +26,11 @@ public class ExamineVO implements Serializable {
     private int applyStatus;
     private int applyUserId;
     private String applyUserName;
-    private String applyUserAvatar;
     private int id;
     private int operaUserId;
     private String operaUserName;
     private int organizationId;
 
-    public String getApplyUserAvatar() {
-        return applyUserAvatar;
-    }
-
-    public void setApplyUserAvatar(String applyUserAvatar) {
-        this.applyUserAvatar = applyUserAvatar;
-    }
 
     public int getApplyStatus() {
         return applyStatus;

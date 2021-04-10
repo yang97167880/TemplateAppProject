@@ -17,18 +17,45 @@
 
 package com.yiflyplan.app.fragment.organization.components;
 
+import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.xuexiang.xpage.annotation.Page;
+import com.xuexiang.xui.widget.actionbar.TitleBar;
+import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.yiflyplan.app.R;
+import com.yiflyplan.app.adapter.VO.ExamineVO;
+import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.core.BaseFragment;
 
-@Page(name = "机构")
-public class ExamineDetailFragment  extends BaseFragment implements View.OnClickListener{
-    @Override
-    public void onClick(View v) {
+import butterknife.BindView;
 
-    }
+@Page(name = "加入申请")
+public class ExamineDetailFragment  extends BaseFragment implements View.OnClickListener{
+
+    @BindView(R.id.member_avatar)
+    RadiusImageView memberAvatar;
+
+    @BindView(R.id.member_name)
+    TextView memberName;
+
+    @BindView(R.id.txt_refused)
+    TextView txtRefused;
+
+    @BindView(R.id.refused_join_or)
+    Button refusedJoinOr;
+
+    @BindView(R.id.agree_join_or)
+    Button agreeJoinOr;
+
+    @BindView(R.id.btn_ll)
+    LinearLayout linearLayout;
+
+    private ExamineVO examineVO;
+    private int ApplyStatus;
 
     @Override
     protected int getLayoutId() {
@@ -37,6 +64,33 @@ public class ExamineDetailFragment  extends BaseFragment implements View.OnClick
 
     @Override
     protected void initViews() {
+        Bundle bundle = getArguments();
+        if(bundle!=null){
+            examineVO = (ExamineVO) bundle.getSerializable("ExamineUserInfo");
+            if (examineVO!=null){
+                memberName.setText(examineVO.getApplyUserName());
+                ApplyStatus = examineVO.getApplyStatus();
+                if(ApplyStatus == 2){
+                    linearLayout.setVisibility(View.GONE);
+                    txtRefused.setText("已同意申请");
+                }
+            }
+
+        }
+
+
+
 
     }
+
+    @Override
+    protected void initListeners() {
+        super.initListeners();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
 }

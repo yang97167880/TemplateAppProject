@@ -178,7 +178,7 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
                 organizationInfo = edtSearchOrganization.getText().toString();
-                if(pageNo == 1 && organizationInfo.length()!=0){
+                if(organizationInfo.length()!=0){
                     apiGetOrganizationVOList("once");
                 }else {
                     organizationVOS.clear();
