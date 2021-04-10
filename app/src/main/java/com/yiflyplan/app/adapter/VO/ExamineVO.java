@@ -26,6 +26,7 @@ public class ExamineVO implements Serializable {
     private int applyStatus;
     private int applyUserId;
     private String applyUserName;
+    private String applyUserAvatar;
     private int id;
     private int operaUserId;
     private String operaUserName;
@@ -54,6 +55,14 @@ public class ExamineVO implements Serializable {
 
     public void setApplyUserName(String applyUserName) {
         this.applyUserName = applyUserName;
+    }
+
+    public String getApplyUserAvatar() {
+        return applyUserAvatar;
+    }
+
+    public void setApplyUserAvatar(String applyUserAvatar) {
+        this.applyUserAvatar = applyUserAvatar;
     }
 
     public int getId() {
@@ -88,17 +97,17 @@ public class ExamineVO implements Serializable {
         this.organizationId = organizationId;
     }
 
-    @NonNull
     @Override
     public String toString() {
         return "ExamineVO{" +
                 "applyStatus=" + applyStatus +
-                ", applyUserId='" + applyUserId + '\'' +
+                ", applyUserId=" + applyUserId +
                 ", applyUserName='" + applyUserName + '\'' +
-                ", id='" + id + '\'' +
-                ", operaUserId='" + operaUserId + '\'' +
+                ", applyUserAvatar='" + applyUserAvatar + '\'' +
+                ", id=" + id +
+                ", operaUserId=" + operaUserId +
                 ", operaUserName='" + operaUserName + '\'' +
-                ", organizationId='" + organizationId + '\'' +
+                ", organizationId=" + organizationId +
                 '}';
     }
 }
