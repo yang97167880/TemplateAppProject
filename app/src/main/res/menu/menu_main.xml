@@ -19,10 +19,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_change"
+        android:id="@+id/organization_change"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"
-        android:title="TODO" />
+        android:title="切换" />
 
 
 <!--    <item-->
@@ -34,11 +34,6 @@
         android:id="@+id/organization_add"
         android:title="加入机构"
         android:icon="@drawable/ic_add"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/organization_change"
-        android:title="切换机构"
-        android:icon="@drawable/ic_change"
         app:showAsAction="never" />
 
 </menu>

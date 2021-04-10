@@ -20,13 +20,16 @@ package com.yiflyplan.app.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -37,8 +40,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.commonsdk.debug.I;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xui.adapter.FragmentAdapter;
 import com.xuexiang.xui.utils.ResUtils;
@@ -60,12 +66,15 @@ import com.yarolegovich.slidingrootnav.callback.DragStateListener;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
+import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
+import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.adapter.menu.DrawerAdapter;
 import com.yiflyplan.app.adapter.menu.DrawerItem;
 import com.yiflyplan.app.adapter.menu.SimpleItem;
 import com.yiflyplan.app.adapter.menu.SpaceItem;
 import com.yiflyplan.app.core.BaseActivity;
 import com.yiflyplan.app.core.BaseFragment;
+import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.AboutFragment;
 import com.yiflyplan.app.fragment.QRCodeFragment;
 import com.yiflyplan.app.fragment.SettingsFragment;
@@ -79,11 +88,17 @@ import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 import com.yiflyplan.app.widget.GuideTipsDialog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import butterknife.BindView;
+import me.samlss.broccoli.Broccoli;
 
 /**
  * 程序主页面,只是一个简单的Tab例子
@@ -91,7 +106,7 @@ import butterknife.BindView;
  * @author xuexiang
  * @since 2019-07-07 23:53
  */
-public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSelectedListener,View.OnClickListener, ViewPager.OnPageChangeListener, BottomNavigationView.OnNavigationItemSelectedListener, ClickUtils.OnClick2ExitListener, Toolbar.OnMenuItemClickListener {
+public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSelectedListener, View.OnClickListener, ViewPager.OnPageChangeListener, BottomNavigationView.OnNavigationItemSelectedListener, ClickUtils.OnClick2ExitListener, Toolbar.OnMenuItemClickListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -117,8 +132,12 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     private static final int POS_LOGOUT = 5;
     private CurrentUserVO userVO;
     OrganizationVO organizationVO;
+    List<OrganizationVO> relationships;
     private Bundle organizationBundle;
 
+    ComponentsFragment componentsFragment;
+    InputFragment inputFragment;
+    BottomSheetDialog dialog;
 
     @Override
     protected int getLayoutId() {
@@ -131,8 +150,10 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 
         //获取传递过来的用户数据
         Intent intent = this.getIntent();
-        userVO =  (CurrentUserVO) intent.getSerializableExtra(CURRENTUSER);
+        userVO = (CurrentUserVO) intent.getSerializableExtra(CURRENTUSER);
         organizationVO = userVO.getCurrentOrganization();
+        relationships = userVO.getRelationships();
+
         organizationBundle = new Bundle();
         organizationBundle.putSerializable("organization", userVO.getCurrentOrganization());
 
@@ -166,27 +187,30 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 
     private void initViews() {
         mTitles = ResUtils.getStringArray(R.array.home_titles);
-        toolbar.setTitle(mTitles[0]);
+        toolbar.setTitle(organizationVO.getOrganizationName());
         toolbar.inflateMenu(R.menu.menu_main);
         toolbar.setOnMenuItemClickListener(this);
         toolbar.setNavigationIcon(R.drawable.ic_action_menu);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-           @Override
-           @SingleClick
-           public void onClick(View v) {
-            openMenu();
-           }
-       });
+            @Override
+            @SingleClick
+            public void onClick(View v) {
+                openMenu();
+            }
+        });
 
+        componentsFragment = new ComponentsFragment();
+        inputFragment = new InputFragment();
+        componentsFragment.setArguments(organizationBundle);
+        inputFragment.setArguments(organizationBundle);
         //主页内容填充
         BaseFragment[] fragments = new BaseFragment[]{
-                new ComponentsFragment(),
-                new InputFragment(),
+                componentsFragment,
+                inputFragment,
 //                new ProfileFragment(),
                 new NoticesFragment(),
         };
-        fragments[0].setArguments( organizationBundle);
-        fragments[1].setArguments( organizationBundle);
+
         FragmentAdapter<BaseFragment> adapter = new FragmentAdapter<>(getSupportFragmentManager(), fragments);
         viewPager.setOffscreenPageLimit(mTitles.length - 1);
         viewPager.setAdapter(adapter);
@@ -212,19 +236,19 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         userName.setText(userVO.getUserName());
 
         TextView organizationName = findViewById(R.id.tv_organization);
-        organizationName.setText(userVO.getCurrentOrganization().getOrganizationName());
+        organizationName.setText(organizationVO.getOrganizationName());
         RadiusImageView userAvatar = findViewById(R.id.iv_avatar);
         //String url = "https://light-plant.oss-cn-beijing.aliyuncs.com/2021/03/22/2fac6a7f3a764dec8eae65046924296d.jpg";
         //Glide.with(this).load(url).into(userAvatar);
         GlideImageLoadStrategy lodeImg = new GlideImageLoadStrategy();
-        lodeImg.loadImage(userAvatar,userVO.getUserAvatar());
+        lodeImg.loadImage(userAvatar, userVO.getUserAvatar());
 
         LinearLayout mLLMenu = mSlidingRootNav.getLayout().findViewById(R.id.ll_menu);
         final AppCompatImageView ivQrcode = mSlidingRootNav.getLayout().findViewById(R.id.iv_qrcode);
         Bundle bundle = new Bundle();
-        bundle.putString("userAvatar",userVO.getUserAvatar());
-        bundle.putString("userName",userVO.getUserName());
-        ivQrcode.setOnClickListener(v -> openNewPage(QRCodeFragment.class,bundle));
+        bundle.putString("userAvatar", userVO.getUserAvatar());
+        bundle.putString("userName", userVO.getUserName());
+        ivQrcode.setOnClickListener(v -> openNewPage(QRCodeFragment.class, bundle));
 
         final AppCompatImageView ivSetting = mSlidingRootNav.getLayout().findViewById(R.id.iv_setting);
         ivSetting.setOnClickListener(v -> openNewPage(SettingsFragment.class));
@@ -294,6 +318,10 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
             case R.id.organization_add:
                 openNewPage(SearchOrganizationFragment.class);
                 break;
+
+            case R.id.organization_change:
+                showBottomSheetListDialog();
+                        break;
             default:
                 break;
         }
@@ -322,7 +350,12 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     @Override
     public void onPageSelected(int position) {
         MenuItem item = bottomNavigation.getMenu().getItem(position);
-        toolbar.setTitle(item.getTitle());
+        if (position == 0) {
+            toolbar.setTitle(organizationVO.getOrganizationName());
+        } else {
+            toolbar.setTitle(item.getTitle());
+        }
+
         item.setChecked(true);
 
     }
@@ -344,7 +377,11 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         int index = CollectionUtils.arrayIndexOf(mTitles, menuItem.getTitle());
         if (index != -1) {
-            toolbar.setTitle(menuItem.getTitle());
+            if (index == 0) {
+                toolbar.setTitle(organizationVO.getOrganizationName());
+            } else {
+                toolbar.setTitle(menuItem.getTitle());
+            }
             viewPager.setCurrentItem(index, false);
 
             return true;
@@ -385,8 +422,12 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
             case POS_ORGANIZATION:
             case POS_INPUT:
             case POS_NOTICES:
-                if(mMenuTitles.length > 0){
-                    toolbar.setTitle(mMenuTitles[position]);
+                if (mMenuTitles.length > 0) {
+                    if (position == 0) {
+                        toolbar.setTitle(organizationVO.getOrganizationName());
+                    } else {
+                        toolbar.setTitle(mMenuTitles[position]);
+                    }
                     viewPager.setCurrentItem(position, false);
                 }
                 mSlidingRootNav.closeMenu();
@@ -454,17 +495,17 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                         getString(R.string.hint_input),
                         null,
                         false,
-                        ((dialog, input) -> Log.d("","")))
+                        ((dialog, input) -> Log.d("", "")))
                 .positiveText(R.string.lab_search)
                 .negativeText(R.string.lab_cancel)
                 .onPositive((dialog, which) -> {
-                    String organizationInfo =dialog.getInputEditText().getText().toString();
-                    if (organizationInfo.length()==0){
+                    String organizationInfo = dialog.getInputEditText().getText().toString();
+                    if (organizationInfo.length() == 0) {
                         XToastUtils.toast("内容不能为空");
-                    }else{
+                    } else {
                         Bundle bundle = new Bundle();
-                        bundle.putString("organizationInfo",organizationInfo);
-                        openNewPage(ApplyFormFragment.class,bundle);
+                        bundle.putString("organizationInfo", organizationInfo);
+                        openNewPage(ApplyFormFragment.class, bundle);
                     }
 
                 })
@@ -472,5 +513,104 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 .show();
     }
 
+    //切换机构弹窗
+    private void showBottomSheetListDialog() {
+        dialog = new BottomSheetDialog(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_organization_sheet, null);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        TextView dialogClose = view.findViewById(R.id.dialog_close);
+        dialogClose.setOnClickListener(view1 -> {
+            dialog.dismiss();
+        });
+        initDialogList(recyclerView);
+
+        dialog.setContentView(view);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+    }
+
+    private void initDialogList(RecyclerView recyclerView) {
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(RecyclerView.VERTICAL);
+        recyclerView.setLayoutManager(manager);
+
+        BroccoliSimpleDelegateAdapter<OrganizationVO> mOrganizationAdapter = new BroccoliSimpleDelegateAdapter<OrganizationVO>(R.layout.adapter_sheet_item, new LinearLayoutHelper()) {
+            @Override
+            protected void onBindData(MyRecyclerViewHolder holder, OrganizationVO model, int position) {
+                if (model != null) {
+                    holder.bindDataToViewById(view -> {
+                        TextView title = (TextView) view;
+                        title.setText(model.getOrganizationName());
+                    }, R.id.or_title);
+                    holder.bindDataToViewById(view -> {
+                        TextView title = (TextView) view;
+                        title.setText(model.getOrganizationLevel());
+                    }, R.id.or_subtitle);
+                    holder.bindDataToViewById(view -> {
+                        RadiusImageView avatar = (RadiusImageView) view;
+                        //设置头像
+                        GlideImageLoadStrategy img = new GlideImageLoadStrategy();
+                        img.loadImage(avatar, Uri.parse(model.getOrganizationAvatar()));
+                    }, R.id.or_avatar_1);
+                    holder.bindDataToViewById(view -> {
+                        TextView now = (TextView) view;
+                        if (organizationVO.getOrganizationName().equals(model.getOrganizationName())) {
+                            now.setVisibility(View.VISIBLE);
+                        } else {
+                            now.setVisibility(View.GONE);
+                        }
+                    }, R.id.or_now);
+                    holder.bindDataToViewById(view -> {
+                        Button change = (Button) view;
+                        if (organizationVO.getOrganizationName().equals(model.getOrganizationName())) {
+                            change.setVisibility(View.GONE);
+                        } else {
+                            change.setVisibility(View.VISIBLE);
+                        }
+                    }, R.id.or_change);
+                    holder.click(R.id.or_change, view -> {
+                        apiChangeOrganization(String.valueOf(model.getOrganizationId()),position);
+                    });
+                }
+            }
+
+            @Override
+            protected void onBindBroccoli(MyRecyclerViewHolder holder, Broccoli broccoli) {
+                broccoli.addPlaceholders(
+                        holder.findView(R.id.sheet_view)
+                );
+            }
+        };
+        recyclerView.setAdapter(mOrganizationAdapter);
+        mOrganizationAdapter.refresh(relationships);
+    }
+
+    private void apiChangeOrganization(String id, int position) {
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("organizationId", id);
+        MyHttp.get("/organization/checkUserBelongsToOrganization", TokenUtils.getToken(), params, new MyHttp.Callback() {
+            @Override
+            public void success(JSONObject data) throws JSONException {
+                organizationVO = relationships.get(position);
+                toolbar.setTitle(organizationVO.getOrganizationName());
+
+                organizationBundle = new Bundle();
+                organizationBundle.putSerializable("organization", organizationVO);
+
+                componentsFragment.setArguments(organizationBundle);
+                inputFragment.setArguments(organizationBundle);
+                XToastUtils.success("切换成功！");
+                TextView organizationName = findViewById(R.id.tv_organization);
+                organizationName.setText(organizationVO.getOrganizationName());
+                dialog.dismiss();
+            }
+
+            @Override
+            public void fail(JSONObject error) throws JSONException {
+                XToastUtils.error("您没有加入该机构，请刷新检查！");
+            }
+        });
+    }
 }
 
