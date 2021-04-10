@@ -102,6 +102,8 @@
     <string name="title_type_select">类型选择</string>
     <string name="title_package_select">包装选择</string>
     <string name="title_pollution_select">污染选择</string>
+    <string name="refused">拒绝</string>
+    <string name="agree">同意</string>
 
 
 </resources>
