@@ -107,7 +107,7 @@ public class Examine extends BaseFragment {
                     holder.click(R.id.refused_join_or, v -> {
                         LinkedHashMap<String,String> params = new  LinkedHashMap<>();
                         params.put("applyId",String.valueOf(model.getId()));
-                        MyHttp.post("/organization/rejectJoinOrganizationApply", TokenUtils.getToken(), params, new MyHttp.Callback() {
+                        MyHttp.putJson("/organization/rejectJoinOrganizationApply", TokenUtils.getToken(), params, new MyHttp.Callback() {
                             @SuppressLint("SetTextI18n")
                             @Override
                             public void success(JSONObject data) throws JSONException {
@@ -123,7 +123,7 @@ public class Examine extends BaseFragment {
                     holder.click(R.id.agree_join_or, v -> {
                         LinkedHashMap<String,String> params = new  LinkedHashMap<>();
                         params.put("applyId",String.valueOf(model.getId()));
-                        MyHttp.post("/organization/approvedOrganizationApply", TokenUtils.getToken(), params, new MyHttp.Callback() {
+                        MyHttp.putJson("/organization/approvedOrganizationApply", TokenUtils.getToken(), params, new MyHttp.Callback() {
                             @SuppressLint("SetTextI18n")
                             @Override
                             public void success(JSONObject data) throws JSONException {

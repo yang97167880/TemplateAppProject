@@ -315,6 +315,11 @@ public final class MyHttp {
         requestJson(Request.Method.POST, url,token, params, callback);
     }
 
+    // 使用PUT模式传参给后端，并获得后端返回数据（修改数据）
+    public static void putJson(final String url,final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
+        requestJson(Request.Method.PUT, url,token, params, callback);
+    }
+
     // 使用GET模式获得后端返回数据，不传参给后端（查询数据）
     public static void getWithoutParams(final String url,final String token, final Callback callback) {
         requestJson(Request.Method.GET, url,token, null, callback);
