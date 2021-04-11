@@ -18,6 +18,7 @@
 package com.yiflyplan.app.fragment.blueTooth;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -26,6 +27,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,6 +41,8 @@ import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.widget.button.ButtonView;
+import com.xuexiang.xui.widget.dialog.MiniLoadingDialog;
+import com.xuexiang.xui.widget.progress.loading.MiniLoadingView;
 import com.xuexiang.xutil.app.ActivityUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
@@ -123,6 +127,10 @@ public class BlueToothFragment extends BaseFragment {
             @Override
             protected void onBindData(MyRecyclerViewHolder holder, DeviceEntity model, int position) {
                 if(model != null){
+                  holder.bindDataToViewById(view ->{
+                      MiniLoadingView loadingView = (MiniLoadingView) view;
+                      loadingView.setVisibility(View.GONE);
+                  },R.id.match_loading);
                     holder.bindDataToViewById(view -> {
                         TextView name = (TextView) view;
                         name.setText(model.getName());
@@ -132,16 +140,21 @@ public class BlueToothFragment extends BaseFragment {
                         TextView address = (TextView) view;
                         address.setText(model.getAddress());
                     },R.id.bluetooth_address);
+
                     holder.click(R.id.bluetooth_item_view,view -> {
+
                         if (!tryConnect) {
                             bluetoothAdapter.cancelDiscovery();
 //                          XToastUtils.info("正在连接，请等待...",200);
                             tryConnect = true;
+                            holder.bindDataToViewById(v ->{
+                                MiniLoadingView loadingView = (MiniLoadingView) v;
+                                loadingView.setVisibility(View.VISIBLE);
+                            },R.id.match_loading);
                             uploadData.setAddress( model.getAddress());
                             openNewPage(EntryGarbageFragment.class,UPLOAD,uploadData);
                         } else {
-                            XToastUtils.info("连接失败！请刷新后重试...");
-                            tryConnect = false;
+                            XToastUtils.info("请刷新后重试...");
                         }
                     });
                 }
@@ -159,6 +172,10 @@ public class BlueToothFragment extends BaseFragment {
             @Override
             protected void onBindData(MyRecyclerViewHolder holder, DeviceEntity model, int position) {
                 if(model != null){
+                    holder.bindDataToViewById(view ->{
+                        MiniLoadingView loadingView = (MiniLoadingView) view;
+                        loadingView.setVisibility(View.GONE);
+                    },R.id.match_loading);
                     holder.bindDataToViewById(view -> {
                         TextView name = (TextView) view;
                         name.setText(model.getName());
@@ -172,11 +189,15 @@ public class BlueToothFragment extends BaseFragment {
                         if (!tryConnect) {
                             bluetoothAdapter.cancelDiscovery();
 //                          XToastUtils.info("正在连接，请等待...",200);
+                            holder.bindDataToViewById(v ->{
+                                MiniLoadingView loadingView = (MiniLoadingView) v;
+                                loadingView.setVisibility(View.VISIBLE);
+                            },R.id.match_loading);
                             tryConnect = true;
                             uploadData.setAddress( model.getAddress());
                             openNewPage(EntryGarbageFragment.class,UPLOAD,uploadData);
                         } else {
-                            XToastUtils.info("连接失败！请刷新后重试...");
+                            XToastUtils.info("请刷新后重试...");
                             tryConnect = false;
                         }
                     });
@@ -235,7 +256,7 @@ public class BlueToothFragment extends BaseFragment {
 
         } else {
             //
-            if(pairDataList.indexOf(deviceEntity)<0){
+            if(unPairDataList.indexOf(deviceEntity)<0){
             unPairDataList.add(deviceEntity);
             }
 //            }
@@ -309,6 +330,16 @@ public class BlueToothFragment extends BaseFragment {
                 this.getActivity().finish();
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
 }

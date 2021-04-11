@@ -77,13 +77,13 @@ public final class SettingUtils extends BaseSPUtil {
     /**
      * @return 是否同意隐私政策
      */
-    public  boolean isAgreePrivacy() {
-        return getBoolean(IS_AGREE_PRIVACY_KEY, false);
-    }
+//    public static boolean isAgreePrivacy() {
+//        return getBoolean(IS_AGREE_PRIVACY_KEY, false);
+//    }
 
-    public void setIsAgreePrivacy(boolean isAgreePrivacy) {
-        MMKVUtils.put(IS_AGREE_PRIVACY_KEY, isAgreePrivacy);
-    }
+//    public static void setIsAgreePrivacy(boolean isAgreePrivacy) {
+//        MMKVUtils.put(IS_AGREE_PRIVACY_KEY, isAgreePrivacy);
+//    }
 
     public boolean isUseAppTheme() {
         return getBoolean(IS_USE_APP_THEME_KEY, true);

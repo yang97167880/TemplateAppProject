@@ -158,9 +158,6 @@ public class LoginFragment extends BaseFragment {
                 }
                 break;
             case R.id.et_password_number:
-                KeyboardUtils.isSoftInputShow(getActivity());
-                KeyboardUtils.showSoftInputForce(getActivity());
-                break;
             case R.id.et_verify_code:
                 KeyboardUtils.isSoftInputShow(getActivity());
                 KeyboardUtils.showSoftInputForce(getActivity());
