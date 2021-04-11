@@ -88,6 +88,7 @@ public class EntryGarbageFragment extends BaseFragment {
     Button btnPollution;
     @BindView(R.id.uploadData)
     ButtonView uploadData;
+
     private String[] mTypeOption;
     private String[] mTypeOptionId;
     private String[] mPackageOption;
@@ -111,12 +112,12 @@ public class EntryGarbageFragment extends BaseFragment {
 
     private ScrollView message_scroll;
 
-    private final Timer timer = new Timer();
+    private Timer timer = new Timer();
 
     private final Integer RECEIVE_CODE = 1; //接受数据成功状态码
     private final Integer RE_RECEIVE_CODE = 2;//接受数据失败，冲录入状态码
 
-    SearchFragment.UploadData upload;
+    SearchFragment.UploadData nextParams;
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_entry_garbage;
@@ -128,25 +129,20 @@ public class EntryGarbageFragment extends BaseFragment {
         getTypeOption();
         getPackageOption();
         getPollutionOption();
+
         Bundle bundle = this.getArguments();
         if (bundle == null) {throw new AssertionError();}
-        upload = new SearchFragment.UploadData();
-        upload = (SearchFragment.UploadData) bundle.getSerializable("uploadData");
-        if (upload == null){ throw new AssertionError();}
-        mac = upload.getAddress();
+        nextParams = ( SearchFragment.UploadData) bundle.getSerializable("uploadData");
+        if (nextParams == null){ throw new AssertionError();}
+        mac= nextParams.getAddress();
         if (mac == null) {
             XToastUtils.info("找不到该蓝牙，请重试...");
             popToBack();
         }
         try{
             initBT();
-            if(bluetoothSocket.isConnected()){
-                createEntryInfoDialog();
-                setUploadEvent();
-            }else{
-                XToastUtils.info("蓝牙通讯超时，请重试...");
-                popToBack();
-            }
+            createEntryInfoDialog();
+            setUploadEvent();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -180,7 +176,7 @@ public class EntryGarbageFragment extends BaseFragment {
             e.printStackTrace();
             XToastUtils.error("连接失败");
             closeBlueSocket();
-            Objects.requireNonNull(this.getActivity()).finish();
+            Objects.requireNonNull(this).popToBack();
         }
         //接收数据线程接受输入流
         try {
@@ -395,8 +391,8 @@ public class EntryGarbageFragment extends BaseFragment {
                     handler.sendMessage(message);
 
                     LinkedHashMap<String, String> params = new LinkedHashMap<>();
-                    params.put("departmentId",String.valueOf(upload.getDepartmentId()));
-                    params.put("organizationId",String.valueOf(upload.getOrganizationId()));
+                    params.put("departmentId",String.valueOf(nextParams.getDepartmentId()));
+                    params.put("organizationId",String.valueOf(nextParams.getOrganizationId()));
                     params.put("itemWeight", garbageWeight.getText().toString());
                     params.put("itemTypeId", mTypeOptionId[typeSelectOption]);
                     params.put("bagTypeId", mPackageOptionId[packageSelectOption]);

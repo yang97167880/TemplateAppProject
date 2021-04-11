@@ -45,17 +45,17 @@ import com.yiflyplan.app.fragment.organization.components.PersonalWarehouse;
 import com.yiflyplan.app.fragment.organization.components.Receive;
 import com.yiflyplan.app.fragment.organization.components.Share;
 import com.yiflyplan.app.fragment.organization.components.Transfer;
+import com.yiflyplan.app.utils.MapDataCache;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
 public abstract class BaseHomeFragment extends BaseFragment implements RecyclerViewHolder.OnItemClickListener<PageInfo> {
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-
-    private OrganizationVO organizationVO;
 
     @Override
     protected TitleBar initTitle() { return null; }
@@ -67,9 +67,6 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
 
     @Override
     protected void initViews() {
-        Bundle bundle = getArguments();
-        organizationVO = (OrganizationVO) bundle.getSerializable("organization");
-        Log.e("VO",String.valueOf(organizationVO));
         initRecyclerView();
     }
 
@@ -101,6 +98,8 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
     @SingleClick
     public void onItemClick(View itemView, PageInfo widgetInfo, int pos) {
         if (widgetInfo != null) {
+            Map<String, Object> bundle= MapDataCache.getCacheMap();
+            OrganizationVO organizationVO = (OrganizationVO)bundle.get("organization");
             switch (widgetInfo.getName()){
                 case "机构成员":
                     openNewPage(OrganizationUser.class,"id",organizationVO.getOrganizationId());

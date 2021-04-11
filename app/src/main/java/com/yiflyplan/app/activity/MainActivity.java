@@ -84,6 +84,7 @@ import com.yiflyplan.app.fragment.organization.SearchOrganizationFragment;
 import com.yiflyplan.app.fragment.organization.components.ApplyFormFragment;
 import com.yiflyplan.app.fragment.organization.OrganizationFragment;
 import com.yiflyplan.app.fragment.organization.components.ComponentsFragment;
+import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 import com.yiflyplan.app.widget.GuideTipsDialog;
@@ -199,14 +200,16 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
             }
         });
 
-        componentsFragment = new ComponentsFragment();
-        inputFragment = new InputFragment();
-        componentsFragment.setArguments(organizationBundle);
-        inputFragment.setArguments(organizationBundle);
+        MapDataCache.putCache("organization",organizationVO);
+//        componentsFragment = new ComponentsFragment();
+//        inputFragment = new InputFragment();
+//        componentsFragment.setArguments(organizationBundle);
+//        inputFragment.setArguments(organizationBundle);
+
         //主页内容填充
         BaseFragment[] fragments = new BaseFragment[]{
-                componentsFragment,
-                inputFragment,
+                new ComponentsFragment(),
+                new InputFragment(),
 //                new ProfileFragment(),
                 new NoticesFragment(),
         };
@@ -353,6 +356,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         if (position == 0) {
             toolbar.setTitle(organizationVO.getOrganizationName());
         } else {
+            toolbar.dismissPopupMenus();
             toolbar.setTitle(item.getTitle());
         }
 
@@ -379,6 +383,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         if (index != -1) {
             if (index == 0) {
                 toolbar.setTitle(organizationVO.getOrganizationName());
+                toolbar.dismissPopupMenus();
             } else {
                 toolbar.setTitle(menuItem.getTitle());
             }
@@ -426,6 +431,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                     if (position == 0) {
                         toolbar.setTitle(organizationVO.getOrganizationName());
                     } else {
+                        toolbar.dismissPopupMenus();
                         toolbar.setTitle(mMenuTitles[position]);
                     }
                     viewPager.setCurrentItem(position, false);
@@ -598,12 +604,16 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 organizationBundle = new Bundle();
                 organizationBundle.putSerializable("organization", organizationVO);
 
-                componentsFragment.setArguments(organizationBundle);
-                inputFragment.setArguments(organizationBundle);
+               // componentsFragment.setArguments(organizationBundle);
+               // inputFragment.setArguments(organizationBundle);
                 XToastUtils.success("切换成功！");
                 TextView organizationName = findViewById(R.id.tv_organization);
                 organizationName.setText(organizationVO.getOrganizationName());
                 dialog.dismiss();
+
+                //更新全局VO对象
+                MapDataCache.putCache("organization",organizationVO);
+
             }
 
             @Override

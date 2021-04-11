@@ -26,7 +26,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -63,7 +62,7 @@ import me.samlss.broccoli.Broccoli;
  * @author xhy
  */
 @Page(name = "蓝牙")
-public class BlueToothFragment extends BaseFragment implements Serializable {
+public class BlueToothFragment extends BaseFragment {
     public static final String UPLOAD = "uploadData";
     private final Integer REQUEST_CODE = 200;
     private BluetoothAdapter bluetoothAdapter;
@@ -81,14 +80,15 @@ public class BlueToothFragment extends BaseFragment implements Serializable {
     SmartRefreshLayout bluetoothLayout;
     @BindView(R.id.match_bluetooth)
     ButtonView mButton;
-    @BindView(R.id.department)
-    TextView departmentView;
     @BindView(R.id.organization)
-    TextView organizationView;
+    TextView organization;
+    @BindView(R.id.department)
+    TextView department;
 
     private SimpleDelegateAdapter<DeviceEntity> mDeviceAdapter1;
     private SimpleDelegateAdapter<DeviceEntity> mDeviceAdapter2;
 
+    SearchFragment.UploadData uploadData;
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_bluetooth;
@@ -97,9 +97,9 @@ public class BlueToothFragment extends BaseFragment implements Serializable {
     @Override
     protected void initViews() {
         Bundle bundle = this.getArguments();
-        SearchFragment.UploadData up = (SearchFragment.UploadData) bundle.getSerializable("uploadData");
-        departmentView.setText(up.getDepartmentName());
-        organizationView.setText(up.getOrganizationName());
+        uploadData = (SearchFragment.UploadData) bundle.getSerializable("uploadData");
+        organization.setText(uploadData.getOrganizationName());
+        department.setText(uploadData.getDepartmentName());
         initBT();
         mButton.setOnClickListener(view -> {
             bluetoothLayout.setEnableRefresh(true);
@@ -119,19 +119,31 @@ public class BlueToothFragment extends BaseFragment implements Serializable {
         bluetoothCard2.setLayoutManager(virtualLayoutManager2);
         bluetoothCard2.setRecycledViewPool(viewPool2);
 
-        mDeviceAdapter1 = new BroccoliSimpleDelegateAdapter<DeviceEntity>(R.layout.adapter_bluetooth_item, new LinearLayoutHelper()) {
+        mDeviceAdapter1 = new BroccoliSimpleDelegateAdapter<DeviceEntity>(R.layout.adapter_bluetooth_item,new LinearLayoutHelper()) {
             @Override
             protected void onBindData(MyRecyclerViewHolder holder, DeviceEntity model, int position) {
-                if (model != null) {
+                if(model != null){
                     holder.bindDataToViewById(view -> {
                         TextView name = (TextView) view;
                         name.setText(model.getName());
-                    }, R.id.bluetooth_name);
+                    },R.id.bluetooth_name);
 
                     holder.bindDataToViewById(view -> {
                         TextView address = (TextView) view;
                         address.setText(model.getAddress());
-                    }, R.id.bluetooth_address);
+                    },R.id.bluetooth_address);
+                    holder.click(R.id.bluetooth_item_view,view -> {
+                        if (!tryConnect) {
+                            bluetoothAdapter.cancelDiscovery();
+//                          XToastUtils.info("正在连接，请等待...",200);
+                            tryConnect = true;
+                            uploadData.setAddress( model.getAddress());
+                            openNewPage(EntryGarbageFragment.class,UPLOAD,uploadData);
+                        } else {
+                            XToastUtils.info("连接失败！请刷新后重试...");
+                            tryConnect = false;
+                        }
+                    });
                 }
             }
 
@@ -143,27 +155,26 @@ public class BlueToothFragment extends BaseFragment implements Serializable {
             }
         };
 
-        mDeviceAdapter2 = new BroccoliSimpleDelegateAdapter<DeviceEntity>(R.layout.adapter_bluetooth_item, new LinearLayoutHelper()) {
+        mDeviceAdapter2 = new BroccoliSimpleDelegateAdapter<DeviceEntity>(R.layout.adapter_bluetooth_item,new LinearLayoutHelper()) {
             @Override
             protected void onBindData(MyRecyclerViewHolder holder, DeviceEntity model, int position) {
-                if (model != null) {
+                if(model != null){
                     holder.bindDataToViewById(view -> {
                         TextView name = (TextView) view;
                         name.setText(model.getName());
-                    }, R.id.bluetooth_name);
+                    },R.id.bluetooth_name);
 
                     holder.bindDataToViewById(view -> {
                         TextView address = (TextView) view;
                         address.setText(model.getAddress());
-                    }, R.id.bluetooth_address);
-                    holder.click(R.id.bluetooth_item_view, view -> {
+                    },R.id.bluetooth_address);
+                    holder.click(R.id.bluetooth_item_view,view -> {
                         if (!tryConnect) {
                             bluetoothAdapter.cancelDiscovery();
 //                          XToastUtils.info("正在连接，请等待...",200);
                             tryConnect = true;
-
-                            up.setAddress(model.getAddress());
-                            openNewPage(EntryGarbageFragment.class, UPLOAD, up);
+                            uploadData.setAddress( model.getAddress());
+                            openNewPage(EntryGarbageFragment.class,UPLOAD,uploadData);
                         } else {
                             XToastUtils.info("连接失败！请刷新后重试...");
                             tryConnect = false;
@@ -188,13 +199,12 @@ public class BlueToothFragment extends BaseFragment implements Serializable {
         bluetoothCard1.setAdapter(delegateAdapter1);
         bluetoothCard2.setAdapter(delegateAdapter2);
     }
-
     @Override
     protected void initListeners() {
         //首次刷新
         bluetoothLayout.autoRefresh();
         bluetoothLayout.setOnRefreshListener(bluetoothLayout -> {
-            bluetoothLayout.getLayout().postDelayed(() -> {
+            bluetoothLayout.getLayout().postDelayed(() ->{
                 bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
                 if (bluetoothAdapter == null) {
@@ -209,23 +219,25 @@ public class BlueToothFragment extends BaseFragment implements Serializable {
                 mDeviceAdapter1.refresh(unPairDataList);
                 mDeviceAdapter2.refresh(pairDataList);
                 bluetoothLayout.setEnableRefresh(false);
-            }, 1000);
+            },1000);
             bluetoothLayout.finishRefresh();
         });
     }
 
     private void addDeviceToList(BluetoothDevice device) {
-        DeviceEntity deviceEntity = new DeviceEntity(device.getName(), device.getAddress());
+       DeviceEntity deviceEntity = new DeviceEntity(device.getName(), device.getAddress());
         //如果不是配对过的设备
         if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
-            if (pairDataList.indexOf(deviceEntity) < 0) {
+            if(pairDataList.indexOf(deviceEntity)<0){
                 pairDataList.add(deviceEntity);
             }
 //            }
 
         } else {
             //
+            if(pairDataList.indexOf(deviceEntity)<0){
             unPairDataList.add(deviceEntity);
+            }
 //            }
         }
     }
@@ -265,7 +277,7 @@ public class BlueToothFragment extends BaseFragment implements Serializable {
                     XToastUtils.error("设备出错！");
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                // XToastUtils.info("搜索结束");
+               // XToastUtils.info("搜索结束");
             }
         }
     };
