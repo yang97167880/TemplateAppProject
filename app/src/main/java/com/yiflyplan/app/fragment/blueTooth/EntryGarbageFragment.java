@@ -96,11 +96,14 @@ public class EntryGarbageFragment extends BaseFragment {
     private String[] mPollutionOption;
     private String[] mPollutionOptionId;
 
-    private int typeSelectOption = 0;
-    private int packageSelectOption = 0;
-    private int pollutionSelectOption = 0;
+    private int typeSelectOption = -1;
+    private int packageSelectOption = -1;
+    private int pollutionSelectOption = -1;
 
     private final static String MY_UUID = "00001101-0000-1000-8000-00805F9B34FB";   //SPP服务UUID号
+    private final static String TYPE_DEFAULT = "请选择垃圾类型";
+    private final static String PACKAGE_DEFAULT = "请选择包装类型";
+    private final static String POLLUTION_DEFAULT = "请选择污染级别";
     private String mac;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice remoteDevice;
@@ -118,6 +121,7 @@ public class EntryGarbageFragment extends BaseFragment {
     private final Integer RE_RECEIVE_CODE = 2;//接受数据失败，冲录入状态码
 
     SearchFragment.UploadData nextParams;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_entry_garbage;
@@ -131,19 +135,23 @@ public class EntryGarbageFragment extends BaseFragment {
         getPollutionOption();
 
         Bundle bundle = this.getArguments();
-        if (bundle == null) {throw new AssertionError();}
-        nextParams = ( SearchFragment.UploadData) bundle.getSerializable("uploadData");
-        if (nextParams == null){ throw new AssertionError();}
-        mac= nextParams.getAddress();
+        if (bundle == null) {
+            throw new AssertionError();
+        }
+        nextParams = (SearchFragment.UploadData) bundle.getSerializable("uploadData");
+        if (nextParams == null) {
+            throw new AssertionError();
+        }
+        mac = nextParams.getAddress();
         if (mac == null) {
             XToastUtils.info("找不到该蓝牙，请重试...");
             popToBack();
         }
-        try{
+        try {
             initBT();
             createEntryInfoDialog();
             setUploadEvent();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -154,7 +162,7 @@ public class EntryGarbageFragment extends BaseFragment {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetoothAdapter == null) {
-            XToastUtils.error( "该设备可能不支持蓝牙");
+            XToastUtils.error("该设备可能不支持蓝牙");
             return;
         }
         if (!bluetoothAdapter.isEnabled()) {
@@ -169,7 +177,7 @@ public class EntryGarbageFragment extends BaseFragment {
                 bluetoothSocket = remoteDevice.createRfcommSocketToServiceRecord(UUID.fromString(MY_UUID));
                 bluetoothSocket.connect();
                 hasConnect = true;
-                XToastUtils.success( "连接成功");
+                XToastUtils.success("连接成功");
             }
 
         } catch (Exception e) {
@@ -360,7 +368,6 @@ public class EntryGarbageFragment extends BaseFragment {
 
                     }
                 }, 1000);
-                btnType.performClick();
             }
 
         }
@@ -371,7 +378,9 @@ public class EntryGarbageFragment extends BaseFragment {
     //检验蓝牙接受的数据格式
     private boolean checkData(String data) {
         try {
-            if (data.length() > 5) {return false;}
+            if (data.length() > 5) {
+                return false;
+            }
             Integer.parseInt(data);
             return true;
         } catch (Exception e) {
@@ -391,18 +400,16 @@ public class EntryGarbageFragment extends BaseFragment {
                     handler.sendMessage(message);
 
                     LinkedHashMap<String, String> params = new LinkedHashMap<>();
-                    params.put("departmentId",String.valueOf(nextParams.getDepartmentId()));
-                    params.put("organizationId",String.valueOf(nextParams.getOrganizationId()));
+                    params.put("departmentId", String.valueOf(nextParams.getDepartmentId()));
+                    params.put("organizationId", String.valueOf(nextParams.getOrganizationId()));
                     params.put("itemWeight", garbageWeight.getText().toString());
                     params.put("itemTypeId", mTypeOptionId[typeSelectOption]);
                     params.put("bagTypeId", mPackageOptionId[packageSelectOption]);
                     params.put("pollutionLevelId", mPollutionOptionId[pollutionSelectOption]);
-//                    Log.e("TAG", params.toString());
 //                    Toast.makeText(EntryGarbageActivity.this, "上传中...", Toast.LENGTH_SHORT).show();
-                    MyHttp.postJson( "/product/createProduct",TokenUtils.getToken(), params, new MyHttp.Callback() {
+                    MyHttp.postJson("/product/createProduct", TokenUtils.getToken(), params, new MyHttp.Callback() {
                         @Override
                         public void success(JSONObject data) throws JSONException {
-                            sendMessageToRemoteBluetooth(data.getString("trashCode"));
 //                            Toast.makeText(EntryGarbageActivity.this, "上传成功,请继续...", Toast.LENGTH_SHORT).show();
 
                             //发送显示消息，进行显示刷新
@@ -412,7 +419,7 @@ public class EntryGarbageFragment extends BaseFragment {
                             message = new Message();
                             message.obj = "【您可以继续录入/退出请按返回键】";
                             handler.sendMessage(message);
-                           // resetThisPage();
+                            // resetThisPage();
                         }
 
                         @Override
@@ -425,7 +432,7 @@ public class EntryGarbageFragment extends BaseFragment {
 
 
                 } else {
-                    XToastUtils.info( "请将字段选择完整");
+                    XToastUtils.info("请将字段选择完整");
                 }
 
             }
@@ -439,7 +446,9 @@ public class EntryGarbageFragment extends BaseFragment {
             int addSpaceNum = 0;
             //计算出0x0a个数，为下方准换格式添加0x0d申请新空间
             for (byte b : bytes) {
-                if (b == 0x0a){ ++addSpaceNum;}
+                if (b == 0x0a) {
+                    ++addSpaceNum;
+                }
             }
             //申请新空间
             byte[] newBytes = new byte[bytes.length + addSpaceNum];
@@ -461,7 +470,8 @@ public class EntryGarbageFragment extends BaseFragment {
     }
 
     private boolean checkSelectValues() {
-        return typeSelectOption != 0 && packageSelectOption != 0 && pollutionSelectOption != 0;
+
+        return !btnType.getText().equals(TYPE_DEFAULT) && !btnPackage.getText().equals(PACKAGE_DEFAULT) && !btnPollution.getText().equals(PACKAGE_DEFAULT);
     }
 
     @OnClick({R.id.btn_type, R.id.btn_package, R.id.btn_pollution})
@@ -480,7 +490,8 @@ public class EntryGarbageFragment extends BaseFragment {
                 break;
         }
     }
-    private void getTypeOption(){
+
+    private void getTypeOption() {
         MyHttp.getJsonList("/productType/getAllProductTypes", TokenUtils.getToken(), new MyHttp.Callback() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -488,7 +499,7 @@ public class EntryGarbageFragment extends BaseFragment {
                 JSONArray options = new JSONArray(data.getString("data"));
                 mTypeOption = new String[options.length()];
                 mTypeOptionId = new String[options.length()];
-                for(int i=0;i<options.length();i++){
+                for (int i = 0; i < options.length(); i++) {
                     mTypeOption[i] = options.getJSONObject(i).getString("itemTypeName");
                     mTypeOptionId[i] = options.getJSONObject(i).getString("id");
                 }
@@ -500,7 +511,8 @@ public class EntryGarbageFragment extends BaseFragment {
             }
         });
     }
-    private void getPackageOption(){
+
+    private void getPackageOption() {
         MyHttp.getJsonList("/bagType/getAllBagTypes", TokenUtils.getToken(), new MyHttp.Callback() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -508,7 +520,7 @@ public class EntryGarbageFragment extends BaseFragment {
                 JSONArray options = new JSONArray(data.getString("data"));
                 mPackageOption = new String[options.length()];
                 mPackageOptionId = new String[options.length()];
-                for(int i=0;i<options.length();i++){
+                for (int i = 0; i < options.length(); i++) {
                     mPackageOption[i] = options.getJSONObject(i).getString("bagTypeName");
                     mPackageOptionId[i] = options.getJSONObject(i).getString("id");
                 }
@@ -520,7 +532,8 @@ public class EntryGarbageFragment extends BaseFragment {
             }
         });
     }
-    private void getPollutionOption(){
+
+    private void getPollutionOption() {
         MyHttp.getJsonList("/getAllPollutionLevels", TokenUtils.getToken(), new MyHttp.Callback() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -528,7 +541,7 @@ public class EntryGarbageFragment extends BaseFragment {
                 JSONArray options = new JSONArray(data.getString("data"));
                 mPollutionOption = new String[options.length()];
                 mPollutionOptionId = new String[options.length()];
-                for(int i=0;i<options.length();i++){
+                for (int i = 0; i < options.length(); i++) {
                     mPollutionOption[i] = options.getJSONObject(i).getString("pollutionLevelName");
                     mPollutionOptionId[i] = options.getJSONObject(i).getString("id");
                 }
@@ -540,6 +553,7 @@ public class EntryGarbageFragment extends BaseFragment {
             }
         });
     }
+
     /**
      * 类型选择
      */
