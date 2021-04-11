@@ -17,13 +17,28 @@
 
 package com.yiflyplan.app.fragment.organization.components;
 
+import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.alibaba.android.vlayout.DelegateAdapter;
+import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
+import com.xuexiang.xui.widget.imageview.RadiusImageView;
+import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
 import com.yiflyplan.app.R;
+import com.yiflyplan.app.adapter.VO.ProductCirculationVO;
 import com.yiflyplan.app.adapter.VO.ProductVO;
+import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
+import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.utils.ReflectUtil;
@@ -36,13 +51,29 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
+
+import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import me.samlss.broccoli.Broccoli;
 
 @Page(name = "流转信息")
 public class ProductItemCirculationFragment extends BaseFragment {
 
+    @BindView(R.id.circulation_recyclerView)
+    RecyclerView recyclerView;
+    @BindView(R.id.circulation_refreshLayout)
+    SmartRefreshLayout refreshLayout;
+
+
+    private final static String TAKEOUT = "取出";
+    private final static String DEPOSIT = "存入";
+
     private int totalPage = 1;
     private int pageNo = 1;
     private int pageSize = 5;
+    private BroccoliSimpleDelegateAdapter<ProductCirculationVO> mProductAdapter;
+    private List<ProductCirculationVO> productVOS = new ArrayList<>();
 
     @Override
     protected int getLayoutId() {
@@ -51,6 +82,59 @@ public class ProductItemCirculationFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
+        VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager(Objects.requireNonNull(getContext()));
+        recyclerView.setLayoutManager(virtualLayoutManager);
+        RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
+        recyclerView.setRecycledViewPool(viewPool);
+        viewPool.setMaxRecycledViews(0, 10);
+
+        mProductAdapter = new BroccoliSimpleDelegateAdapter<ProductCirculationVO>(R.layout.adapter_circulation_item, new LinearLayoutHelper()) {
+            @Override
+            protected void onBindData(MyRecyclerViewHolder holder, ProductCirculationVO model, int position) {
+
+                if (model != null) {
+                    holder.bindDataToViewById(view -> {
+                        RadiusImageView avatar = (RadiusImageView) view;
+                        GlideImageLoadStrategy img = new GlideImageLoadStrategy();
+                        img.loadImage(avatar, Uri.parse(model.getUpdateUserAvatar()));
+                    }, R.id.member_avatar);
+
+
+                    holder.bindDataToViewById(view -> {
+                        TextView time = (TextView) view;
+                        time.setText(model.getUpdateTime());
+                    }, R.id.time);
+
+                    holder.bindDataToViewById(view -> {
+                        TextView memberName = (TextView) view;
+                        memberName.setText(model.getUpdateUserName());
+                    }, R.id.member_name);
+
+                    holder.bindDataToViewById(view -> {
+                        TextView operator = (TextView) view;
+                        if(model.getOperator().equals(DEPOSIT)){
+                            operator.setTextColor(getContext().getResources().getColor(R.color.xui_config_color_red));
+                        } else if(model.getOperator().equals(TAKEOUT)){
+                            operator.setTextColor(getContext().getResources().getColor(R.color.xui_btn_green_normal_color));
+                        }
+                        operator.setText(model.getOperator());
+                    }, R.id.tv_operator);
+
+                }
+            }
+
+            @Override
+            protected void onBindBroccoli(MyRecyclerViewHolder holder, Broccoli broccoli) {
+                broccoli.addPlaceholders(
+                        holder.findView(R.id.product_circulation_view)
+                );
+            }
+        };
+
+        DelegateAdapter delegateAdapter = new DelegateAdapter(virtualLayoutManager);
+        delegateAdapter.addAdapter(mProductAdapter);
+//
+        recyclerView.setAdapter(delegateAdapter);
     }
 
     @Override
@@ -60,14 +144,31 @@ public class ProductItemCirculationFragment extends BaseFragment {
 
     @Override
     protected void initListeners() {
-        Bundle bundle = getArguments();
-        ProductVO product = (ProductVO) bundle.getSerializable("product");
-
-        apiGetCirculationInfo(String.valueOf(product.getId()));
-
         super.initListeners();
-
-
+        //下拉刷新
+        refreshLayout.setOnRefreshListener(refreshLayout -> {
+            // TODO: 2020-02-25 网络请求
+            refreshLayout.getLayout().postDelayed(() -> {
+                if (pageNo == 1) {
+                    Bundle bundle = getArguments();
+                    ProductVO product = (ProductVO) bundle.getSerializable("product");
+                    apiGetCirculationInfo(String.valueOf(product.getId()));
+                }
+                mProductAdapter.refresh(productVOS);
+                refreshLayout.finishRefresh();
+            }, 500);
+        });
+        //上拉加载
+        refreshLayout.setOnLoadMoreListener(refreshLayout -> {
+            // TODO: 2020-02-25 网络请求
+            refreshLayout.getLayout().postDelayed(() -> {
+                Bundle bundle = getArguments();
+                ProductVO product = (ProductVO) bundle.getSerializable("product");
+                apiGetCirculationInfo(String.valueOf(product.getId()));
+                refreshLayout.finishLoadMore();
+            }, 500);
+        });
+        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
     }
 
     protected void apiGetCirculationInfo(String id) {
@@ -80,21 +181,19 @@ public class ProductItemCirculationFragment extends BaseFragment {
             public void success(JSONObject data) throws JSONException {
                 totalPage = data.getInt("totalPage");
                 JSONArray product = new JSONArray(data.getString("list"));
-
-                Log.d("circulation",product.toString());
-//                List<ProductVO> newList = new ArrayList<>();
-//                newList = ReflectUtil.convertToList(product, ProductVO.class);
-//                if(pageNo<=totalPage){
-//                    productVOS.addAll(newList);
-//                    mProductAdapter.loadMore(newList);
-//                    pageNo += 1;
-//                }
+                List<ProductCirculationVO> newList = new ArrayList<>();
+                newList = ReflectUtil.convertToList(product, ProductCirculationVO.class);
+                if(pageNo<=totalPage){
+                    productVOS.addAll(newList);
+                    mProductAdapter.loadMore(newList);
+                    pageNo += 1;
+                }
 
             }
 
             @Override
             public void fail(JSONObject error) {
-//                refreshLayout.finishRefresh();
+                refreshLayout.finishRefresh();
             }
         });
     }
