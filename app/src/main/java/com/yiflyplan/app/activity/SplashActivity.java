@@ -25,6 +25,7 @@ import com.xuexiang.xutil.app.ActivityUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.utils.SettingUtils;
 import com.yiflyplan.app.utils.TokenUtils;
+import com.yiflyplan.app.utils.Utils;
 
 import me.jessyan.autosize.internal.CancelAdapt;
 
@@ -84,8 +85,9 @@ public class SplashActivity extends BaseSplashActivity implements CancelAdapt {
             }
         }
         finish();
+        loginOrGoMainPage();
 //        if (SettingUtils.isAgreePrivacy()) {
-//            loginOrGoMainPage();
+//
 //        } else {
 //            Utils.showPrivacyDialog(this, (dialog, which) -> {
 //                dialog.dismiss();

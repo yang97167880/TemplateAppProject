@@ -88,7 +88,8 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
     protected void initViews() {
         Bundle bundle = getArguments();
         organizationVO = (OrganizationVO) bundle.getSerializable("organization");
-        organizationId = organizationVO.getOrganizationId();
+        assert organizationVO != null;
+        organizationId = organizationVO.getId();
         RadiusImageView radiusImageView = findViewById(R.id.or_avatar);
         GlideImageLoadStrategy lodeImg = new GlideImageLoadStrategy();
         lodeImg.loadImage(radiusImageView,organizationVO.getOrganizationAvatar());
@@ -135,7 +136,6 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_apply_or:
-
             if (belongsTo) {
 
             }else {
@@ -151,6 +151,7 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
 
                     @Override
                     public void fail(JSONObject error) {
+
                     }
                 });
             }
