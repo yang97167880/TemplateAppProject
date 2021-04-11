@@ -116,6 +116,12 @@ public class DemoDataProvider {
         return infoList;
     }
 
+    public static List<Object> getUserGuides() {
+        List<Object> list = new ArrayList<>();
+        list.add(R.drawable.background);
+        return list;
+    }
+
     @MemoryCache
     public static List<ChartInfo> getDemoChartInfos() {
         List<ChartInfo> infoList = new ArrayList<>();
