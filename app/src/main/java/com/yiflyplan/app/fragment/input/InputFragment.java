@@ -48,7 +48,10 @@ import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.yiflyplan.app.fragment.SearchFragment;
 import com.yiflyplan.app.fragment.blueTooth.BlueToothFragment;
+import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.XToastUtils;
+
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -185,8 +188,10 @@ public class InputFragment extends BaseFragment {
      * 开启蓝牙录入
      */
     private void startBlueTooth() {
-        Bundle bundle = getArguments();
-        OrganizationVO organizationVO = (OrganizationVO) bundle.getSerializable("organization");
+       // Bundle bundle = getArguments();
+        //OrganizationVO organizationVO = (OrganizationVO) bundle.getSerializable("organization");
+        Map<String, Object> bundle= MapDataCache.getCacheMap();
+        OrganizationVO organizationVO = (OrganizationVO)bundle.get("organization");
         openNewPage(SearchFragment.class,"organization",organizationVO);
     }
 
