@@ -18,6 +18,7 @@
 package com.yiflyplan.app.core;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -31,6 +32,7 @@ import com.xuexiang.xrouter.facade.service.SerializationService;
 import com.xuexiang.xrouter.launcher.XRouter;
 import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.widget.slideback.SlideBack;
+import com.yiflyplan.app.activity.SplashActivity;
 import com.yiflyplan.app.utils.Utils;
 
 import butterknife.ButterKnife;
