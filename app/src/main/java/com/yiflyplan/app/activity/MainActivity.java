@@ -595,7 +595,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     private void apiChangeOrganization(String id, int position) {
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("organizationId", id);
-        MyHttp.get("/organization/checkUserBelongsToOrganization", TokenUtils.getToken(), params, new MyHttp.Callback() {
+        MyHttp.get("/user/switchOrganization", TokenUtils.getToken(), params, new MyHttp.Callback() {
             @Override
             public void success(JSONObject data) throws JSONException {
                 organizationVO = relationships.get(position);

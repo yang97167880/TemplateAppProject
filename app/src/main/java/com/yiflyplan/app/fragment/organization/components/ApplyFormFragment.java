@@ -141,7 +141,7 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
             }else {
                 LinkedHashMap<String, String> params = new LinkedHashMap<>();
                 params.put("organizationId", String.valueOf(organizationId));
-                MyHttp.postJson("/organization/applyToJoinOrganization", TokenUtils.getToken(), params, new MyHttp.Callback() {
+                MyHttp.post("/organization/applyToJoinOrganization?organizationId="+ organizationId, TokenUtils.getToken(), params, new MyHttp.Callback() {
                     @Override
                     public void success(JSONObject data) throws JSONException {
                         btnApplyOr.setText(R.string.check_pending);
