@@ -18,134 +18,84 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/examine_member_view"
+    android:id="@+id/product_circulation_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/xui_config_color_white"
-    app:contentPaddingBottom="5dp"
-    app:contentPaddingLeft="16dp"
-    app:contentPaddingRight="16dp"
-    app:contentPaddingTop="5dp">
+   >
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="3dp"
-            tools:ignore="UselessParent">
+            android:orientation="horizontal"
 
+           >
             <TextView
                 android:id="@+id/time"
-                android:layout_width="0dp"
-                android:textSize="12sp"
-                android:layout_weight="3"
-                android:gravity="center|right"
-                android:text="2019-10-9 12:34"
-                android:layout_height="match_parent" />
-
-            <ImageView
-                android:id="@+id/logo"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="80dp" />
-
-
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="6">
+                android:gravity="center|right"
+                android:layout_marginStart="@dimen/config_margin_8dp"
+                android:text="2019-10-9 12:34"
+                android:textSize="12sp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    tools:ignore="NestedWeights">
-                    <TextView
-                        android:id="@+id/userName"
-                        android:minWidth="0dp"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:paddingStart="10dp"
-                        android:gravity="center|left"
-                        android:text="  xxx"
-                        android:singleLine="true"
-                        android:layout_weight="1"
-                        tools:ignore="RtlHardcoded,RtlSymmetry" />
-                    <TextView
-                        android:id="@+id/box_weight"
-                        android:layout_width="0dp"
-                        android:singleLine="true"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:paddingEnd="5dp"
-                        android:text="1234g"/>
-                </LinearLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_height="80dp"
+                    android:layout_width="30dp"
+                    android:layout_marginTop="@dimen/config_margin_8dp"
+                    android:src="@drawable/ico_logistics_line"/>
+                <com.xuexiang.xui.widget.imageview.RadiusImageView
+                    android:id="@+id/member_avatar"
+                    android:layout_width="@dimen/config_margin_30dp"
+                    android:layout_height="@dimen/config_margin_30dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/xui_ic_default_img"
+                    app:riv_border_width="0dp"
+                    app:riv_corner_radius="30dp" />
+            </RelativeLayout>
 
 
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:id="@+id/organizationName"
-                    android:text="【xxx医院】xxxxxx"
-                    android:gravity="center|left"
-                    android:paddingLeft="10dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/config_margin_10dp"
+                android:paddingTop="@dimen/config_margin_7dp"
+                android:paddingStart="@dimen/config_margin_10dp">
 
                 <TextView
-                    android:id="@+id/tel"
-                    android:text="  15659670305"
-                    android:paddingStart="10dp"
-                    android:gravity="center|left"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:paddingStart="10dp"
-                    android:layout_weight="1">
-                    <TextView
-                        android:id="@+id/rfid"
-                        android:layout_weight="8"
-                        android:layout_width="0dp"
-                        android:gravity="center|left"
-                        android:layout_height="match_parent"
-                        android:text="   rfid">
-                    </TextView>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="2"
-                        android:layout_height="match_parent">
-                        <TextView
-                            android:id="@+id/operatorTag"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="3dp"
-                            android:paddingRight="3dp"
-                            android:text="取出"
-                            android:textSize="12dp"
-                            android:textColor="@color/white"
-                            android:gravity="center"
-                        />
-                    </LinearLayout>
+                    android:id="@+id/member_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="1dp"
+                    android:textColor="@color/black"
+                    android:text="super"
+                    android:textSize="@dimen/config_margin_15dp" />
 
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_operator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/config_margin_20dp"
+                    android:textColor="@color/xui_btn_green_normal_color"
+                    android:text="存入"
+                    />
 
-
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
+            </RelativeLayout>
 
 
 
+
+       </LinearLayout>
 
 </androidx.cardview.widget.CardView>

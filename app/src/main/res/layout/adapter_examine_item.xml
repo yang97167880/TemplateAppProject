@@ -72,25 +72,43 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/refused_join_or"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_rounded_rectangle"
-                android:textSize="@dimen/config_margin_8dp"
-                android:text="@string/refused"
-                android:textColor="@color/xui_config_color_white"
-                />
 
-            <Button
-                android:id="@+id/agree_join_or"
-                android:layout_width="48dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/config_margin_20dp"
-                android:layout_marginEnd="@dimen/config_margin_20dp"
-                android:background="@drawable/btn_rounded_rectangle_agree"
-                android:text="@string/agree"
-                android:textSize="8dp" />
+            <RelativeLayout
+                android:id="@+id/btn_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/refused_join_or"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_rounded_rectangle"
+                    android:textSize="@dimen/config_margin_8dp"
+                    android:text="@string/refused"
+                    android:textColor="@color/xui_config_color_white"
+                    />
+
+                <Button
+                    android:id="@+id/agree_join_or"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="@dimen/config_margin_10dp"
+                    android:layout_toEndOf="@+id/refused_join_or"
+                    android:background="@drawable/btn_rounded_rectangle_agree"
+                    android:text="@string/agree"
+                    android:textSize="8dp" />
+
+
+                <TextView
+                    android:id="@+id/txt_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="已同意"
+                    android:visibility="invisible"/>
+            </RelativeLayout>
+
 
         </LinearLayout>
 

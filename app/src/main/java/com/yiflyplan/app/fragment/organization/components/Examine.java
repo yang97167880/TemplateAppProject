@@ -21,6 +21,9 @@ import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
@@ -112,6 +115,16 @@ public class Examine extends BaseFragment {
                             @Override
                             public void success(JSONObject data) throws JSONException {
                                 XToastUtils.toast("已拒绝该用户的申请");
+                                holder.bindDataToViewById(view -> {
+                                    RelativeLayout btnView = (RelativeLayout) view;
+                                    btnView.setVisibility(View.GONE);
+                                }, R.id.btn_view);
+
+                                holder.bindDataToViewById(view -> {
+                                    TextView status = (TextView) view;
+                                    status.setVisibility(View.VISIBLE);
+                                    status.setText("已拒绝");
+                                }, R.id.txt_message);
                             }
                             @Override
                             public void fail(JSONObject error) {
@@ -128,6 +141,16 @@ public class Examine extends BaseFragment {
                             @Override
                             public void success(JSONObject data) throws JSONException {
                                 XToastUtils.toast("已同意该用户的申请");
+                                holder.bindDataToViewById(view -> {
+                                    RelativeLayout btnView = (RelativeLayout) view;
+                                    btnView.setVisibility(View.GONE);
+                                }, R.id.btn_view);
+
+                                holder.bindDataToViewById(view -> {
+                                    TextView status = (TextView) view;
+                                    status.setVisibility(View.VISIBLE);
+                                    status.setText("已同意");
+                                }, R.id.txt_message);
                             }
                             @Override
                             public void fail(JSONObject error) {
