@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
@@ -94,31 +95,53 @@ public class ProductItemCirculationFragment extends BaseFragment {
 
                 if (model != null) {
                     holder.bindDataToViewById(view -> {
+                        TextView mainBodyName = (TextView) view;
+                        mainBodyName.setText(model.getMainBodyName());
+                    }, R.id.mainBodyName);
+
+                    holder.bindDataToViewById(view -> {
+                        RadiusImageView avatar = (RadiusImageView) view;
+                        GlideImageLoadStrategy img = new GlideImageLoadStrategy();
+                        img.loadImage(avatar, Uri.parse(model.getCreateUserAvatar()));
+                    }, R.id.create_member_avatar);
+
+                     holder.bindDataToViewById(view -> {
+                        TextView memberName = (TextView) view;
+                        memberName.setText(model.getCreateUserName());
+                    }, R.id.create_member_name);
+
+
+                    holder.bindDataToViewById(view -> {
+                        TextView time = (TextView) view;
+                        time.setText(model.getCreateTime());
+                    }, R.id.create_time);
+
+
+
+                    holder.bindDataToViewById(v -> {
+                        if(model.getOperator().equals(DEPOSIT)) {
+                            RelativeLayout relativeLayout = (RelativeLayout) v;
+                            relativeLayout.setVisibility(View.GONE);
+                        }
+                    },R.id.rl_take_out);
+
+                    holder.bindDataToViewById(view -> {
                         RadiusImageView avatar = (RadiusImageView) view;
                         GlideImageLoadStrategy img = new GlideImageLoadStrategy();
                         img.loadImage(avatar, Uri.parse(model.getUpdateUserAvatar()));
-                    }, R.id.member_avatar);
+                    }, R.id.update_member_avatar);
+
+                    holder.bindDataToViewById(view -> {
+                        TextView memberName = (TextView) view;
+                        memberName.setText(model.getUpdateUserName());
+                    }, R.id.update_member_name);
 
 
                     holder.bindDataToViewById(view -> {
                         TextView time = (TextView) view;
                         time.setText(model.getUpdateTime());
-                    }, R.id.time);
+                    }, R.id.update_time);
 
-                    holder.bindDataToViewById(view -> {
-                        TextView memberName = (TextView) view;
-                        memberName.setText(model.getUpdateUserName());
-                    }, R.id.member_name);
-
-                    holder.bindDataToViewById(view -> {
-                        TextView operator = (TextView) view;
-                        if(model.getOperator().equals(DEPOSIT)){
-                            operator.setTextColor(getContext().getResources().getColor(R.color.xui_config_color_red));
-                        } else if(model.getOperator().equals(TAKEOUT)){
-                            operator.setTextColor(getContext().getResources().getColor(R.color.xui_btn_green_normal_color));
-                        }
-                        operator.setText(model.getOperator());
-                    }, R.id.tv_operator);
 
                 }
             }
