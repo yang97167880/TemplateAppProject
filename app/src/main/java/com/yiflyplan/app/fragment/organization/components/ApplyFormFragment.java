@@ -18,6 +18,7 @@
 package com.yiflyplan.app.fragment.organization.components;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
 import com.yiflyplan.app.R;
+import com.yiflyplan.app.activity.MainActivity;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
