@@ -104,6 +104,7 @@
     <string name="title_pollution_select">污染选择</string>
     <string name="refused">拒绝</string>
     <string name="agree">同意</string>
+    <string name="tv_tel">Tel:</string>
 
 
 </resources>

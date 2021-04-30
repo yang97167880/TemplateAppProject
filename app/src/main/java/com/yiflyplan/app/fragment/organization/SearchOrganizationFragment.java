@@ -211,7 +211,6 @@ public class SearchOrganizationFragment extends BaseFragment implements View.OnC
                     @Override
                     public void success(JSONObject data) throws JSONException {
                         JSONArray organizationBaseInfo = new JSONArray(data.getString("list"));
-                        Log.d("RRRR",organizationBaseInfo.toString());
                         List<OrganizationVO> voList = new ArrayList<>();
                         voList = ReflectUtil.convertToList(organizationBaseInfo, OrganizationVO.class);
                         totalPage = data.getInt("totalPage");

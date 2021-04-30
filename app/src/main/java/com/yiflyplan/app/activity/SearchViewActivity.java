@@ -49,6 +49,7 @@ public class SearchViewActivity extends BaseAppCompatActivity{
         initViews();
     }
 
+
     private void initViews() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

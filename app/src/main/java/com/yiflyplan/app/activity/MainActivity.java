@@ -167,6 +167,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         initSlidingMenu(savedInstanceState);
 
         initListeners();
+
+        changeOrganization();
     }
 
     @Override
@@ -342,6 +344,12 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 break;
         }
     }
+
+    //=============进入机构切换机构===================//
+    private void changeOrganization(){
+
+    }
+
 
     //=============ViewPager===================//
 
@@ -622,5 +630,6 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
             }
         });
     }
+
 }
 
