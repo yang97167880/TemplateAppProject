@@ -58,6 +58,10 @@ public class UserInfoFragment extends BaseFragment {
     @BindView(R.id.tv_user_tel)
     TextView tvUserTel;
 
+    @BindView(R.id.tv_user_rfid)
+    TextView tvUserRfid;
+
+
 
 
 
@@ -77,7 +81,7 @@ public class UserInfoFragment extends BaseFragment {
 
             tvUserName.setText(currentUserVO.getUserName());
             tvUserTel.setText(currentUserVO.getUserTel());
-
+            tvUserRfid.setText(currentUserVO.getRfid());
 
         }
 

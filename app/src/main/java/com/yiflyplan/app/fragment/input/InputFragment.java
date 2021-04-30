@@ -19,8 +19,6 @@ package com.yiflyplan.app.fragment.input;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,14 +34,12 @@ import androidx.cardview.widget.CardView;
 import com.xuexiang.xaop.annotation.IOThread;
 import com.xuexiang.xaop.annotation.Permission;
 import com.xuexiang.xaop.enums.ThreadType;
-import com.xuexiang.xpage.core.PageOption;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 import com.xuexiang.xutil.app.PathUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.adapter.VO.ProductVO;
-import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.core.BaseFragment;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xqrcode.XQRCode;
@@ -53,20 +49,16 @@ import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.ProductInfoFragment;
 import com.yiflyplan.app.fragment.SearchFragment;
 import com.yiflyplan.app.fragment.UserInfoFragment;
-import com.yiflyplan.app.fragment.blueTooth.BlueToothFragment;
 import com.yiflyplan.app.fragment.organization.components.ApplyFormFragment;
 import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -104,6 +96,29 @@ public class InputFragment extends BaseFragment {
 
     @BindView(R.id.bluetooth_card_instructions_info)
     TextView bluetoothCardInstructionsInfoTextView;
+
+
+    /**
+     * 扫描跳转类型：物品转移
+     */
+    public static final String PRODUCT_TRANSFER = "物品转移";
+
+    /**
+     * 扫描跳转类型：物品条形码
+     */
+    public static final String PRODUCT_BAR_CODE = "物品条形码";
+
+    /**
+     * 扫描跳转类型：用户二维码
+     */
+    public static final String USER_QR_CODE = "用户二维码";
+
+    /**
+     * 扫描跳转类型：机构二维码
+     */
+    public static final String ORGANIZATION_QR_CODE = "机构二维码";
+
+
 
 
     /**
@@ -290,18 +305,18 @@ public class InputFragment extends BaseFragment {
                 QRCodeResultType = data.getString("type");
                 JSONObject parseResult = data.getJSONObject("parseResult");
                 switch (QRCodeResultType){
-                    case "物品转移":
+                    case PRODUCT_TRANSFER:
                         XToastUtils.toast(parseResult.toString(), Toast.LENGTH_LONG);
                         break;
-                    case "物品条形码":
+                    case PRODUCT_BAR_CODE:
                         ProductVO productVO = ReflectUtil.convertToObject(parseResult, ProductVO.class);
                         openNewPage(ProductInfoFragment.class,"productVO",productVO);
                         break;
-                    case "用户二维码":
+                    case USER_QR_CODE:
                         CurrentUserVO currentUserVO = ReflectUtil.convertToObject(parseResult, CurrentUserVO.class);
                         openNewPage(UserInfoFragment.class,"currentUserVO",currentUserVO);
                         break;
-                    case "机构二维码":
+                    case ORGANIZATION_QR_CODE:
                         organizationVO = ReflectUtil.convertToObject(parseResult, OrganizationVO.class);
                         openNewPage(ApplyFormFragment.class,"organization",organizationVO);
                         break;
