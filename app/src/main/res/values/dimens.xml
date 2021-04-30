@@ -19,6 +19,7 @@
     <dimen name="config_margin_52dp">52dp</dimen>
     <dimen name="config_margin_60dp">60dp</dimen>
     <dimen name="config_margin_50dp">50dp</dimen>
+    <dimen name="config_margin_250dp">250dp</dimen>
 
     <dimen name="company_logo_bottom">30dp</dimen>
 </resources>
