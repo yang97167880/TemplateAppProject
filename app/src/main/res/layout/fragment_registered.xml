@@ -20,11 +20,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
-    <FrameLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="50dp">
+
+    <com.xuexiang.xui.widget.imageview.RadiusImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:tint="?attr/colorAccent"
+        app:riv_is_circle="true"
+        app:srcCompat="@drawable/ic_avatar_default" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="@dimen/config_margin_10dp"
+        android:text="@string/tv_change_avatar"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/config_margin_24dp"
         >
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -32,14 +57,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:tint="?attr/colorAccent"
-            app:srcCompat="@drawable/ic_phone" />
+            app:srcCompat="@drawable/ic_baseline_phone_android_24" />
 
         <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
             android:id="@+id/et_phone_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
-            android:text="15659670302"
+            android:layout_marginStart="@dimen/config_margin_10dp"
             android:hint="@string/tip_please_input_phone_number"
             android:inputType="number"
             app:met_clearButton="true"
@@ -48,9 +72,9 @@
             app:met_floatingLabelText="@string/title_phone_number"
             app:met_regexp="@string/regex_phone_number" />
 
-    </FrameLayout>
+    </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp">
@@ -60,22 +84,77 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:tint="?attr/colorAccent"
-            app:srcCompat="@drawable/ic_password" />
+            app:srcCompat="@drawable/ic_user_name" />
+
+        <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
+            android:id="@+id/et_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/config_margin_10dp"
+            android:hint="@string/hint_user_name"
+            app:met_errorMessage="@string/tip_user_name_error"
+            app:met_regexp="@string/regex_user_name"
+            android:inputType="text"
+            app:met_clearButton="true"
+            app:met_floatingLabel="normal"
+            app:met_floatingLabelText="@string/user_name" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:tint="?attr/colorAccent"
+            app:srcCompat="@drawable/ic_baseline_lock_24" />
 
         <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
             android:id="@+id/et_password_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
-            android:hint="请输入密码"
-            android:text="123456"
+            android:layout_marginStart="@dimen/config_margin_10dp"
+            android:hint="@string/hint_password"
             android:inputType="textPassword"
-            app:met_clearButton="true"
-            app:met_errorMessage="@string/tip_phone_number_error"
+            app:met_passWordButton="true"
+            app:met_errorMessage="@string/tip_password_error"
+            app:met_regexp="@string/regex_password"
             app:met_floatingLabel="normal"
             app:met_floatingLabelText="@string/title_password" />
 
-    </FrameLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:tint="?attr/colorAccent"
+            app:srcCompat="@drawable/ic_baseline_lock_24" />
+
+        <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
+            android:id="@+id/et_confirm_password_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/config_margin_10dp"
+            android:hint="@string/hint_confirm_password"
+            android:inputType="textPassword"
+            app:met_passWordButton="true"
+            app:met_errorMessage="@string/tip_password_error"
+            app:met_regexp="@string/regex_password"
+            app:met_floatingLabel="normal"
+            app:met_floatingLabelText="@string/title_confirm_password" />
+
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/fl_verify_code"
@@ -83,12 +162,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp">
 
-        <!--            <androidx.appcompat.widget.AppCompatImageView-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_gravity="start|center_vertical"-->
-        <!--                android:tint="?attr/colorAccent"-->
-        <!--                app:srcCompat="@drawable/ic_password" />-->
 
         <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
             android:id="@+id/et_verify_code"
@@ -111,25 +184,16 @@
             android:layout_gravity="end|center"
             android:paddingStart="10dp"
             android:paddingTop="3dp"
-            android:paddingEnd="10dp"
             android:textSize="13sp"
             android:paddingBottom="3dp" />
-        <!--            <com.xuexiang.xui.widget.button.roundbutton.RoundButton-->
-        <!--                android:id="@+id/btn_get_verify_code"-->
-        <!--                style="@style/RoundButton"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_gravity="end"-->
-        <!--                android:paddingStart="10dp"-->
-        <!--                android:paddingTop="3dp"-->
-        <!--                android:paddingEnd="10dp"-->
-        <!--                android:paddingBottom="3dp"-->
-        <!--                android:text="@string/action_get_verify_code"-->
-        <!--                android:textColor="@color/selector_round_button_main_theme_color"-->
-        <!--                android:textSize="13sp"-->
-        <!--                app:rb_borderColor="@color/selector_round_button_main_theme_color"-->
-        <!--                app:rb_borderWidth="1.5dp"-->
-        <!--                app:rb_radius="15dp" />-->
+
 
     </FrameLayout>
+        <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+            android:id="@+id/btn_register"
+            style="@style/SuperButton.Primary.register"
+            android:layout_marginTop="16dp"
+            android:text="@string/title_register" />
+    </LinearLayout>
+
 </LinearLayout>
