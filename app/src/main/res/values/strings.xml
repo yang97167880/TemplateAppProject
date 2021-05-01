@@ -105,6 +105,8 @@
     <string name="refused">拒绝</string>
     <string name="agree">同意</string>
     <string name="tv_tel">Tel:</string>
+    <string name="testTitle1"><![CDATA[物品<-->转运箱]]></string>
+    <string name="testTitle2"><![CDATA[转运箱<-->容器]]></string>
 
 
 </resources>

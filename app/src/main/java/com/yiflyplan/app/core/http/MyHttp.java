@@ -300,7 +300,7 @@ public final class MyHttp {
             {
                 LinkedHashMap<String, String> headers = new LinkedHashMap<>();
                 headers.put("Charset", "UTF-8");
-                headers.put("Content-Type", "multipart/form-data");
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
                 headers.put("Accept-Encoding", "gzip,deflate");
                 headers.put("Authorization",token);
                 return headers;

@@ -139,21 +139,27 @@ public class EntryGarbageFragment extends BaseFragment {
             throw new AssertionError();
         }
         nextParams = (SearchFragment.UploadData) bundle.getSerializable("uploadData");
-        if (nextParams == null) {
-            throw new AssertionError();
-        }
-        mac = nextParams.getAddress();
-        if (mac == null) {
-            XToastUtils.info("找不到该蓝牙，请重试...");
-            popToBack();
-        }
-        try {
-            initBT();
-            createEntryInfoDialog();
-            setUploadEvent();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        //测试数据 上线请删掉
+        setUploadEvent();
+        //--
+
+
+//        if (nextParams == null) {
+//            throw new AssertionError();
+//        }
+//        mac = nextParams.getAddress();
+//        if (mac == null) {
+//            XToastUtils.info("找不到该蓝牙，请重试...");
+//            popToBack();
+//        }
+//        try {
+//            initBT();
+//            createEntryInfoDialog();
+//            setUploadEvent();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
     }
 
@@ -389,15 +395,18 @@ public class EntryGarbageFragment extends BaseFragment {
     }
 
     private void setUploadEvent() {
+//测试数据 上线请删掉
+        garbageWeight.setText(String.valueOf((int)(Math.random()*1000)));
+        //---
         uploadData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (checkSelectValues()) {
-                    entry_info_dialog.show();
-                    //发送显示消息，进行显示刷新
-                    Message message = new Message();
-                    message.obj = "正在上传数据....";
-                    handler.sendMessage(message);
+//                    entry_info_dialog.show();
+//                    //发送显示消息，进行显示刷新
+//                    Message message = new Message();
+//                    message.obj = "正在上传数据....";
+//                    handler.sendMessage(message);
 
                     LinkedHashMap<String, String> params = new LinkedHashMap<>();
                     params.put("departmentId", String.valueOf(nextParams.getDepartmentId()));
@@ -413,20 +422,22 @@ public class EntryGarbageFragment extends BaseFragment {
 //                            Toast.makeText(EntryGarbageActivity.this, "上传成功,请继续...", Toast.LENGTH_SHORT).show();
 
                             //发送显示消息，进行显示刷新
-                            Message message = new Message();
-                            message.obj = "上传成功...";
-                            handler.sendMessage(message);
-                            message = new Message();
-                            message.obj = "【您可以继续录入/退出请按返回键】";
-                            handler.sendMessage(message);
+//                            Message message = new Message();
+//                            message.obj = "上传成功...";
+//                            handler.sendMessage(message);
+//                            message = new Message();
+//                            message.obj = "【您可以继续录入/退出请按返回键】";
+//                            handler.sendMessage(message);
                             // resetThisPage();
+                            XToastUtils.success("上传成功");
+                            garbageWeight.setText(String.valueOf((int)(Math.random()*1000)));
                         }
 
                         @Override
                         public void fail(JSONObject error) {
-                            Message message = new Message();
-                            message.obj = "上传失败，请重试....";
-                            handler.sendMessage(message);
+//                            Message message = new Message();
+//                            message.obj = "上传失败，请重试....";
+//                            handler.sendMessage(message);
                         }
                     });
 

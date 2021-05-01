@@ -36,4 +36,10 @@
         android:icon="@drawable/ic_add"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/test"
+        android:title="测试"
+        android:icon="@drawable/ic_chart_right"
+        app:showAsAction="never"/>
+
 </menu>

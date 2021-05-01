@@ -78,6 +78,7 @@ import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.AboutFragment;
 import com.yiflyplan.app.fragment.QRCodeFragment;
 import com.yiflyplan.app.fragment.SettingsFragment;
+import com.yiflyplan.app.fragment.TestFragment;
 import com.yiflyplan.app.fragment.input.InputFragment;
 import com.yiflyplan.app.fragment.notices.NoticesFragment;
 import com.yiflyplan.app.fragment.organization.SearchOrganizationFragment;
@@ -324,8 +325,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 openNewPage(SearchOrganizationFragment.class);
                 break;
 
-            case R.id.organization_change:
-                showBottomSheetListDialog();
+            case R.id.test:
+                openNewPage(TestFragment.class);
                         break;
             default:
                 break;

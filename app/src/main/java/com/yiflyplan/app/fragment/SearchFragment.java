@@ -38,6 +38,7 @@ import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.blueTooth.BlueToothFragment;
+import com.yiflyplan.app.fragment.blueTooth.EntryGarbageFragment;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
@@ -104,9 +105,11 @@ public class SearchFragment extends BaseFragment {
         uploadData.setOrganizationId(String.valueOf(organizationVO.getOrganizationId()));
         uploadData.setOrganizationName(organizationVO.getOrganizationName());
 
+
         mSearchView.setVoiceSearch(false);
         mSearchView.setEllipsize(true);
         getAllDepartment();
+
         mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -157,9 +160,20 @@ public class SearchFragment extends BaseFragment {
     @OnClick(R.id.match_start)
     void toSearchActivity(View v) {
         if(departmentView.getText().toString().equals(NO_SET)){
+
             XToastUtils.error("请先设置科室");
+            //随机设置科室
+            int random = (int)(Math.random()*departments.length);
+            departmentView.setText(departments[random]);
+            uploadData.setDepartmentId(departmentsId[random]);
+            uploadData.setDepartmentName(departments[random]);
+
         }else{
-            openNewPage(BlueToothFragment.class, "uploadData", uploadData);
+            //  蓝牙模块
+            //openNewPage(BlueToothFragment.class, "uploadData", uploadData);
+
+            //  假数据测试
+            openNewPage(EntryGarbageFragment.class,"uploadData",uploadData);
         }
     }
 
