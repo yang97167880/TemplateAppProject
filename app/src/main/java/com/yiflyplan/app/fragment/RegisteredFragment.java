@@ -22,6 +22,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Entity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -38,6 +39,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xqrcode.XQRCode;
@@ -54,7 +58,9 @@ import com.xuexiang.xutil.file.FileUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 import com.yiflyplan.app.core.BaseFragment;
+import com.yiflyplan.app.core.http.MultipartRequest;
 import com.yiflyplan.app.core.http.MyHttp;
+import com.yiflyplan.app.core.http.entity.MultipartEntity;
 import com.yiflyplan.app.utils.MD5Util;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.XToastUtils;
@@ -139,7 +145,6 @@ public class RegisteredFragment  extends BaseFragment {
                 break;
             case R.id.btn_register:
                 if (mImageUri!=null){
-                    Log.d("file",file.toString());
                     if (etPhoneNumber.validate()) {
                         if(etUserName.isEmpty()){
                             XToastUtils.toast("用户名不能为空");
@@ -147,27 +152,71 @@ public class RegisteredFragment  extends BaseFragment {
                             if(etPasswordNumber.validate()){
                                 if(etConfirmPasswordNumber.getText().toString().equals(etPasswordNumber.getText().toString())){
                                     if (etVerifyCode.validate()) {
-                                        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-                                        params.put("tel", String.valueOf(etPhoneNumber.getText()));
-                                        params.put("password", etPasswordNumber.getText().toString());
-                                        params.put("passwordAgain", etConfirmPasswordNumber.getText().toString());
-                                        params.put("userName", String.valueOf(etUserName.getText()));
-                                        params.put("verificationCode", String.valueOf(etVerifyCode.getText()));
-                                        params.put("userAvatar", String.valueOf(file));
-                                        MyHttp.postJson("/user/register", "", params, new MyHttp.Callback() {
-                                            @Override
-                                            public void success(JSONObject data) throws JSONException {
-                                                XToastUtils.toast("注册成功");
-                                                openNewPage(LoginFragment.class);
-                                            }
+                                        RequestQueue queue = Volley.newRequestQueue(getContext());
+
+                                        MultipartRequest multipartRequest = new MultipartRequest(
+                                                "http://118.190.97.125:8080/user/register", new Response.Listener<String>() {
 
                                             @Override
-                                            public void fail(JSONObject error) throws JSONException {
-                                                if (error.getInt("code") == 40004) {
-                                                    getVerifyCode();
-                                                }
+                                            public void onResponse(String response) {
+                                                Log.e("", "### response : " + response);
                                             }
+
                                         });
+
+                                        // 添加header
+//                                        multipartRequest.addHeader("Charset", "UTF-8");
+//                                        multipartRequest.addHeader("Content-Type", "multipart/form-data");
+//                                        multipartRequest.addHeader("Accept-Encoding", "gzip,deflate");
+//                                        multipartRequest.addHeader("Authorization", "");
+
+                                        // 通过MultipartEntity来设置参数
+                                        MultipartEntity multi = multipartRequest.getMultiPartEntity();
+
+                                        // 文本参数
+                                        multi.addStringPart("password", etPasswordNumber.getText().toString());
+                                        multi.addStringPart("passwordAgain", etConfirmPasswordNumber.getText().toString());
+                                        multi.addStringPart("tel", String.valueOf(etPhoneNumber.getText()));
+                                        multi.addStringPart("userName",String.valueOf(etUserName.getText()));
+                                        multi.addStringPart("verificationCode", String.valueOf(etVerifyCode.getText()));
+                                        // 上传文件
+                                        multi.addFilePart("userAvatar", file);
+
+                                        Log.d("rrr", String.valueOf(multi.getContent()));
+                                        // 将请求添加到队列中
+                                        queue.add(multipartRequest);
+
+
+
+//
+//                                        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+//                                        params.put("tel", String.valueOf(etPhoneNumber.getText()));
+//                                        params.put("password", etPasswordNumber.getText().toString());
+//                                        params.put("passwordAgain", etConfirmPasswordNumber.getText().toString());
+//                                        params.put("userName", String.valueOf(etUserName.getText()));
+//                                        params.put("verificationCode", String.valueOf(etVerifyCode.getText()));
+//
+//
+//
+//                                        LinkedHashMap<String, MultipartEntity> params1 = new LinkedHashMap<>();
+//                                        MultipartEntity multipartEntity = new MultipartEntity();
+//                                        multipartEntity.addFilePart("images", new File(file.getPath()));
+//                                        params1.put("userAvatar", multipartEntity);
+//
+//                                        MyHttp.postForm("/user/register", "", params, new MyHttp.Callback() {
+//                                            @Override
+//                                            public void success(JSONObject data) throws JSONException {
+//                                                XToastUtils.toast("注册成功");
+//                                                openNewPage(LoginFragment.class);
+//                                            }
+//
+//                                            @Override
+//                                            public void fail(JSONObject error) throws JSONException {
+//                                                if (error.getInt("code") == 40004) {
+//                                                    getVerifyCode();
+//                                                }
+//                                            }
+//                                        });
                                     }
                                 }else{
                                     XToastUtils.toast("重复密码与原密码不匹配");
