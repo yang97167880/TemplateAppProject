@@ -170,7 +170,7 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="其他登录方式"
+                android:text="@string/tv_other_login"
                 android:textColor="@color/xui_config_color_primary_text" />
 
             <com.xuexiang.xui.widget.alpha.XUIAlphaTextView
