@@ -17,7 +17,11 @@
 
 package com.yiflyplan.app.core.http;
 
+import android.os.Build;
+
 import java.util.Objects;
+
+import androidx.annotation.RequiresApi;
 
 public class FormField<T> {
     private String fieldName;
@@ -102,6 +106,7 @@ public class FormField<T> {
                     value.equals(pair.value);
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         public int hashCode() {
             return Objects.hash(key, value);
