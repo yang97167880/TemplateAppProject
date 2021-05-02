@@ -32,18 +32,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FormRequest extends Request<String> {
-    private Response.ErrorListener errorListener;
+    private final Response.ErrorListener errorListener;
     private static final String BOUNDARY = "--------------520-13-14"; //数据分隔线
     private static final String MULTIPART_FORM_DATA = "multipart/form-data";
-    private List<FormField> fieldList;
+    private final List<FormField> fieldList;
+    private final String token;
 
-    public FormRequest(int method, String url, Response.ErrorListener listener, List<FormField> fieldList) {
+    public FormRequest(int method, String url, Response.ErrorListener listener, List<FormField> fieldList, String token) {
         super(method, url, listener);
         this.errorListener = listener;
         this.fieldList = fieldList;
+        this.token = token;
         setShouldCache(false);
         //设置请求的响应事件，因为文件上传需要较长的时间，所以在这里加大了，设为5秒
         setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -133,5 +137,12 @@ public class FormRequest extends Request<String> {
     @Override
     public String getBodyContentType() {
         return MULTIPART_FORM_DATA + "; boundary=" + BOUNDARY;
+    }
+
+    @Override
+    public Map<String, String> getHeaders() {
+        LinkedHashMap<String, String> headers = new LinkedHashMap<>();
+        headers.put("Authorization", token);
+        return headers;
     }
 }
