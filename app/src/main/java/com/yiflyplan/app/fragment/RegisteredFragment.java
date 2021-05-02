@@ -19,60 +19,44 @@ package com.yiflyplan.app.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Entity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.Volley;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xpage.annotation.Page;
-import com.xuexiang.xqrcode.XQRCode;
-import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 import com.xuexiang.xui.utils.KeyboardUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
-import com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet;
 import com.xuexiang.xui.widget.dialog.bottomsheet.BottomSheet.BottomListSheetBuilder;
 import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
-import com.xuexiang.xutil.display.ImageUtils;
-import com.xuexiang.xutil.file.FileUtils;
 import com.yiflyplan.app.R;
-import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 import com.yiflyplan.app.core.BaseFragment;
-import com.yiflyplan.app.core.http.MultipartRequest;
+import com.yiflyplan.app.core.http.FormField;
 import com.yiflyplan.app.core.http.MyHttp;
-import com.yiflyplan.app.core.http.entity.MultipartEntity;
-import com.yiflyplan.app.utils.MD5Util;
-import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.XToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -152,71 +136,60 @@ public class RegisteredFragment  extends BaseFragment {
                             if(etPasswordNumber.validate()){
                                 if(etConfirmPasswordNumber.getText().toString().equals(etPasswordNumber.getText().toString())){
                                     if (etVerifyCode.validate()) {
-                                        RequestQueue queue = Volley.newRequestQueue(getContext());
+                                        List<FormField> formFields = new ArrayList<>();
 
-                                        MultipartRequest multipartRequest = new MultipartRequest(
-                                                "http://118.190.97.125:8080/user/register", new Response.Listener<String>() {
+                                        FormField formField1 = new FormField();
+                                        formField1.setFieldName("password");
+                                        formField1.setFieldValue(etPasswordNumber.getText().toString());
 
+                                        FormField formField2 = new FormField();
+                                        formField2.setFieldName("passwordAgain");
+                                        formField2.setFieldValue(etConfirmPasswordNumber.getText().toString());
+
+                                        FormField formField3 = new FormField();
+                                        formField3.setFieldName("tel");
+                                        formField3.setFieldValue(String.valueOf(etPhoneNumber.getText()));
+
+                                        FormField formField4 = new FormField();
+                                        formField4.setFieldName("userName");
+                                        formField4.setFieldValue(String.valueOf(etUserName.getText()));
+
+
+                                        FormField formField5 = new FormField();
+                                        formField5.setFieldName("verificationCode");
+                                        formField5.setFieldValue(String.valueOf(etVerifyCode.getText()));
+
+                                        FormField formField6 = new FormField();
+                                        formField6.setFieldName("userAvatar");
+                                        formField6.setExtras(new FormField.Pair("filename=",file.getName()));
+                                        formField6.setContentType("application/x-jpg");
+                                        formField6.setFieldValue(file);
+
+
+
+                                        formFields.add(formField1);
+                                        formFields.add(formField2);
+                                        formFields.add(formField3);
+                                        formFields.add(formField4);
+                                        formFields.add(formField5);
+                                        formFields.add(formField6);
+
+
+
+                                        MyHttp.postForm("/user/register", "", formFields, new MyHttp.Callback() {
                                             @Override
-                                            public void onResponse(String response) {
-                                                Log.e("", "### response : " + response);
+                                            public void success(JSONObject data) throws JSONException {
+                                                XToastUtils.toast("注册成功");
+                                                openNewPage(LoginFragment.class);
                                             }
 
+                                            @Override
+                                            public void fail(JSONObject error) throws JSONException {
+                                                if (error.getInt("code") == 40004) {
+                                                    getVerifyCode();
+                                                }
+                                            }
                                         });
-
-                                        // 添加header
-//                                        multipartRequest.addHeader("Charset", "UTF-8");
-//                                        multipartRequest.addHeader("Content-Type", "multipart/form-data");
-//                                        multipartRequest.addHeader("Accept-Encoding", "gzip,deflate");
-//                                        multipartRequest.addHeader("Authorization", "");
-
-                                        // 通过MultipartEntity来设置参数
-                                        MultipartEntity multi = multipartRequest.getMultiPartEntity();
-
-                                        // 文本参数
-                                        multi.addStringPart("password", etPasswordNumber.getText().toString());
-                                        multi.addStringPart("passwordAgain", etConfirmPasswordNumber.getText().toString());
-                                        multi.addStringPart("tel", String.valueOf(etPhoneNumber.getText()));
-                                        multi.addStringPart("userName",String.valueOf(etUserName.getText()));
-                                        multi.addStringPart("verificationCode", String.valueOf(etVerifyCode.getText()));
-                                        // 上传文件
-                                        multi.addFilePart("userAvatar", file);
-
-                                        Log.d("rrr", String.valueOf(multi.getContent()));
-                                        // 将请求添加到队列中
-                                        queue.add(multipartRequest);
-
-
-
-//
-//                                        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-//                                        params.put("tel", String.valueOf(etPhoneNumber.getText()));
-//                                        params.put("password", etPasswordNumber.getText().toString());
-//                                        params.put("passwordAgain", etConfirmPasswordNumber.getText().toString());
-//                                        params.put("userName", String.valueOf(etUserName.getText()));
-//                                        params.put("verificationCode", String.valueOf(etVerifyCode.getText()));
-//
-//
-//
-//                                        LinkedHashMap<String, MultipartEntity> params1 = new LinkedHashMap<>();
-//                                        MultipartEntity multipartEntity = new MultipartEntity();
-//                                        multipartEntity.addFilePart("images", new File(file.getPath()));
-//                                        params1.put("userAvatar", multipartEntity);
-//
-//                                        MyHttp.postForm("/user/register", "", params, new MyHttp.Callback() {
-//                                            @Override
-//                                            public void success(JSONObject data) throws JSONException {
-//                                                XToastUtils.toast("注册成功");
-//                                                openNewPage(LoginFragment.class);
-//                                            }
-//
-//                                            @Override
-//                                            public void fail(JSONObject error) throws JSONException {
-//                                                if (error.getInt("code") == 40004) {
-//                                                    getVerifyCode();
-//                                                }
-//                                            }
-//                                        });
                                     }
                                 }else{
                                     XToastUtils.toast("重复密码与原密码不匹配");
@@ -397,7 +370,7 @@ public class RegisteredFragment  extends BaseFragment {
         Uri imageUri = null;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             String storage = Environment.getExternalStorageDirectory().getPath();
-            File dirFile = new File(storage + "/gzIcon");
+            File dirFile = new File(storage + "/bigIcon");
             if (!dirFile.exists()) {
                 if (!dirFile.mkdirs()) {
                     Log.e("TAG", "文件夹创建失败");
@@ -434,7 +407,7 @@ public class RegisteredFragment  extends BaseFragment {
         Uri imageUri = null;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             String storage = Environment.getExternalStorageDirectory().getPath();
-            File dirFile = new File(storage + "/gzIcon");
+            File dirFile = new File(storage + "/bigIcon");
             if (!dirFile.exists()) {
                 if (!dirFile.mkdirs()) {
                     Log.e("TAG", "文件夹创建失败");
