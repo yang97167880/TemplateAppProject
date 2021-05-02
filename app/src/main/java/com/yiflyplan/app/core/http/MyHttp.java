@@ -389,8 +389,8 @@ public final class MyHttp {
         requestJson(Request.Method.POST, url, token, params, callback);
     }
 
-    public static void postForm(final String url, final String token, final List<FormField> formFields, final Callback callback) {
-        FormRequest request = new FormRequest(Request.Method.POST, url, error -> {
+    public static void postForm(final String url, final String token, final List<FormField<?>> formFields, final Callback callback) {
+        FormRequest request = new FormRequest(Request.Method.POST, API + url, error -> {
             Log.e("TAGERR", error.getMessage(), error);
             try {
                 JSONObject err = new JSONObject("{err:" + error.getMessage() + "}");

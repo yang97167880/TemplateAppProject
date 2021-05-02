@@ -55,11 +55,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -68,7 +70,7 @@ import static com.yiflyplan.app.fragment.LoginFragment.stringtoBitmap;
 import static com.yiflyplan.app.utils.TextUtil.disallowSpacesUtil;
 
 @Page(name = "注册")
-public class RegisteredFragment  extends BaseFragment {
+public class RegisteredFragment extends BaseFragment {
 
 
     @BindView(R.id.iv_avatar)
@@ -121,47 +123,48 @@ public class RegisteredFragment  extends BaseFragment {
 
     @SuppressLint("NonConstantResourceId")
     @SingleClick
-    @OnClick({R.id.btn_register, R.id.iv_avatar,R.id.et_verify_code, R.id.code_image})
+    @OnClick({R.id.btn_register, R.id.iv_avatar, R.id.et_verify_code, R.id.code_image})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.code_image:
                 getVerifyCode();
                 break;
             case R.id.btn_register:
-                if (mImageUri!=null){
+                if (mImageUri != null) {
                     if (etPhoneNumber.validate()) {
-                        if(etUserName.isEmpty()){
+                        if (etUserName.isEmpty()) {
                             XToastUtils.toast("用户名不能为空");
-                        }else if(etUserName.validate()) {
-                            if(etPasswordNumber.validate()){
-                                if(etConfirmPasswordNumber.getText().toString().equals(etPasswordNumber.getText().toString())){
+                        } else if (etUserName.validate()) {
+                            if (etPasswordNumber.validate()) {
+                                if (Objects.requireNonNull(etConfirmPasswordNumber.getText()).toString().equals(Objects.requireNonNull(etPasswordNumber.getText()).toString())) {
                                     if (etVerifyCode.validate()) {
-                                        List<FormField> formFields = new ArrayList<>();
+                                        List<FormField<?>> formFields = new ArrayList<>();
 
-                                        FormField formField1 = new FormField();
+                                        FormField<String> formField1 = new FormField<>();
                                         formField1.setFieldName("password");
                                         formField1.setFieldValue(etPasswordNumber.getText().toString());
 
-                                        FormField formField2 = new FormField();
+                                        FormField<String> formField2 = new FormField<>();
                                         formField2.setFieldName("passwordAgain");
                                         formField2.setFieldValue(etConfirmPasswordNumber.getText().toString());
 
-                                        FormField formField3 = new FormField();
+                                        FormField<String> formField3 = new FormField<>();
                                         formField3.setFieldName("tel");
                                         formField3.setFieldValue(String.valueOf(etPhoneNumber.getText()));
 
-                                        FormField formField4 = new FormField();
+                                        FormField<String> formField4 = new FormField<>();
                                         formField4.setFieldName("userName");
                                         formField4.setFieldValue(String.valueOf(etUserName.getText()));
 
-                                        FormField formField5 = new FormField();
+                                        FormField<String> formField5 = new FormField<>();
                                         formField5.setFieldName("verificationCode");
                                         formField5.setFieldValue(String.valueOf(etVerifyCode.getText()));
 
-                                        FormField formField6 = new FormField();
+                                        FormField<File> formField6 = new FormField<>();
                                         formField6.setFieldName("userAvatar");
-                                        formField6.setExtras(new FormField.Pair("filename",file.getName()));
-                                        formField6.setContentType("application/x-jpg");
+                                        formField6.setExtras(new FormField.Pair<>("filename", file.getName()));
+                                        formField6.setContentType("image/jpeg");
+                                        
                                         formField6.setFieldValue(file);
 
                                         formFields.add(formField1);
@@ -170,7 +173,6 @@ public class RegisteredFragment  extends BaseFragment {
                                         formFields.add(formField4);
                                         formFields.add(formField5);
                                         formFields.add(formField6);
-
 
 
                                         MyHttp.postForm("/user/register", "", formFields, new MyHttp.Callback() {
@@ -188,13 +190,13 @@ public class RegisteredFragment  extends BaseFragment {
                                             }
                                         });
                                     }
-                                }else{
+                                } else {
                                     XToastUtils.toast("重复密码与原密码不匹配");
                                 }
                             }
                         }
                     }
-                }else {
+                } else {
                     XToastUtils.toast("请更改头像");
                 }
 
@@ -214,10 +216,11 @@ public class RegisteredFragment  extends BaseFragment {
 
     /**
      * 弹窗
+     *
      * @param v
      */
     private void showBottomSheetList(View v) {
-           new BottomListSheetBuilder(getActivity())
+        new BottomListSheetBuilder(getActivity())
                 .addItem("拍照")
                 .addItem("从相册选择")
                 .setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
@@ -255,8 +258,7 @@ public class RegisteredFragment  extends BaseFragment {
                                 // 判断系统中是否有处理该 Intent 的 Activity
                                 if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
                                     startActivityForResult(intent, REQUEST_IMAGE_GET);
-                                }
-                                else {
+                                } else {
                                     Toast.makeText(getActivity(), "未找到图片查看器", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -268,8 +270,6 @@ public class RegisteredFragment  extends BaseFragment {
                 .build()
                 .show();
     }
-
-
 
 
     /**
@@ -285,7 +285,7 @@ public class RegisteredFragment  extends BaseFragment {
                 case REQUEST_BIG_IMAGE_CUTTING:
                     RadiusImageView radiusImageView = findViewById(R.id.iv_avatar);
                     GlideImageLoadStrategy lodeImg = new GlideImageLoadStrategy();
-                    lodeImg.loadImage(radiusImageView,mImageUri);
+                    lodeImg.loadImage(radiusImageView, mImageUri);
                     break;
                 // 相册选取
                 case REQUEST_IMAGE_GET:
@@ -302,7 +302,6 @@ public class RegisteredFragment  extends BaseFragment {
             }
         }
     }
-
 
 
     /**
@@ -338,7 +337,7 @@ public class RegisteredFragment  extends BaseFragment {
     /**
      * 判断系统及拍照
      */
-    private void imageCapture(){
+    private void imageCapture() {
         Intent intent;
         Uri pictureUri;
         File pictureFile = new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME);
@@ -397,8 +396,6 @@ public class RegisteredFragment  extends BaseFragment {
     }
 
 
-
-
     public void startBigPhotoZoom(Uri uri) {
         // 创建大图文件夹
         Uri imageUri = null;
@@ -437,9 +434,9 @@ public class RegisteredFragment  extends BaseFragment {
         String filePath = imageFile.getAbsolutePath();
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[] { MediaStore.Images.Media._ID },
+                new String[]{MediaStore.Images.Media._ID},
                 MediaStore.Images.Media.DATA + "=? ",
-                new String[] { filePath }, null);
+                new String[]{filePath}, null);
 
         if (cursor != null && cursor.moveToFirst()) {
             int id = cursor.getInt(cursor
@@ -459,7 +456,6 @@ public class RegisteredFragment  extends BaseFragment {
     }
 
 
-
     /**
      * 获取验证码
      */
@@ -474,6 +470,7 @@ public class RegisteredFragment  extends BaseFragment {
                 verificationCodeImage = stringtoBitmap(savedVerificationCode);
                 codeImage.setImageBitmap(verificationCodeImage);
             }
+
             @Override
             public void fail(JSONObject error) {
                 codeImage.setImageResource(R.drawable.ic_img);

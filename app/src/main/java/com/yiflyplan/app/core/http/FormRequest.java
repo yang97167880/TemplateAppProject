@@ -27,23 +27,31 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.xuexiang.xhttp2.model.HttpParams;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class FormRequest extends Request<String> {
     private final Response.ErrorListener errorListener;
-    private static final String BOUNDARY = "--------------520-13-14"; //数据分隔线
+    private static final String BOUNDARY = "----WebKitFormBoundary5yUaMLXohbYiZp6E"; //数据分隔线
     private static final String MULTIPART_FORM_DATA = "multipart/form-data";
-    private final List<FormField> fieldList;
+    private final List<FormField<?>> fieldList;
     private final String token;
 
-    public FormRequest(int method, String url, Response.ErrorListener listener, List<FormField> fieldList, String token) {
+    public FormRequest(int method, String url, Response.ErrorListener listener, List<FormField<?>> fieldList, String token) {
         super(method, url, listener);
         this.errorListener = listener;
         this.fieldList = fieldList;
@@ -87,30 +95,44 @@ public class FormRequest extends Request<String> {
                 /*第二行*/
                 //Content-Disposition: form-data; name="参数的名称"; filename="上传的文件名" + "\r\n"
                 fieldBuilder.append("Content-Disposition: form-data;");
-                fieldBuilder.append(" name=\"").append(formField.getFieldName()).append("\";");
+                fieldBuilder.append(" name=\"").append(formField.getFieldName()).append("\"");
                 if (formField.getExtras() != null && formField.getExtras().length > 0) {
+                    fieldBuilder.append(";");
                     FormField.Pair[] extras = formField.getExtras();
                     for (FormField.Pair extra : extras) {
-                        fieldBuilder.append(extra.getKey()).append("\"").append(extra.getValue()).append("\"");
+                        fieldBuilder.append(" ").append(extra.getKey()).append("=\"").append(extra.getValue()).append("\"");
                     }
                 }
-                if (formField.getContentType() != null) {
-                    fieldBuilder.append("\r\n").append("Content-Type: ").append(formField.getContentType()).append("\r\n");
+                if (formField.getContentType() != null && formField.getContentType().trim().length() > 0) {
+                    fieldBuilder.append("\r\n").append("Content-Type: ").append(formField.getContentType());
                 }
 
-                fieldBuilder.append("\r\n");
-                ObjectOutputStream objectOutputStream = null;
+                fieldBuilder.append("\r\n\r\n");
+                FileInputStream fileInputStream = null;
                 try {
                     byteArrayOutputStream.write(fieldBuilder.toString().getBytes("utf-8"));
-                    objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-                    objectOutputStream.writeObject(formField.getFieldValue());
-                    objectOutputStream.flush();
+                    if (formField.getFieldValue() instanceof File) {
+                        File file = (File) formField.getFieldValue();
+                        byte[] bytes = new byte[(int) file.length()];
+                        fileInputStream = new FileInputStream(file);
+                        fileInputStream.read(bytes);
+                        byteArrayOutputStream.write(bytes);
+                        byteArrayOutputStream.write("\r\n".getBytes("utf-8"));
+                    } else {
+                        Object fieldValue = formField.getFieldValue();
+                        if (fieldValue instanceof String) {
+                            byteArrayOutputStream.write((fieldValue + "\r\n").getBytes("utf-8"));
+                        } else {
+                            throw new AuthFailureError("表单字段暂时不支持字符串以外的类型，请修改后重试");
+                        }
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
                     try {
-                        if (objectOutputStream != null) {
-                            objectOutputStream.close();
+                        if (fileInputStream != null) {
+                            fileInputStream.close();
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -142,7 +164,20 @@ public class FormRequest extends Request<String> {
     @Override
     public Map<String, String> getHeaders() {
         LinkedHashMap<String, String> headers = new LinkedHashMap<>();
-        headers.put("Authorization", token);
+        if (token != null && token.trim().length() > 0) {
+            headers.put("Authorization", token);
+        }
+
         return headers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FormRequest request = (FormRequest) o;
+        return errorListener.equals(request.errorListener) &&
+                fieldList.equals(request.fieldList) &&
+                token.equals(request.token);
     }
 }
