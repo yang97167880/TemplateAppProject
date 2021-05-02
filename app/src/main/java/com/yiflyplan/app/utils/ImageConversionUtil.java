@@ -19,10 +19,13 @@ package com.yiflyplan.app.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
 
 public class ImageConversionUtil {
     /**
@@ -111,6 +114,31 @@ public class ImageConversionUtil {
             ret[i] = arr[i + count];
         }
         return String.copyValueOf(ret);
+    }
+
+    /**
+     * 网络图片转 Drawable
+     * @param imageUrl
+     * @return Drawable
+     */
+
+    private Drawable loadImageFromNetwork(String imageUrl)
+    {
+        Drawable drawable = null;
+        try {
+            // 可以在这里通过文件名来判断，是否本地有此图片
+            drawable = Drawable.createFromStream(
+                    new URL(imageUrl).openStream(), "image.jpg");
+        } catch (IOException e) {
+            Log.d("test", e.getMessage());
+        }
+        if (drawable == null) {
+            Log.d("test", "null drawable");
+        } else {
+            Log.d("test", "not null drawable");
+        }
+
+        return drawable ;
     }
 
 
