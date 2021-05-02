@@ -37,7 +37,6 @@ public final class MyHttp {
     private static RequestQueue mQueue;
 
 
-
     private static final String Message = "message";
     private static final String SUCCESS = "success";
     private static final String DATA = "data";
@@ -64,7 +63,7 @@ public final class MyHttp {
      */
     // 参数为：请求方式、请求路径（前面默认添加API）、请求参数列表、返回结果回调接口
     // 请求参数列表使用LinkedHashMap，确保添加顺序和读取顺序一致
-    private static void request(int method, final String url,final String token, final LinkedHashMap<String, String> params, final Callback callback) {
+    private static void request(int method, final String url, final String token, final LinkedHashMap<String, String> params, final Callback callback) {
         //生成请求对象
         StringRequest jsonObjectRequest = new StringRequest(
                 method,//请求方式，GET、POST
@@ -74,7 +73,7 @@ public final class MyHttp {
                     @Override
                     public void onResponse(String response) {// 获得后端返回的json数据，包括status和data两部分
                         try {
-                            if(response != null && response.startsWith("\ufeff")) {
+                            if (response != null && response.startsWith("\ufeff")) {
                                 response = response.substring(1);
                             }
                             JSONObject res = new JSONObject(response);//将返回数据转化为json
@@ -99,11 +98,11 @@ public final class MyHttp {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("TAG", error.getMessage(), error);
-                        try{
-                            JSONObject err = new JSONObject("err:"+error.getMessage());
+                        try {
+                            JSONObject err = new JSONObject("err:" + error.getMessage());
                             callback.fail(err);
-                        }catch (Exception e){
-                            Log.e("Ex:",e.getMessage());
+                        } catch (Exception e) {
+                            Log.e("Ex:", e.getMessage());
                         }
                         XToastUtils.error("请求失败！请检查网络问题。");
                     }
@@ -131,13 +130,12 @@ public final class MyHttp {
             }
 
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError
-            {
+            public Map<String, String> getHeaders() throws AuthFailureError {
                 LinkedHashMap<String, String> headers = new LinkedHashMap<>();
                 headers.put("Charset", "UTF-8");
                 headers.put("Content-Type", "application/json;charset=utf-8");
                 headers.put("Accept-Encoding", "gzip,deflate");
-                headers.put("Authorization",token);
+                headers.put("Authorization", token);
                 return headers;
             }
         };
@@ -148,8 +146,8 @@ public final class MyHttp {
     }
 
     // 使用POST模式传参给后端，并获得后端返回数据（修改数据）
-    public static void post(final String url,final String token, final LinkedHashMap<String, String> params, final Callback callback) {
-        request(Request.Method.POST, url,token, params, callback);
+    public static void post(final String url, final String token, final LinkedHashMap<String, String> params, final Callback callback) {
+        request(Request.Method.POST, url, token, params, callback);
     }
 
     /**
@@ -157,7 +155,7 @@ public final class MyHttp {
      */
     // 参数为：请求方式、请求路径（前面默认添加API）、请求参数列表、返回结果回调接口
     // 请求参数列表使用LinkedHashMap，确保添加顺序和读取顺序一致
-    private static void requestJson(int method, final String url,final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
+    private static void requestJson(int method, final String url, final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
         //JSONObject请求不支持Map传递参数列表，需要自行构造请求参数对象，如果没有参数，则为null
         JSONObject jsonRequest = (params == null || params.isEmpty()) ? null : new JSONObject(params);
         //生成请求对象
@@ -190,11 +188,11 @@ public final class MyHttp {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("TAGERR", error.getMessage(), error);
-                        try{
-                            JSONObject err = new JSONObject("{err:"+error.getMessage()+"}");
+                        try {
+                            JSONObject err = new JSONObject("{err:" + error.getMessage() + "}");
                             callback.fail(err);
-                        }catch (Exception e){
-                            Log.e("Ex:",e.getMessage());
+                        } catch (Exception e) {
+                            Log.e("Ex:", e.getMessage());
                         }
                         XToastUtils.error("请求失败！请检查网络问题。");
                     }
@@ -217,13 +215,12 @@ public final class MyHttp {
             }
 
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError
-            {
+            public Map<String, String> getHeaders() throws AuthFailureError {
                 LinkedHashMap<String, String> headers = new LinkedHashMap<>();
                 headers.put("Charset", "UTF-8");
                 headers.put("Content-Type", "application/json;charset=utf-8");
                 headers.put("Accept-Encoding", "gzip,deflate");
-                headers.put("Authorization",token);
+                headers.put("Authorization", token);
                 return headers;
             }
 
@@ -236,7 +233,7 @@ public final class MyHttp {
 
     // 参数为：请求方式、请求路径（前面默认添加API）、请求参数列表、返回结果回调接口
     // 请求参数列表使用LinkedHashMap，确保添加顺序和读取顺序一致
-    private static void requestJsonByForm(int method, final String url,final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
+    private static void requestJsonByForm(int method, final String url, final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
         //JSONObject请求不支持Map传递参数列表，需要自行构造请求参数对象，如果没有参数，则为null
         JSONObject jsonRequest = (params == null || params.isEmpty()) ? null : new JSONObject(params);
         //生成请求对象
@@ -269,11 +266,11 @@ public final class MyHttp {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("TAGERR", error.getMessage(), error);
-                        try{
-                            JSONObject err = new JSONObject("{err:"+error.getMessage()+"}");
+                        try {
+                            JSONObject err = new JSONObject("{err:" + error.getMessage() + "}");
                             callback.fail(err);
-                        }catch (Exception e){
-                            Log.e("Ex:",e.getMessage());
+                        } catch (Exception e) {
+                            Log.e("Ex:", e.getMessage());
                         }
                         XToastUtils.error("请求失败！请检查网络问题。");
                     }
@@ -296,13 +293,12 @@ public final class MyHttp {
             }
 
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError
-            {
+            public Map<String, String> getHeaders() throws AuthFailureError {
                 LinkedHashMap<String, String> headers = new LinkedHashMap<>();
                 headers.put("Charset", "UTF-8");
                 headers.put("Content-Type", "multipart/form-data");
                 headers.put("Accept-Encoding", "gzip,deflate");
-                headers.put("Authorization",token);
+                headers.put("Authorization", token);
                 return headers;
             }
 
@@ -313,7 +309,7 @@ public final class MyHttp {
         mQueue.add(jsonObjectRequest);
     }
 
-    private static void requestJsonArray(int method, final String url,final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
+    private static void requestJsonArray(int method, final String url, final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
         //JSONObject请求不支持Map传递参数列表，需要自行构造请求参数对象，如果没有参数，则为null
         JSONObject jsonRequest = (params == null || params.isEmpty()) ? null : new JSONObject(params);
         //生成请求对象
@@ -345,11 +341,11 @@ public final class MyHttp {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("TAGERR", error.getMessage(), error);
-                        try{
-                            JSONObject err = new JSONObject("{err:"+error.getMessage()+"}");
+                        try {
+                            JSONObject err = new JSONObject("{err:" + error.getMessage() + "}");
                             callback.fail(err);
-                        }catch (Exception e){
-                            Log.e("Ex:",e.getMessage());
+                        } catch (Exception e) {
+                            Log.e("Ex:", e.getMessage());
                         }
                         XToastUtils.error("请求失败！请检查网络问题。");
                     }
@@ -372,13 +368,12 @@ public final class MyHttp {
             }
 
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError
-            {
+            public Map<String, String> getHeaders() throws AuthFailureError {
                 LinkedHashMap<String, String> headers = new LinkedHashMap<>();
                 headers.put("Charset", "UTF-8");
                 headers.put("Content-Type", "application/json;charset=utf-8");
                 headers.put("Accept-Encoding", "gzip,deflate");
-                headers.put("Authorization",token);
+                headers.put("Authorization", token);
                 return headers;
             }
 
@@ -390,39 +385,55 @@ public final class MyHttp {
     }
     // 使用POST模式传参给后端，并获得后端返回数据（修改数据）
 
-    public static void postJson(final String url,final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
-        requestJson(Request.Method.POST, url,token, params, callback);
+    public static void postJson(final String url, final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
+        requestJson(Request.Method.POST, url, token, params, callback);
     }
 
-    public static void postForm(final String url,final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
-        requestJsonByForm(Request.Method.POST, url,token, params, callback);
+    public static void postForm(final String url, final String token, final List<FormField> formFields, final Callback callback) {
+        FormRequest request = new FormRequest(Request.Method.POST, url, error -> {
+            Log.e("TAGERR", error.getMessage(), error);
+            try {
+                JSONObject err = new JSONObject("{err:" + error.getMessage() + "}");
+                callback.fail(err);
+            } catch (Exception e) {
+                Log.e("Ex:", e.getMessage());
+            }
+            XToastUtils.error("请求失败！请检查网络问题。");
+        }, formFields);
+        mQueue.add(request);
     }
+
+    public static void postForm(final String url, final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
+        requestJsonByForm(Request.Method.POST, url, token, params, callback);
+    }
+
     // 使用PUT模式传参给后端，并获得后端返回数据（修改数据）
-    public static void putJson(final String url,final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
-        requestJson(Request.Method.PUT, url,token, params, callback);
+    public static void putJson(final String url, final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
+        requestJson(Request.Method.PUT, url, token, params, callback);
     }
 
     // 使用GET模式获得后端返回数据，不传参给后端（查询数据）
-    public static void getWithoutParams(final String url,final String token, final Callback callback) {
-        requestJson(Request.Method.GET, url,token, null, callback);
+    public static void getWithoutParams(final String url, final String token, final Callback callback) {
+        requestJson(Request.Method.GET, url, token, null, callback);
     }
 
     // 使用GET模式传参给后端，并获得后端返回数据（查询数据）
     // GET模式不支持直接用Map传递参数列表，需要将参数列表拼接到请求链接上
-    public static void get(final String url,final String token, final LinkedHashMap<String, String> params, final Callback callback) {
-        getWithoutParams(appendParamsToUrl(url, params), token,callback);
+    public static void get(final String url, final String token, final LinkedHashMap<String, String> params, final Callback callback) {
+        getWithoutParams(appendParamsToUrl(url, params), token, callback);
     }
 
     // 使用GET模式获得后端返回数据，不传参给后端（查询数据）
-    public static void getJsonList(final String url,final String token, final Callback callback) {
-        requestJsonArray(Request.Method.GET, url,token, null, callback);
+    public static void getJsonList(final String url, final String token, final Callback callback) {
+        requestJsonArray(Request.Method.GET, url, token, null, callback);
     }
 
     // 将参数列表添加到请求链接后面
     private static String appendParamsToUrl(final String url, final Map<String, String> params) {
         // 无参数直接返回原url
-        if (params == null || params.isEmpty())
-        {  return url;}
+        if (params == null || params.isEmpty()) {
+            return url;
+        }
 
         // 构造新的请求链接
         StringBuilder sb = new StringBuilder(url);
