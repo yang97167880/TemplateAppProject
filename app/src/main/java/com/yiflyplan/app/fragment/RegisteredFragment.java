@@ -161,7 +161,7 @@ public class RegisteredFragment  extends BaseFragment {
 
                                         FormField formField6 = new FormField();
                                         formField6.setFieldName("userAvatar");
-                                        formField6.setExtras(new FormField.Pair("filename=",file.getName()));
+                                        formField6.setExtras(new FormField.Pair("filename",file.getName()));
                                         formField6.setContentType("application/x-jpg");
                                         formField6.setFieldValue(file);
 
