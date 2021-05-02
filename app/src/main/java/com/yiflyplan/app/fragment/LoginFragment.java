@@ -41,22 +41,17 @@ import com.xuexiang.xutil.app.ActivityUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.activity.MainActivity;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
-import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.utils.MD5Util;
-import com.yiflyplan.app.utils.RandomUtils;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -151,6 +146,9 @@ public class LoginFragment extends BaseFragment {
                                 Log.e("TAG1:", error.toString());
                                 if (error.getInt("code") == 40004) {
                                     getVerifyCode();
+                                }
+                                if (error.getInt("code") == 20002) {
+                                    openNewPage(RegisteredFragment.class);
                                 }
                             }
                         });

@@ -16,34 +16,46 @@
   ~
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     >
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/white"
-        >
-        <com.xuexiang.xui.widget.imageview.RadiusImageView
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/white"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="200dp"
+            />
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="155dp">
+
+            <com.xuexiang.xui.widget.imageview.RadiusImageView
             android:id="@+id/iv_avatar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_marginStart="@dimen/config_margin_15dp"
-            android:layout_marginVertical="@dimen/config_margin_15dp"
+            android:layout_marginVertical="@dimen/config_margin_10dp"
             app:riv_is_circle="true"
             app:srcCompat="@drawable/ic_product" />
-        <LinearLayout
+
+            <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_marginStart="@dimen/config_margin_10dp"
-            android:layout_marginVertical="@dimen/config_margin_15dp">
+            android:layout_marginVertical="@dimen/config_margin_10dp">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -52,8 +64,8 @@
                     android:id="@+id/tv_user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/black"
+                    android:layout_gravity="top"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/config_margin_20dp"
                     android:text="super"/>
             </LinearLayout>
@@ -62,6 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1">
                 <TextView
                     android:layout_width="wrap_content"
@@ -76,14 +89,36 @@
 
             </LinearLayout>
 
+            </LinearLayout>
         </LinearLayout>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll"
+        android:layout_marginVertical="@dimen/config_margin_15dp"
+        android:layout_marginHorizontal="@dimen/config_margin_15dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_phone"
+            />
+
+        <TextView
+            android:id="@+id/tv_user_rfid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/config_margin_15dp"
+            android:textColor="@color/black"
+            android:text="18259887677" />
     </LinearLayout>
 
 
 
 
 
-
-</LinearLayout>
+</RelativeLayout>
