@@ -154,7 +154,6 @@ public class RegisteredFragment  extends BaseFragment {
                                         formField4.setFieldName("userName");
                                         formField4.setFieldValue(String.valueOf(etUserName.getText()));
 
-
                                         FormField formField5 = new FormField();
                                         formField5.setFieldName("verificationCode");
                                         formField5.setFieldValue(String.valueOf(etVerifyCode.getText()));
@@ -164,8 +163,6 @@ public class RegisteredFragment  extends BaseFragment {
                                         formField6.setExtras(new FormField.Pair("filename",file.getName()));
                                         formField6.setContentType("application/x-jpg");
                                         formField6.setFieldValue(file);
-
-
 
                                         formFields.add(formField1);
                                         formFields.add(formField2);
