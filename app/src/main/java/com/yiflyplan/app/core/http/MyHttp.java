@@ -390,21 +390,35 @@ public final class MyHttp {
     }
 
     public static void postForm(final String url, final String token, final List<FormField<?>> formFields, final Callback callback) {
-        FormRequest request = new FormRequest(Request.Method.POST, API + url, error -> {
-            Log.e("TAGERR", error.getMessage(), error);
-            try {
-                JSONObject err = new JSONObject("{err:" + error.getMessage() + "}");
-                callback.fail(err);
-            } catch (Exception e) {
-                Log.e("Ex:", e.getMessage());
-            }
-            XToastUtils.error("请求失败！请检查网络问题。");
-        }, formFields, token);
+        FormRequest request = new FormRequest(
+                Request.Method.POST,
+                API + url,
+                response -> {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        if (SUCCESS.equals(jsonResponse.getString(Message))) {
+                            callback.success(jsonResponse);
+                        } else {// 业务处理中产生的异常
+                            Log.e("TAG", jsonResponse.getString(Message));
+                            XToastUtils.error(jsonResponse.getString(Message));
+                            callback.fail(jsonResponse);
+                        }
+                    } catch (JSONException e) {
+                        XToastUtils.error(e.getMessage());
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    Log.e("TAGERR", String.valueOf(error), error);
+                    try {
+                        JSONObject err = new JSONObject("{err:" + error.getMessage() + "}");
+                        callback.fail(err);
+                    } catch (Exception e) {
+                        Log.e("Ex:", e.getMessage());
+                    }
+                    XToastUtils.error("请求失败！请检查网络问题。");
+                }, formFields, token);
         mQueue.add(request);
-    }
-
-    public static void postForm(final String url, final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
-        requestJsonByForm(Request.Method.POST, url, token, params, callback);
     }
 
     // 使用PUT模式传参给后端，并获得后端返回数据（修改数据）

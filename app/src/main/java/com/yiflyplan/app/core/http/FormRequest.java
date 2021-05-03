@@ -20,6 +20,7 @@ package com.yiflyplan.app.core.http;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -27,25 +28,34 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.xuexiang.xhttp2.model.HttpParams;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class FormRequest extends Request<String> {
     private final Response.ErrorListener errorListener;
+    private final Response.Listener<String> successListener;
     private static final String BOUNDARY = "----WebKitFormBoundary5yUaMLXohbYiZp6E"; //数据分隔线
     private static final String MULTIPART_FORM_DATA = "multipart/form-data";
     private final List<FormField<?>> fieldList;
     private final String token;
 
-    public FormRequest(int method, String url, Response.ErrorListener listener, List<FormField<?>> fieldList, String token) {
+    public FormRequest(int method, String url, Response.Listener<String> successListener, Response.ErrorListener listener, List<FormField<?>> fieldList, String token) {
         super(method, url, listener);
+        this.successListener = successListener;
         this.errorListener = listener;
         this.fieldList = fieldList;
         this.token = token;
@@ -61,16 +71,17 @@ public class FormRequest extends Request<String> {
             String parseResult =
                     new String(networkResponse.data, HttpHeaderParser.parseCharset(networkResponse.headers));
             Log.v("FromRequest", "====parseResult===" + parseResult);
-            return Response.success(parseResult,
-                    HttpHeaderParser.parseCacheHeaders(networkResponse));
+            Cache.Entry cacheEntry = HttpHeaderParser.parseCacheHeaders(networkResponse);
+            return Response.success(parseResult, cacheEntry);
         } catch (UnsupportedEncodingException e) {
+            Log.e("ERROR", String.valueOf(e));
             return Response.error(new ParseError(e));
         }
     }
 
     @Override
     protected void deliverResponse(String s) {
-        errorListener.onErrorResponse(new VolleyError(s));
+        this.successListener.onResponse(s);
     }
 
     @Override
