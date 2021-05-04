@@ -147,6 +147,9 @@ public class LoginFragment extends BaseFragment {
                                 if (error.getInt("code") == 40004) {
                                     getVerifyCode();
                                 }
+                                if (error.getInt("code") == 20002) {
+                                    openNewPage(RegisteredFragment.class);
+                                }
                             }
                         });
                     }
