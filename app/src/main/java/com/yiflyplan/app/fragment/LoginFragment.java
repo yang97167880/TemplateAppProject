@@ -41,22 +41,17 @@ import com.xuexiang.xutil.app.ActivityUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.activity.MainActivity;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
-import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.utils.MD5Util;
-import com.yiflyplan.app.utils.RandomUtils;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -111,7 +106,7 @@ public class LoginFragment extends BaseFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SingleClick
-    @OnClick({R.id.btn_login, R.id.tv_other_login, R.id.tv_forget_password, R.id.tv_user_protocol, R.id.tv_privacy_protocol, R.id.et_password_number, R.id.et_verify_code, R.id.code_image})
+    @OnClick({R.id.btn_login,R.id.tv_register,R.id.tv_other_login, R.id.tv_forget_password, R.id.tv_user_protocol, R.id.tv_privacy_protocol, R.id.et_password_number, R.id.et_verify_code, R.id.code_image})
     public void onViewClicked(View view) {
         switch (view.getId()) {
 //            case R.id.btn_get_verify_code:
@@ -152,6 +147,9 @@ public class LoginFragment extends BaseFragment {
                                 if (error.getInt("code") == 40004) {
                                     getVerifyCode();
                                 }
+                                if (error.getInt("code") == 20002) {
+                                    openNewPage(RegisteredFragment.class);
+                                }
                             }
                         });
                     }
@@ -161,6 +159,9 @@ public class LoginFragment extends BaseFragment {
             case R.id.et_verify_code:
                 KeyboardUtils.isSoftInputShow(getActivity());
                 KeyboardUtils.showSoftInputForce(getActivity());
+                break;
+            case R.id.tv_register:
+                openNewPage(RegisteredFragment.class);
                 break;
             case R.id.tv_other_login:
                 XToastUtils.info("其他登录方式");
