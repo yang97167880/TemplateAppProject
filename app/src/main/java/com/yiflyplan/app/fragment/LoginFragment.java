@@ -106,7 +106,7 @@ public class LoginFragment extends BaseFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SingleClick
-    @OnClick({R.id.btn_login, R.id.tv_other_login, R.id.tv_forget_password, R.id.tv_user_protocol, R.id.tv_privacy_protocol, R.id.et_password_number, R.id.et_verify_code, R.id.code_image})
+    @OnClick({R.id.btn_login,R.id.tv_register,R.id.tv_other_login, R.id.tv_forget_password, R.id.tv_user_protocol, R.id.tv_privacy_protocol, R.id.et_password_number, R.id.et_verify_code, R.id.code_image})
     public void onViewClicked(View view) {
         switch (view.getId()) {
 //            case R.id.btn_get_verify_code:
@@ -147,9 +147,6 @@ public class LoginFragment extends BaseFragment {
                                 if (error.getInt("code") == 40004) {
                                     getVerifyCode();
                                 }
-                                if (error.getInt("code") == 20002) {
-                                    openNewPage(RegisteredFragment.class);
-                                }
                             }
                         });
                     }
@@ -159,6 +156,9 @@ public class LoginFragment extends BaseFragment {
             case R.id.et_verify_code:
                 KeyboardUtils.isSoftInputShow(getActivity());
                 KeyboardUtils.showSoftInputForce(getActivity());
+                break;
+            case R.id.tv_register:
+                openNewPage(RegisteredFragment.class);
                 break;
             case R.id.tv_other_login:
                 XToastUtils.info("其他登录方式");

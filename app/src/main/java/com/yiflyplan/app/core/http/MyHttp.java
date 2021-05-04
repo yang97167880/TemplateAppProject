@@ -23,6 +23,7 @@ import com.yiflyplan.app.utils.XToastUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.nio.charset.StandardCharsets;

@@ -130,7 +130,6 @@ public class FormRequest extends Request<String> {
                             throw new AuthFailureError("表单字段暂时不支持字符串以外的类型，请修改后重试");
                         }
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {

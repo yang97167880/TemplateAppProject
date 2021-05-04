@@ -46,6 +46,7 @@ import com.yiflyplan.app.R;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.FormField;
 import com.yiflyplan.app.core.http.MyHttp;
+import com.yiflyplan.app.utils.MD5Util;
 import com.yiflyplan.app.utils.XToastUtils;
 
 import org.json.JSONException;
@@ -140,13 +141,22 @@ public class RegisteredFragment extends BaseFragment {
                                     if (etVerifyCode.validate()) {
                                         List<FormField<?>> formFields = new ArrayList<>();
 
+                                        String md5psd = null;
+                                        String md5repeatPsd = null;
+                                        try {
+                                            md5psd = MD5Util.getMD5(String.valueOf(etPasswordNumber.getText()));
+                                            md5repeatPsd = MD5Util.getMD5(String.valueOf(etConfirmPasswordNumber.getText()));
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+
                                         FormField<String> formField1 = new FormField<>();
                                         formField1.setFieldName("password");
-                                        formField1.setFieldValue(etPasswordNumber.getText().toString());
+                                        formField1.setFieldValue(md5psd);
 
                                         FormField<String> formField2 = new FormField<>();
                                         formField2.setFieldName("passwordAgain");
-                                        formField2.setFieldValue(etConfirmPasswordNumber.getText().toString());
+                                        formField2.setFieldValue(md5repeatPsd);
 
                                         FormField<String> formField3 = new FormField<>();
                                         formField3.setFieldName("tel");
@@ -173,6 +183,8 @@ public class RegisteredFragment extends BaseFragment {
                                         formFields.add(formField4);
                                         formFields.add(formField5);
                                         formFields.add(formField6);
+
+
 
 
                                         MyHttp.postForm("/user/register", "", formFields, new MyHttp.Callback() {

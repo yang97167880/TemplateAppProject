@@ -120,6 +120,7 @@
     <string name="hint_password">请输入密码</string>
     <string name="hint_confirm_password">请重新输入密码</string>
     <string name="tv_other_login">其他登录方式</string>
+    <string name="tv_register">注册新用户</string>
 
 
 </resources>
