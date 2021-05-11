@@ -39,6 +39,7 @@ public abstract class SimpleDelegateAdapter<T> extends BaseDelegateAdapter<T, My
 
     private LayoutHelper mLayoutHelper;
 
+
     public SimpleDelegateAdapter(int layoutId, LayoutHelper layoutHelper) {
         super(MyRecyclerViewHolder.class);
         mLayoutId = layoutId;
@@ -68,6 +69,5 @@ public abstract class SimpleDelegateAdapter<T> extends BaseDelegateAdapter<T, My
     public LayoutHelper onCreateLayoutHelper() {
         return mLayoutHelper;
     }
-
 
 }

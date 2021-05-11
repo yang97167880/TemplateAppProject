@@ -37,6 +37,7 @@ import com.yiflyplan.app.R;
 import com.yiflyplan.app.activity.MainActivity;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.adapter.WidgetItemAdapter;
+import com.yiflyplan.app.bundle.PersonalWareHouseBundle;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.fragment.organization.components.Examine;
 import com.yiflyplan.app.fragment.organization.components.OrganizationUser;
@@ -105,7 +106,10 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
                     openNewPage(OrganizationUser.class,"id",organizationVO.getOrganizationId());
                     break;
                 case "个人仓库":
-                    openNewPage(PersonalWarehouse.class,"id",organizationVO.getOrganizationId());
+                    PersonalWareHouseBundle personalWareHouseBundle=new PersonalWareHouseBundle();
+                    personalWareHouseBundle.setOrganizationId(organizationVO.getOrganizationId());
+                    MapDataCache.putCache("personalWareHouseBundle",personalWareHouseBundle);
+                    openNewPage(PersonalWarehouse.class);
                     break;
                 case "审核申请":
                     openNewPage(Examine.class,"id",organizationVO.getOrganizationId());

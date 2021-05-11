@@ -22,6 +22,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xuexiang.xpage.annotation.Page;
@@ -31,8 +33,11 @@ import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
+import com.yiflyplan.app.bundle.PersonalWareHouseBundle;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
+import com.yiflyplan.app.fragment.organization.components.PersonalWarehouse;
+import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 
@@ -61,8 +66,11 @@ public class UserInfoFragment extends BaseFragment {
     @BindView(R.id.tv_user_rfid)
     TextView tvUserRfid;
 
+    @BindView(R.id.tv_city_name)
+    TextView tvCityName;
 
-
+    @BindView(R.id.rl_ware_house)
+    RelativeLayout llWareHouse;
 
 
     @Override
@@ -74,18 +82,24 @@ public class UserInfoFragment extends BaseFragment {
     protected void initViews() {
         Bundle bundle = getArguments();
         CurrentUserVO currentUserVO = (CurrentUserVO) bundle.getSerializable("currentUserVO");
-        if(currentUserVO!=null){
+        if (currentUserVO != null) {
             RadiusImageView radiusImageView = findViewById(R.id.iv_avatar);
             GlideImageLoadStrategy lodeImg = new GlideImageLoadStrategy();
-            lodeImg.loadImage(radiusImageView,currentUserVO.getUserAvatar());
+            lodeImg.loadImage(radiusImageView, currentUserVO.getUserAvatar());
 
             tvUserName.setText(currentUserVO.getUserName());
             tvUserTel.setText(currentUserVO.getUserTel());
+            tvCityName.setText(currentUserVO.getUserCityName());
             tvUserRfid.setText(currentUserVO.getRfid());
-
+            llWareHouse.setOnClickListener(view -> {
+                PersonalWareHouseBundle personalWareHouseBundle=new PersonalWareHouseBundle();
+                CurrentUserVO cache = (CurrentUserVO) MapDataCache.getCache(MapDataCache.Constants.LOGIN_USER, null);
+                personalWareHouseBundle.setOrganizationId(cache.getCurrentOrganization().getId());
+                personalWareHouseBundle.setUserId(currentUserVO.getUserId());
+                MapDataCache.putCache("personalWareHouseBundle",personalWareHouseBundle);
+                openNewPage(PersonalWarehouse.class);
+            });
         }
-
-
     }
 
     @Override

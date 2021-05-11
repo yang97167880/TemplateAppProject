@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -39,14 +40,17 @@ import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
 import com.xuexiang.xui.widget.searchview.MaterialSearchView;
 import com.yiflyplan.app.R;
+import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 import com.yiflyplan.app.adapter.VO.MemberVO;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
+import com.yiflyplan.app.fragment.UserInfoFragment;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
+import com.yiflyplan.app.utils.XToastUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -117,6 +121,24 @@ public class OrganizationUser extends BaseFragment {
                         TextView role = (TextView) view;
                         role.setText(model.getRoleName());
                     }, R.id.member_roleName);
+                    holder.click(R.id.member_view, view -> {
+                        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+                        params.put("userId", String.valueOf(model.getUserId()));
+                        MyHttp.get("/user/getUserInfo", TokenUtils.getToken(), params, new MyHttp.Callback() {
+                            @Override
+                            public void success(JSONObject data) {
+                                CurrentUserVO currentUserVO = ReflectUtil.convertToObject(data, CurrentUserVO.class);
+
+                                openNewPage(UserInfoFragment.class, "currentUserVO", currentUserVO);
+                            }
+
+                            @Override
+                            public void fail(JSONObject error) throws JSONException {
+                                XToastUtils.error(error.getString("message"));
+                            }
+                        });
+
+                    });
                 }
             }
 
@@ -130,7 +152,7 @@ public class OrganizationUser extends BaseFragment {
 
         DelegateAdapter delegateAdapter = new DelegateAdapter(virtualLayoutManager);
         delegateAdapter.addAdapter(mMemberAdapter);
-//
+
         recyclerView.setAdapter(delegateAdapter);
     }
 
@@ -142,13 +164,15 @@ public class OrganizationUser extends BaseFragment {
         mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                SnackbarUtils.Long(mSearchView, "Query: " + query).show();
+//                SnackbarUtils.Long(mSearchView, "Query: " + query).show();
+
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 //Do some magic
+              //  MyHttp.post("/user/search",);
                 return false;
             }
         });
@@ -192,11 +216,12 @@ public class OrganizationUser extends BaseFragment {
 
     @Override
     protected void initListeners() {
+
         //下拉刷新
         refreshLayout.setOnRefreshListener(refreshLayout -> {
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
-                if(pageNo == 1){
+                if (pageNo == 1) {
                     Bundle build = getArguments();
                     int id = build.getInt("id");
                     apiLoadMoreMember(String.valueOf(id));

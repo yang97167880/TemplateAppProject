@@ -35,8 +35,10 @@ import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.ProductVO;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
+import com.yiflyplan.app.bundle.PersonalWareHouseBundle;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
+import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 
@@ -177,9 +179,8 @@ public class PersonalWarehouse extends BaseFragment {
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
                 if (pageNo == 1) {
-                    Bundle bundle = getArguments();
-                    int id = bundle.getInt("id");
-                    apiLoadMoreProduct(String.valueOf(id));
+                    PersonalWareHouseBundle personalWareHouseBundle = (PersonalWareHouseBundle) MapDataCache.getCache("personalWareHouseBundle",null);
+                    apiLoadMoreProduct(String.valueOf(personalWareHouseBundle.getOrganizationId()),String.valueOf(personalWareHouseBundle.getUserId()));
                 }
                 mProductAdapter.refresh(productVOS);
                 refreshLayout.finishRefresh();
@@ -190,18 +191,25 @@ public class PersonalWarehouse extends BaseFragment {
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
                 Bundle bundle = getArguments();
-                int id = bundle.getInt("id");
-                apiLoadMoreProduct(String.valueOf(id));
+                PersonalWareHouseBundle personalWareHouseBundle = (PersonalWareHouseBundle) bundle.get("personalWareHouseBundle");
+                apiLoadMoreProduct(String.valueOf(personalWareHouseBundle.getOrganizationId()), String.valueOf(personalWareHouseBundle.getUserId()));
+
                 refreshLayout.finishLoadMore();
             }, 500);
         });
         refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
     }
 
-    protected void apiLoadMoreProduct(String id) {
+    protected void apiLoadMoreProduct(String organizationId, String userId) {
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("queryOwn", "true");
-        params.put("organizationId", id);
+        if (userId != null) {
+            params.put("queryOwn", "false");
+            params.put("userId", userId);
+        } else {
+            params.put("queryOwn", "true");
+        }
+
+        params.put("organizationId", organizationId);
         params.put("pageNo", String.valueOf(pageNo));
         params.put("pageSize", String.valueOf(pageSize));
         MyHttp.postJson("/product/getAllProduct", TokenUtils.getToken(), params, new MyHttp.Callback() {
@@ -209,10 +217,10 @@ public class PersonalWarehouse extends BaseFragment {
             public void success(JSONObject data) throws JSONException {
                 totalPage = data.getInt("totalPage");
                 JSONArray product = new JSONArray(data.getString("list"));
-                Log.e("product",product.toString());
+                Log.e("product", product.toString());
                 List<ProductVO> newList = new ArrayList<>();
                 newList = ReflectUtil.convertToList(product, ProductVO.class);
-                if(pageNo<=totalPage){
+                if (pageNo <= totalPage) {
                     productVOS.addAll(newList);
                     mProductAdapter.loadMore(newList);
                     pageNo += 1;

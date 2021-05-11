@@ -44,6 +44,7 @@ import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.utils.MD5Util;
+import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
@@ -106,7 +107,7 @@ public class LoginFragment extends BaseFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SingleClick
-    @OnClick({R.id.btn_login,R.id.tv_register,R.id.tv_other_login, R.id.tv_forget_password, R.id.tv_user_protocol, R.id.tv_privacy_protocol, R.id.et_password_number, R.id.et_verify_code, R.id.code_image})
+    @OnClick({R.id.btn_login, R.id.tv_register, R.id.tv_other_login, R.id.tv_forget_password, R.id.tv_user_protocol, R.id.tv_privacy_protocol, R.id.et_password_number, R.id.et_verify_code, R.id.code_image})
     public void onViewClicked(View view) {
         switch (view.getId()) {
 //            case R.id.btn_get_verify_code:
@@ -135,8 +136,8 @@ public class LoginFragment extends BaseFragment {
                             public void success(JSONObject data) throws JSONException {
                                 Log.e("JSON:", data.toString());
                                 CurrentUserVO userVO = new CurrentUserVO();
-                                userVO = ReflectUtil.convertToObject(data,CurrentUserVO.class);
-                                Log.e("list",String.valueOf(userVO.getRelationships()));
+                                userVO = ReflectUtil.convertToObject(data, CurrentUserVO.class);
+                                Log.e("list", String.valueOf(userVO.getRelationships()));
                                 //用户初始化
                                 onLoginSuccess(userVO, data.getString("token"));
                             }
@@ -222,6 +223,7 @@ public class LoginFragment extends BaseFragment {
     private void onLoginSuccess(CurrentUserVO userInfo, String token) {
         if (TokenUtils.handleLoginSuccess(token)) {
             popToBack();
+            MapDataCache.putCache(MapDataCache.Constants.LOGIN_USER, userInfo);
             ActivityUtils.startActivity(MainActivity.class, CURRENTUSER, userInfo);
         }
     }
