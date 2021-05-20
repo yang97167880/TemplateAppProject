@@ -40,20 +40,21 @@ import java.util.Collection;
  */
 public abstract class BaseDelegateAdapter<T, H extends RecyclerView.ViewHolder> extends XDelegateAdapter<T, H> {
     private Class<H> vClass;
+
     public BaseDelegateAdapter(Class<H> cls) {
         super();
-        this.vClass=cls;
+        this.vClass = cls;
 
     }
 
     public BaseDelegateAdapter(Collection<T> list, Class<H> cls) {
         super(list);
-        this.vClass=cls;
+        this.vClass = cls;
     }
 
     public BaseDelegateAdapter(T[] data, Class<H> cls) {
         super(data);
-        this.vClass=cls;
+        this.vClass = cls;
     }
 
 
@@ -82,6 +83,5 @@ public abstract class BaseDelegateAdapter<T, H extends RecyclerView.ViewHolder> 
         }
         throw new Exception("找不到该View");
     }
-
 
 }

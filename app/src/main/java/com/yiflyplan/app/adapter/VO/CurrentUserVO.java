@@ -94,6 +94,14 @@ public class CurrentUserVO implements Serializable {
         this.currentOrganization = currentOrganization;
     }
 
+    public String getUserCityName() {
+        return userCityName;
+    }
+
+    public void setUserCityName(String userCityName) {
+        this.userCityName = userCityName;
+    }
+
     @Override
     public String toString() {
         return "CurrentUserVO{" +
@@ -102,8 +110,11 @@ public class CurrentUserVO implements Serializable {
                 ", userAvatar='" + userAvatar + '\'' +
                 ", userTel='" + userTel + '\'' +
                 ", userCityId='" + userCityId + '\'' +
+                ", userCityName='" + userCityName + '\'' +
                 ", platform='" + platform + '\'' +
                 ", rfid='" + rfid + '\'' +
+                ", relationships=" + relationships +
+                ", currentOrganization=" + currentOrganization +
                 '}';
     }
 
@@ -116,6 +127,8 @@ public class CurrentUserVO implements Serializable {
     private String userTel;
 
     private String userCityId;
+
+    private String userCityName;
 
     private String platform;
 
