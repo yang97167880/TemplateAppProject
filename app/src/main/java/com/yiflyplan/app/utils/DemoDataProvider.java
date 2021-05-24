@@ -125,11 +125,11 @@ public class DemoDataProvider {
     @MemoryCache
     public static List<ChartInfo> getDemoChartInfos() {
         List<ChartInfo> infoList = new ArrayList<>();
-        infoList.add(new ChartInfo(R.drawable.icon_avatar,"你好sssssssssssssssss",0));
-        infoList.add(new ChartInfo(R.drawable.icon_avatar,"你好zzzz",1));
-        infoList.add(new ChartInfo(R.drawable.icon_avatar,"你好zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",0));
-        infoList.add(new ChartInfo(R.drawable.icon_avatar,"你好zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",0));
-        infoList.add(new ChartInfo(R.drawable.icon_avatar,"你好zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",1));
+//        infoList.add(new ChartInfo(R.drawable.icon_avatar,"你好sssssssssssssssss",0));
+//        infoList.add(new ChartInfo(R.drawable.icon_avatar,"你好zzzz",1));
+//        infoList.add(new ChartInfo(R.drawable.icon_avatar,"你好zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",0));
+//        infoList.add(new ChartInfo(R.drawable.icon_avatar,"你好zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",0));
+//        infoList.add(new ChartInfo(R.drawable.icon_avatar,"你好zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",1));
         return infoList;
     }
 

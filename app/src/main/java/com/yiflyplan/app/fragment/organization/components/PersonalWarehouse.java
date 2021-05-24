@@ -208,7 +208,6 @@ public class PersonalWarehouse extends BaseFragment {
         } else {
             params.put("queryOwn", "true");
         }
-
         params.put("organizationId", organizationId);
         params.put("pageNo", String.valueOf(pageNo));
         params.put("pageSize", String.valueOf(pageSize));

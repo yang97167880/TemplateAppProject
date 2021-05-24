@@ -16,11 +16,11 @@
   ~
   -->
 
-<com.xuexiang.xui.widget.alpha.XUIAlphaLinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.xuexiang.xui.widget.alpha.XUIAlphaLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="15dp"
     android:layout_marginLeft="10dp"
     android:layout_marginBottom="15dp"
@@ -34,11 +34,15 @@
         android:layout_height="match_parent"
         android:layout_marginRight="@dimen/config_margin_32dp"
         tools:ignore="RtlHardcoded,UseCompoundDrawables">
-        <ImageView
+
+        <com.xuexiang.xui.widget.imageview.RadiusImageView
             android:id="@+id/avatar_popup_left"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:contentDescription="@string/avatar" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_avatar"
+            app:riv_border_width="0dp"
+            app:riv_corner_radius="40dp" />
 
         <TextView
             android:id="@+id/avatar_text_left"
@@ -77,13 +81,17 @@
             android:textSize="@dimen/config_margin_15dp"
             android:layout_alignParentRight="true"
             tools:ignore="SpUsage" />
-        <ImageView
+
+        <com.xuexiang.xui.widget.imageview.RadiusImageView
             android:id="@+id/avatar_popup_right"
             android:layout_width="35dp"
             android:layout_height="35dp"
+            android:scaleType="centerCrop"
             android:layout_alignParentRight="true"
-            tools:src="@drawable/icon_avatar"
-            android:contentDescription="@string/avatar" />
+            android:src="@drawable/icon_avatar"
+            app:riv_border_width="0dp"
+            app:riv_corner_radius="40dp" />
+
     </RelativeLayout>
 
 

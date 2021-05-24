@@ -35,6 +35,7 @@ import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.activity.MainActivity;
+import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.adapter.WidgetItemAdapter;
 import com.yiflyplan.app.bundle.PersonalWareHouseBundle;

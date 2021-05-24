@@ -122,6 +122,7 @@
     <string name="tv_other_login">其他登录方式</string>
     <string name="tv_register">注册新用户</string>
     <string name="personal_ware_hourse">个人仓库</string>
-
+    <string name="tv_send_message">发送</string>
+    <string name="btn_init_chat">发起聊天</string>
 
 </resources>
