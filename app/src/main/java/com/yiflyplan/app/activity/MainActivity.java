@@ -203,6 +203,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         });
 
         MapDataCache.putCache("organization",organizationVO);
+        MapDataCache.putCache("user",userVO);
 //        componentsFragment = new ComponentsFragment();
 //        inputFragment = new InputFragment();
 //        componentsFragment.setArguments(organizationBundle);

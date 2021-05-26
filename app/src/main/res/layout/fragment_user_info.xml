@@ -188,4 +188,14 @@
     </RelativeLayout>
 
 
+    <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+        android:id="@+id/btn_init_chat"
+        style="@style/SuperButton.Primary.Login"
+        android:layout_width="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/config_margin_60dp"
+        android:text="@string/btn_init_chat" />
+
+
 </RelativeLayout>

@@ -17,19 +17,13 @@
 
 package com.yiflyplan.app.adapter.entity;
 
-import android.annotation.SuppressLint;
-import android.text.Layout;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 
 public class ChartInfo {
     /**
      * 用户头像
      */
-    private int avatar;
+    private String avatar;
 
     /**
      * 聊天内容
@@ -50,24 +44,24 @@ public class ChartInfo {
 
     public ChartInfo(){}
 
-    public ChartInfo(int avatar, String content,int position) {
+    public ChartInfo(String avatar, String content, int position) {
         this.avatar = avatar;
         this.content = content;
         this.position = position;
     }
 
-    public ChartInfo(int avatar, String content, String time, int position) {
+    public ChartInfo(String avatar, String content, String time, int position) {
         this.avatar = avatar;
         this.content = content;
         this.time = time;
         this.position = position;
     }
 
-    public int getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(int avatar) {
+    public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 
