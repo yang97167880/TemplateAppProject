@@ -22,6 +22,7 @@ import android.content.Context;
 import android.os.Parcelable;
 
 import com.tencent.mmkv.MMKV;
+import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 
 import java.util.Set;
 
@@ -221,13 +222,13 @@ public final class MMKVUtils {
     /**
      * 获取对象
      *
+     * @param <T>
      * @param key
      * @param tClass 类型
-     * @param <T>
      * @return
      */
     public static <T extends Parcelable> T getObject(String key, Class<T> tClass) {
-        return getsMMKV().decodeParcelable(key, tClass);
+        return (T) getsMMKV().decodeParcelable(key, tClass);
     }
 
     /**
