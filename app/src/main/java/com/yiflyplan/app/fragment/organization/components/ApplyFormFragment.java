@@ -35,6 +35,7 @@ import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.organization.OrganizationFragment;
+import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
@@ -88,8 +89,7 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
     @SuppressLint("SetTextI18n")
     @Override
     protected void initViews() {
-        Bundle bundle = getArguments();
-        organizationVO = (OrganizationVO) bundle.getSerializable("organization");
+        organizationVO = (OrganizationVO) MMKVUtils.get("organization",OrganizationVO.class);
         assert organizationVO != null;
         organizationId = organizationVO.getId();
         RadiusImageView radiusImageView = findViewById(R.id.or_avatar);

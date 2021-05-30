@@ -410,6 +410,7 @@ public class EntryGarbageFragment extends BaseFragment {
                     MyHttp.postJson("/product/createProduct", TokenUtils.getToken(), params, new MyHttp.Callback() {
                         @Override
                         public void success(JSONObject data) throws JSONException {
+                            sendMessageToRemoteBluetooth(data.getString("itemEnCoding"));
 //                            Toast.makeText(EntryGarbageActivity.this, "上传成功,请继续...", Toast.LENGTH_SHORT).show();
 
                             //发送显示消息，进行显示刷新

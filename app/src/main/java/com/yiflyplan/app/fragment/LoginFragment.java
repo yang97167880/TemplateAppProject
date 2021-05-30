@@ -41,14 +41,17 @@ import com.xuexiang.xutil.app.ActivityUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.activity.MainActivity;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
+import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.utils.MD5Util;
+import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -135,9 +138,13 @@ public class LoginFragment extends BaseFragment {
                             @Override
                             public void success(JSONObject data) throws JSONException {
                                 Log.e("JSON:", data.toString());
-                                CurrentUserVO userVO = new CurrentUserVO();
-                                userVO = ReflectUtil.convertToObject(data, CurrentUserVO.class);
+                                CurrentUserVO userVO = ReflectUtil.convertToObject(data, CurrentUserVO.class);
+                                MMKVUtils.put("userName",userVO.getUserName());
+                                MMKVUtils.put("userAvatar",userVO.getUserAvatar());
+                                MMKVUtils.put("organizationId",userVO.getCurrentOrganization().getOrganizationId());
+                                MMKVUtils.put("organizationName",userVO.getCurrentOrganization().getOrganizationName());
                                 Log.e("list", String.valueOf(userVO.getRelationships()));
+                                MapDataCache.putCache("relationships",userVO.getRelationships());
                                 //用户初始化
                                 onLoginSuccess(userVO, data.getString("token"));
                             }
@@ -223,7 +230,7 @@ public class LoginFragment extends BaseFragment {
     private void onLoginSuccess(CurrentUserVO userInfo, String token) {
         if (TokenUtils.handleLoginSuccess(token)) {
             popToBack();
-            MapDataCache.putCache(MapDataCache.Constants.LOGIN_USER, userInfo);
+            MMKVUtils.put("user", userInfo);
             ActivityUtils.startActivity(MainActivity.class, CURRENTUSER, userInfo);
         }
     }
