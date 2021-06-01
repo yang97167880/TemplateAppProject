@@ -159,7 +159,16 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
-        </provider> <!-- 设置环信应用的AppKey -->
+        </provider>
+
+        <provider
+            android:name=".MyCP"
+            android:authorities="yiflyplan"
+            android:enabled="true"
+            android:exported="true">
+            <grant-uri-permission android:path="/session" />
+            <grant-uri-permission android:path="/chatRecords" />
+        </provider>
 
         <!--屏幕自适应设计图-->
         <meta-data

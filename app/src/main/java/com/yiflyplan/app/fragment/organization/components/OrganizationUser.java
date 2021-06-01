@@ -128,7 +128,6 @@ public class OrganizationUser extends BaseFragment {
                             @Override
                             public void success(JSONObject data) {
                                 CurrentUserVO currentUserVO = ReflectUtil.convertToObject(data, CurrentUserVO.class);
-
                                 openNewPage(UserInfoFragment.class, "currentUserVO", currentUserVO);
                             }
 
@@ -257,6 +256,7 @@ public class OrganizationUser extends BaseFragment {
                 List<MemberVO> newList = new ArrayList<>();
                 newList = ReflectUtil.convertToList(members, MemberVO.class);
                 memberCount.setText("成员数 (" + members.length() + "人)");
+                totalPage = data.getInt("totalPage");
                 if (pageNo <= totalPage) {
                     memberVOS.addAll(newList);
                     mMemberAdapter.loadMore(newList);

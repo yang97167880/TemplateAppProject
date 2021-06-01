@@ -17,6 +17,11 @@
 
 package com.yiflyplan.app.fragment.notices;
 
+import android.net.Uri;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
@@ -27,15 +32,26 @@ import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.xuexiang.xui.widget.grouplist.XUIGroupListView;
+import com.xuexiang.xui.widget.imageview.RadiusImageView;
+import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
+import com.xuexiang.xutil.tip.ToastUtils;
 import com.yiflyplan.app.R;
+import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.entity.NoticeInfo;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.utils.DemoDataProvider;
+import com.yiflyplan.app.utils.MapDataCache;
 
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URI;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -56,7 +72,8 @@ public class NoticesFragment extends BaseFragment {
     @BindView(R.id.notices_refreshLayout)
     SmartRefreshLayout refreshLayout;
 
-
+    private WebSocketClient chatSocket;
+    private static CurrentUserVO user;
     private SimpleDelegateAdapter<NoticeInfo> mNoticeAdapter;
 
     /**
@@ -77,6 +94,10 @@ public class NoticesFragment extends BaseFragment {
      */
     @Override
     protected void initViews() {
+        user = (CurrentUserVO) MapDataCache.getCache("user", null);
+        int userId = user.getUserId();
+
+        connectSocket(userId);
 
         VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager(Objects.requireNonNull(getContext()));
         recyclerView.setLayoutManager(virtualLayoutManager);
@@ -91,15 +112,48 @@ public class NoticesFragment extends BaseFragment {
             @Override
             protected void onBindData(MyRecyclerViewHolder holder, NoticeInfo model, int position) {
                 if (model != null) {
-                    holder.bindDataToViewById(view -> {
-                        SuperTextView noticeView = (SuperTextView) view;
-                        noticeView.setLeftTopString(model.getNickName() );
-                        noticeView.setLeftBottomString(model.getNewMessage() );
-                        noticeView.setRightTopString(model.getNewDate());
-                        noticeView.setLeftIcon(R.drawable.icon_head_default);
-                    }, R.id.notices_view_item);
 
-                    holder.click(R.id.notices_view_item,v -> openNewPage(ChartRoomFragment.class));
+                    holder.bindDataToViewById(view -> {
+                        RadiusImageView avatar = (RadiusImageView) view;
+                        GlideImageLoadStrategy img = new GlideImageLoadStrategy();
+                        img.loadImage(avatar, Uri.parse(model.getAvatar()));
+                    }, R.id.user_avatar);
+
+                    holder.bindDataToViewById(view -> {
+                        TextView nickname = (TextView) view;
+                        nickname.setText(model.getNickName());
+                    }, R.id.tv_nickname);
+
+                    holder.bindDataToViewById(view -> {
+                        TextView message = (TextView) view;
+                        message.setText(model.getNewMessage());
+                    }, R.id.tv_new_message);
+
+                    holder.bindDataToViewById(view -> {
+                        TextView newDate = (TextView) view;
+                        newDate.setText(model.getNewDate());
+                    }, R.id.tv_new_date);
+
+                    holder.bindDataToViewById(view -> {
+                        TextView unreadCount = (TextView) view;
+                        int count = model.getUnreadCount();
+                        if(count == 0){
+                            unreadCount.setVisibility(View.INVISIBLE);
+                        }else {
+                            unreadCount.setVisibility(View.VISIBLE);
+                            unreadCount.setText(String.valueOf(model.getUnreadCount()));
+                        }
+                    }, R.id.tv_unread_count);
+
+
+
+                    holder.click(R.id.notices_view_item,v -> {
+                        CurrentUserVO currentUserVO = new CurrentUserVO();
+                        currentUserVO.setUserName(model.getNickName());
+                        currentUserVO.setUserAvatar(model.getAvatar());
+                        currentUserVO.setUserId(model.getUserId());
+                        openNewPage(ChartRoomFragment.class,"currentUserVO", currentUserVO);
+                    });
                 }
 
             }
@@ -126,7 +180,7 @@ public class NoticesFragment extends BaseFragment {
         refreshLayout.setOnRefreshListener(refreshLayout -> {
             // TODO: 2020-02-25 这里只是模拟了网络请求
             refreshLayout.getLayout().postDelayed(() -> {
-                mNoticeAdapter.refresh(DemoDataProvider.getDemoNoticeInfos());
+//                mNoticeAdapter.refresh(DemoDataProvider.getDemoNoticeInfos());
                 refreshLayout.finishRefresh();
             }, 1000);
         });
@@ -134,11 +188,63 @@ public class NoticesFragment extends BaseFragment {
         refreshLayout.setOnLoadMoreListener(refreshLayout -> {
             // TODO: 2020-02-25 这里只是模拟了网络请求
             refreshLayout.getLayout().postDelayed(() -> {
-                mNoticeAdapter.loadMore(DemoDataProvider.getDemoNoticeInfos());
+//                mNoticeAdapter.loadMore(DemoDataProvider.getDemoNoticeInfos());
                 refreshLayout.finishLoadMore();
             }, 1000);
         });
         refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
     }
+
+    /**
+     * 连接Socket
+     *
+     * @param userId
+     */
+    private void connectSocket(int userId) {
+        ToastUtils.toast("--------------------------建立连接开始--------------------------------");
+        System.out.printf("unread %s\n", userId);
+        chatSocket = new WebSocketClient(URI.create(String.format("ws://118.190.97.125:8080/ws/chat/unread/%s", userId))) {
+            @Override
+            public void onOpen(ServerHandshake handshakedata) {
+                ToastUtils.toast(String.format("%s建立成功", userId));
+                Log.d("WEBSOCKET", "connected");
+            }
+
+            @Override
+            public void onMessage(String message) {
+                try {
+                    JSONObject result = new JSONObject(message);
+
+//                    content = result.getString("content");
+//                    Message msg = Message.obtain();
+//                    msg.what = 0;
+//                    mMainHandler.sendMessage(msg);
+                    Log.d("WEBSOCKET", result.toString());
+//                    ToastUtils.toast(result.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+//                Log.d("WEBSOCKET", message);
+            }
+
+            @Override
+            public void onClose(int code, String reason, boolean remote) {
+                Log.d("WEBSOCKET", "closed");
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ToastUtils.toast("建立失败");
+                Log.d("WEBSOCKET", String.valueOf(ex));
+            }
+        };
+        try {
+            chatSocket.connectBlocking();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+//
+    }
+
 
 }

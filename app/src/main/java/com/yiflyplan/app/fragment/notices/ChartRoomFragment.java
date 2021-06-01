@@ -17,11 +17,18 @@
 
 package com.yiflyplan.app.fragment.notices;
 
+import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.ServiceConnection;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -36,14 +43,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
+import com.google.gson.JsonObject;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xpage.annotation.Page;
-import com.xuexiang.xpage.utils.TitleBar;
-import com.xuexiang.xpage.utils.TitleUtils;
+import com.xuexiang.xui.widget.actionbar.TitleBar;
+import com.xuexiang.xui.widget.actionbar.TitleUtils;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
 import com.xuexiang.xui.widget.toast.XToast;
 import com.xuexiang.xutil.tip.ToastUtils;
+import com.yiflyplan.app.MyCP;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
@@ -58,6 +67,8 @@ import com.yiflyplan.app.utils.XToastUtils;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -66,7 +77,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -89,43 +102,23 @@ public class ChartRoomFragment extends BaseFragment {
     Button tvSendMessage;
 
 
-    // 主线程Handler
-    // 用于将从服务器获取的消息显示出来
-//    private Handler mMainHandler;
 
-    // Socket变量
-//    private Socket socket;
 //
     private WebSocketClient chatSocket;
+    // 主线程Handler
+    // 用于将从服务器获取的消息显示出来
+    private Handler mMainHandler;
 
-    // 线程池
-    // 为了方便展示,此处直接采用线程池进行线程管理,而没有一个个开线程
-//    private ExecutorService mThreadPool;
-
-    /**
-     * 接收服务器消息 变量
-     */
-    // 输入流对象
-//    InputStream is;
-
-    // 输入流读取器对象
-//    InputStreamReader isr;
-//    BufferedReader br;
-
-    // 接收服务器发送过来的消息
-//    String response;
-
-    /**
-     * 发送消息到服务器 变量
-     */
-    // 输出流对象
-//    OutputStream outputStream;
+    private ContentResolver cr ;
 
 
-    private List<ChartInfo> chartInfos = new ArrayList<>();
+    private List<ChartInfo> chartInfos;
     private SimpleDelegateAdapter<ChartInfo> mChartAdapter;
     private static CurrentUserVO currentUserVO;
     private static CurrentUserVO user;
+    private String content;
+    private int SessionId;
+
 
     @Override
     protected int getLayoutId() {
@@ -134,57 +127,42 @@ public class ChartRoomFragment extends BaseFragment {
 
 
     @Override
-    protected TitleBar initTitleBar() {
+    protected TitleBar initTitle() {
         Bundle bundle = getArguments();
         currentUserVO = (CurrentUserVO) bundle.getSerializable("currentUserVO");
-        if (currentUserVO != null) {
-            return TitleUtils.addTitleBarDynamic((ViewGroup) mRootView, currentUserVO.getUserName(), new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    popToBack();
-                }
-            });
-        } else {
-            return super.initTitleBar();
-        }
+        return TitleUtils.addTitleBarDynamic((ViewGroup) getRootView(),currentUserVO.getUserName(), v -> {
+            try {
+                chatSocket.closeBlocking();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            popToBack();
+        });
     }
 
     @Override
     protected void initViews() {
+
+        chartInfos = new ArrayList<>();
+
+        //获取消息提供者
+        cr = getActivity().getContentResolver();
+
 
         Bundle bundle = getArguments();
         assert bundle != null;
         currentUserVO = (CurrentUserVO) bundle.getSerializable("currentUserVO");
 
         user = (CurrentUserVO) MapDataCache.getCache("user", null);
+
         int userId = user.getUserId();
         int leftUserId = currentUserVO.getUserId();
 
+        checkSession(leftUserId,userId);
 
-        // 初始化线程池
-//        mThreadPool = Executors.newCachedThreadPool();
-
-
-// 实例化主线程,用于更新接收过来的消息
-//        mMainHandler = new Handler() {
-//            @Override
-//            public void handleMessage(Message msg) {
-//                switch (msg.what) {
-//                    case 0:
-//                        chartInfos.add(new ChartInfo(currentUserVO.getUserAvatar(), response, 0));
-//                        mChartAdapter.refresh(chartInfos);
-//                        mChartAdapter.setSelectPosition(chartInfos.size() - 1);
-//                        recyclerView.scrollToPosition(mChartAdapter.getSelectPosition());
-//                        break;
-//                    default:
-//                        throw new IllegalStateException("Unexpected value: " + msg.what);
-//                }
-//            }
-//        };
+        initHandler();
 
         connectSocket(userId, leftUserId);
-//        getMessage();
-
 
         VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager(Objects.requireNonNull(getContext()));
         recyclerView.setLayoutManager(virtualLayoutManager);
@@ -257,21 +235,12 @@ public class ChartRoomFragment extends BaseFragment {
         refreshLayout.setOnRefreshListener(refreshLayout -> {
             // TODO: 2020-02-25 这里只是模拟了网络请求
             refreshLayout.getLayout().postDelayed(() -> {
+                getMessage(SessionId);
                 mChartAdapter.refresh(chartInfos);
+                mChartAdapter.setSelectPosition(chartInfos.size()-1);
+                recyclerView.scrollToPosition(mChartAdapter.getSelectPosition());
 
-//                mChartAdapter.refresh(DemoDataProvider.getDemoChartInfos());
                 refreshLayout.finishRefresh();
-            }, 1000);
-        });
-
-        //上拉加载
-        refreshLayout.setOnLoadMoreListener(refreshLayout -> {
-            // TODO: 2020-02-25 这里只是模拟了网络请求
-            refreshLayout.getLayout().postDelayed(() -> {
-//                mChartAdapter.loadMore(chartInfos);
-
-//                mChartAdapter.loadMore(DemoDataProvider.getDemoChartInfos());
-                refreshLayout.finishLoadMore();
             }, 1000);
         });
 
@@ -286,33 +255,18 @@ public class ChartRoomFragment extends BaseFragment {
                     XToastUtils.error("发送内容不能为空");
                 } else {
 
-//                    // 利用线程池直接开启一个线程 & 执行该线程
-//                    mThreadPool.execute(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            try {
-//                                // 步骤1：从Socket 获得输出流对象OutputStream
-//                                // 该对象作用：发送数据
-//                                outputStream = socket.getOutputStream();
-//
-//                                // 步骤2：写入需要发送的数据到输出流对象中
-//                                outputStream.write((message + "\n").getBytes("utf-8"));
-//                                // 特别注意：数据的结尾加上换行符才可让服务器端的readline()停止阻塞
-//
-//                                // 步骤3：发送数据到服务端
-//                                outputStream.flush();
-//
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                        }
-//                    });
+
+
+                    if(chatSocket.isOpen()){
+                        chatSocket.send(message);
+                    }
 
 
                     chartInfos.add(new ChartInfo(user.getUserAvatar(), message, 1));
+                    insertMessage(SessionId,message,1);
+
                     mChartAdapter.refresh(chartInfos);
-                    mChartAdapter.setSelectPosition(chartInfos.size() - 1);
+                    mChartAdapter.setSelectPosition(chartInfos.size()-1);
                     recyclerView.scrollToPosition(mChartAdapter.getSelectPosition());
                     edtMessage.setText("");
                 }
@@ -331,7 +285,7 @@ public class ChartRoomFragment extends BaseFragment {
     private void connectSocket(int fromUserId, int toUserId) {
         ToastUtils.toast("--------------------------建立连接开始--------------------------------");
         System.out.printf("from %s to %s\n", fromUserId, toUserId);
-        WebSocketClient chatSocket = new WebSocketClient(URI.create(String.format("ws://118.190.97.125:8080/ws/chat/simple/%s/%s", fromUserId, toUserId))) {
+        chatSocket = new WebSocketClient(URI.create(String.format("ws://118.190.97.125:8080/ws/chat/simple/%s/%s", fromUserId, toUserId))) {
             @Override
             public void onOpen(ServerHandshake handshakedata) {
                 ToastUtils.toast(String.format("from %s to %s建立成功", fromUserId, toUserId));
@@ -340,8 +294,23 @@ public class ChartRoomFragment extends BaseFragment {
 
             @Override
             public void onMessage(String message) {
+                try {
+                    JSONObject result = new JSONObject(message);
+                    content = result.getString("content");
+
+                    chartInfos.add(new ChartInfo(currentUserVO.getUserAvatar(),content,0));
+                    insertMessage(SessionId,content,0);
+
+                    Message msg = Message.obtain();
+                    msg.what = 0;
+                    mMainHandler.sendMessage(msg);
+
+
+                    Log.d("WEBSOCKET", content);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 Log.d("WEBSOCKET", message);
-                ToastUtils.toast(message);
             }
 
             @Override
@@ -352,7 +321,7 @@ public class ChartRoomFragment extends BaseFragment {
             @Override
             public void onError(Exception ex) {
                 ToastUtils.toast("建立失败");
-                Log.d("WEBSOCKET", "error");
+                Log.d("WEBSOCKET", String.valueOf(ex));
             }
         };
         try {
@@ -360,64 +329,140 @@ public class ChartRoomFragment extends BaseFragment {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-//        // 利用线程池直接开启一个线程 & 执行该线程
-//        mThreadPool.execute(new Runnable() {
-//            @Override
-//            public void run() {
 //
-////                try {
-////
-////                    // 创建Socket对象 & 指定服务端的IP 及 端口号
-////                    socket  = new Socket("118.190.97.125",8080);
-////
-////                    // 判断客户端和服务器是否连接成功
-////                    System.out.println(socket.isConnected());
-////                    Log.d("======", String.valueOf(socket.isConnected()));
-////
-////
-////                } catch (IOException e) {
-////                    e.printStackTrace();
-////                }
-//
-//
-//
-//            }
-//        });
     }
 
-    private void getMessage() {
-//        // 利用线程池直接开启一个线程 & 执行该线程
-//        mThreadPool.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                try {
-//                    // 步骤1：创建输入流对象InputStream
-//                    is = socket.getInputStream();
-//
-//                    if (is != null) {
-//                        // 步骤2：创建输入流读取器对象 并传入输入流对象
-//                        // 该对象作用：获取服务器返回的数据
-//                        isr = new InputStreamReader(is);
-//                        br = new BufferedReader(isr);
-//
-//                        // 步骤3：通过输入流读取器对象 接收服务器发送过来的数据
-//                        response = br.readLine();
-//
-//                        // 步骤4:通知主线程,将接收的消息显示到界面
-//                        Message msg = Message.obtain();
-//                        msg.what = 0;
-//                        mMainHandler.sendMessage(msg);
-//                    }
-//
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        });
+    /**
+     * 初始化handler
+     */
+    private void initHandler(){
+        mMainHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 0:
+                        getMessage(SessionId);
+                        //刷新UI
+                        mChartAdapter.refresh(chartInfos);
+                        mChartAdapter.setSelectPosition(chartInfos.size()-1);
+                        recyclerView.scrollToPosition(mChartAdapter.getSelectPosition());
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + msg.what);
+                }
+            }
+        };
+
     }
 
 
+
+    /**
+     * 检查会话是否存在
+     * @param userId
+     */
+    private void checkSession(int userId,int ownId ) {
+        Uri myURI = MyCP.Session.CONTENT_URI;
+
+        String[] selectionArgs = {String.valueOf(userId),String.valueOf(ownId)};
+        String[] columns = new String[]{MyCP.Session.id};
+        String selection = MyCP.Session.userId + "=? and "+MyCP.Session.ownId +"=?";
+        Cursor cursor = cr.query(myURI, columns, selection, selectionArgs, null);
+
+        if (cursor.getCount() == 0) {
+            ContentValues cv = new ContentValues();
+            cv.put(MyCP.Session.ownId, ownId);
+            cv.put(MyCP.Session.userId, userId);
+            cv.put(MyCP.Session.userAvatar, currentUserVO.getUserAvatar());
+            cv.put(MyCP.Session.userName, currentUserVO.getUserName());
+            cv.put(MyCP.Session.unreadCount, 0);
+            cr.insert(myURI, cv);
+
+            Cursor cursor1 = cr.query(myURI, columns, selection, selectionArgs, null);
+            while (cursor1.moveToNext()) {
+                SessionId = cursor1.getInt(cursor.getColumnIndex(MyCP.Session.id));
+            }
+            cursor1.close();
+        }else {
+            while (cursor.moveToNext()) {
+                SessionId = cursor.getInt(cursor.getColumnIndex(MyCP.Session.id));
+            }
+        }
+        cursor.close();
+    }
+
+    /**
+     * 获取聊天记录
+     * @param sessionId
+     */
+    private void getMessage(int sessionId){
+
+        Uri myURI = MyCP.ChatRecords.CONTENT_URI;
+
+        String[] selectionArgs = {String.valueOf(sessionId)};
+        String[] columns = new String[]{MyCP.ChatRecords.content,MyCP.ChatRecords.position};
+        String selection = MyCP.ChatRecords.sessionId + "=?";
+        Cursor cursor = cr.query(myURI, columns, selection, selectionArgs, null);
+
+        List<ChartInfo> newList = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            String content = cursor.getString(cursor.getColumnIndex(MyCP.ChatRecords.content));
+            int position = cursor.getInt(cursor.getColumnIndex(MyCP.ChatRecords.position));
+
+            if(position == 0){
+                newList.add(new ChartInfo(currentUserVO.getUserAvatar(),content,position));
+            }else {
+                newList.add(new ChartInfo(user.getUserAvatar(), content, position));
+            }
+        }
+
+        chartInfos.clear();
+        chartInfos.addAll(newList);
+
+        cursor.close();
+    }
+
+    /**
+     * 插入聊天记录
+     * @param sessionId
+     * @param content
+     * @param position
+     */
+    private void insertMessage(int sessionId,String content,int position){
+        Uri myURI = MyCP.ChatRecords.CONTENT_URI;
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        String createDate = df.format(new Date());
+
+        ContentValues cv = new ContentValues();
+        cv.put(MyCP.ChatRecords.sessionId, sessionId);
+        cv.put(MyCP.ChatRecords.content, content);
+        cv.put(MyCP.ChatRecords.position, position);
+        cv.put(MyCP.ChatRecords.createDate, createDate);
+
+        cr.insert(myURI, cv);
+    }
+
+
+    /**
+     * 监听返回键
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            try {
+                chatSocket.closeBlocking();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            popToBack();
+            return true;
+        }else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
 }
