@@ -51,24 +51,8 @@ public class SplashActivity extends BaseSplashActivity implements CancelAdapt {
      */
     @Override
     protected void onCreateActivity() {
-        isDisplay = getIntent().getBooleanExtra(KEY_IS_DISPLAY, isDisplay);
-        boolean enableAlphaAnim = getIntent().getBooleanExtra(KEY_ENABLE_ALPHA_ANIM, false);
-        SettingUtils spUtil = SettingUtils.getInstance();
-        if (spUtil.isFirstOpen()) {
-            spUtil.setIsFirstOpen(false);
-            ActivityUtils.startActivity(LoginActivity.class);
-            finish();
-
-        } else {
-            if (enableAlphaAnim) {
-                initSplashView(R.drawable.background);
-            } else {
-                initSplashView(R.drawable.xui_config_bg_splash);
-            }
-            startSplash(enableAlphaAnim);
-        }
-//        initSplashView(R.drawable.xui_config_bg_splash);
-//        startSplash(false);
+        initSplashView(R.drawable.xui_config_bg_splash);
+        startSplash(false);
     }
 
 
@@ -77,24 +61,7 @@ public class SplashActivity extends BaseSplashActivity implements CancelAdapt {
      */
     @Override
     protected void onSplashFinished() {
-        if (!isDisplay) {
-            if (TokenUtils.hasToken()) {
-                ActivityUtils.startActivity(MainActivity.class);
-            } else {
-                ActivityUtils.startActivity(LoginActivity.class);
-            }
-        }
-        finish();
         loginOrGoMainPage();
-//        if (SettingUtils.isAgreePrivacy()) {
-//
-//        } else {
-//            Utils.showPrivacyDialog(this, (dialog, which) -> {
-//                dialog.dismiss();
-//                SettingUtils.setIsAgreePrivacy(true);
-//                loginOrGoMainPage();
-//            });
-//        }
     }
 
     private void loginOrGoMainPage() {

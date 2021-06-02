@@ -47,6 +47,7 @@ import com.yiflyplan.app.fragment.organization.components.PersonalWarehouse;
 import com.yiflyplan.app.fragment.organization.components.Receive;
 import com.yiflyplan.app.fragment.organization.components.Share;
 import com.yiflyplan.app.fragment.organization.components.Transfer;
+import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.MapDataCache;
 
 import java.util.Collections;
@@ -100,32 +101,31 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
     @SingleClick
     public void onItemClick(View itemView, PageInfo widgetInfo, int pos) {
         if (widgetInfo != null) {
-            Map<String, Object> bundle= MapDataCache.getCacheMap();
-            OrganizationVO organizationVO = (OrganizationVO)bundle.get("organization");
+           int organizationId =  MMKVUtils.getInt("organizationId",0);
             switch (widgetInfo.getName()){
                 case "机构成员":
-                    openNewPage(OrganizationUser.class,"id",organizationVO.getOrganizationId());
+                    openNewPage(OrganizationUser.class,"id",organizationId);
                     break;
                 case "个人仓库":
                     PersonalWareHouseBundle personalWareHouseBundle=new PersonalWareHouseBundle();
-                    personalWareHouseBundle.setOrganizationId(organizationVO.getOrganizationId());
+                    personalWareHouseBundle.setOrganizationId(organizationId);
                     MapDataCache.putCache("personalWareHouseBundle",personalWareHouseBundle);
                     openNewPage(PersonalWarehouse.class);
                     break;
                 case "审核申请":
-                    openNewPage(Examine.class,"id",organizationVO.getOrganizationId());
+                    openNewPage(Examine.class,"id",organizationId);
                     break;
                 case "机构仓库":
-                    openNewPage(OrganizationWarehouse.class,"id",organizationVO.getOrganizationId());
+                    openNewPage(OrganizationWarehouse.class,"id",organizationId);
                     break;
                 case "分享机构":
-                    openNewPage(Share.class,"id",organizationVO.getOrganizationId());
+                    openNewPage(Share.class,"id",organizationId);
                     break;
                 case "产品转移":
-                    openNewPage(Transfer.class,"id",organizationVO.getOrganizationId());
+                    openNewPage(Transfer.class,"id",organizationId);
                     break;
                 case "产品接收":
-                    openNewPage(Receive.class,"id",organizationVO.getOrganizationId());
+                    openNewPage(Receive.class,"id",organizationId);
                     break;
                 default:
             }

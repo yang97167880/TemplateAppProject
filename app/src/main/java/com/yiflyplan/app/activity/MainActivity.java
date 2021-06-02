@@ -65,6 +65,7 @@ import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 import com.yarolegovich.slidingrootnav.callback.DragStateListener;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
+import com.yiflyplan.app.adapter.VO.MemberVO;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
@@ -84,11 +85,14 @@ import com.yiflyplan.app.fragment.organization.SearchOrganizationFragment;
 import com.yiflyplan.app.fragment.organization.components.ApplyFormFragment;
 import com.yiflyplan.app.fragment.organization.OrganizationFragment;
 import com.yiflyplan.app.fragment.organization.components.ComponentsFragment;
+import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.MapDataCache;
+import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 import com.yiflyplan.app.widget.GuideTipsDialog;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -132,9 +136,13 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     private static final int POS_ABOUT = 3;
     private static final int POS_LOGOUT = 5;
     private CurrentUserVO userVO;
-    OrganizationVO organizationVO;
+    /*user*/
+    String userName;
+    String userAvatar;
+    /*organization*/
+    String organizationName;
+
     List<OrganizationVO> relationships;
-    private Bundle organizationBundle;
 
     ComponentsFragment componentsFragment;
     InputFragment inputFragment;
@@ -150,13 +158,11 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         super.onCreate(savedInstanceState);
 
         //获取传递过来的用户数据
-        Intent intent = this.getIntent();
-        userVO = (CurrentUserVO) intent.getSerializableExtra(CURRENTUSER);
-        organizationVO = userVO.getCurrentOrganization();
-        relationships = userVO.getRelationships();
-
-        organizationBundle = new Bundle();
-        organizationBundle.putSerializable("organization", userVO.getCurrentOrganization());
+        //user
+        userName = MMKVUtils.getString("userName",null);
+        userAvatar=  MMKVUtils.getString("userAvatar",null);
+        //organization
+        organizationName = MMKVUtils.getString("organizationName",null);
 
         MobclickAgent.onProfileSignIn(DeviceUtils.getAndroidID());
 
@@ -184,13 +190,35 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     }
 
     private void initData() {
+        if(relationships == null){
+            relationships = (List<OrganizationVO>) MapDataCache.getCache("relationships",null);
+//            LinkedHashMap<String, String> params = new LinkedHashMap<>();
+//            params.put("pageNo","1");
+//            params.put("pageSize","20");
+//            MyHttp.get("/organization/getOrganizationCreateByUser", TokenUtils.getToken(), params, new MyHttp.Callback() {
+//
+//                @Override
+//                public void success(JSONObject data) throws JSONException {
+//
+//                    JSONArray organizations = new JSONArray(data.getString("list"));
+//                    Log.e("rea",data.toString());
+//                    relationships  = ReflectUtil.convertToList(organizations, OrganizationVO.class);
+//
+//                }
+//
+//                @Override
+//                public void fail(JSONObject error) throws JSONException {
+//
+//                }
+//            });
+        }
         mMenuTitles = ResUtils.getStringArray(R.array.menu_titles);
         mMenuIcons = ResUtils.getDrawableArray(this, R.array.menu_icons);
     }
 
     private void initViews() {
         mTitles = ResUtils.getStringArray(R.array.home_titles);
-        toolbar.setTitle(organizationVO.getOrganizationName());
+        toolbar.setTitle(organizationName);
         toolbar.inflateMenu(R.menu.menu_main);
         toolbar.setOnMenuItemClickListener(this);
         toolbar.setNavigationIcon(R.drawable.ic_action_menu);
@@ -201,9 +229,6 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 openMenu();
             }
         });
-
-        MapDataCache.putCache("organization",organizationVO);
-        MapDataCache.putCache("user",userVO);
 //        componentsFragment = new ComponentsFragment();
 //        inputFragment = new InputFragment();
 //        componentsFragment.setArguments(organizationBundle);
@@ -238,22 +263,22 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 //        RequestOptions options = new RequestOptions()
 //                .placeholder(R.drawable.icon_head_default)
 //                .diskCacheStrategy(DiskCacheStrategy.ALL);
-        TextView userName = findViewById(R.id.tv_name);
-        userName.setText(userVO.getUserName());
+        TextView Name = findViewById(R.id.tv_name);
+        Name.setText(userName);
 
-        TextView organizationName = findViewById(R.id.tv_organization);
-        organizationName.setText(organizationVO.getOrganizationName());
-        RadiusImageView userAvatar = findViewById(R.id.iv_avatar);
+        TextView organizationText = findViewById(R.id.tv_organization);
+        organizationText.setText(organizationName);
+        RadiusImageView Avatar = findViewById(R.id.iv_avatar);
         //String url = "https://light-plant.oss-cn-beijing.aliyuncs.com/2021/03/22/2fac6a7f3a764dec8eae65046924296d.jpg";
         //Glide.with(this).load(url).into(userAvatar);
         GlideImageLoadStrategy lodeImg = new GlideImageLoadStrategy();
-        lodeImg.loadImage(userAvatar, userVO.getUserAvatar());
+        lodeImg.loadImage(Avatar, userAvatar);
 
         LinearLayout mLLMenu = mSlidingRootNav.getLayout().findViewById(R.id.ll_menu);
         final AppCompatImageView ivQrcode = mSlidingRootNav.getLayout().findViewById(R.id.iv_qrcode);
         Bundle bundle = new Bundle();
-        bundle.putString("userAvatar", userVO.getUserAvatar());
-        bundle.putString("userName", userVO.getUserName());
+        bundle.putString("userAvatar", userAvatar);
+        bundle.putString("userName", userName);
         ivQrcode.setOnClickListener(v -> openNewPage(QRCodeFragment.class, bundle));
 
         final AppCompatImageView ivSetting = mSlidingRootNav.getLayout().findViewById(R.id.iv_setting);
@@ -363,7 +388,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     public void onPageSelected(int position) {
         MenuItem item = bottomNavigation.getMenu().getItem(position);
         if (position == 0) {
-            toolbar.setTitle(organizationVO.getOrganizationName());
+            toolbar.setTitle(organizationName);
         } else {
             toolbar.dismissPopupMenus();
             toolbar.setTitle(item.getTitle());
@@ -391,7 +416,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         int index = CollectionUtils.arrayIndexOf(mTitles, menuItem.getTitle());
         if (index != -1) {
             if (index == 0) {
-                toolbar.setTitle(organizationVO.getOrganizationName());
+                toolbar.setTitle(organizationName);
                 toolbar.dismissPopupMenus();
             } else {
                 toolbar.setTitle(menuItem.getTitle());
@@ -438,7 +463,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
             case POS_NOTICES:
                 if (mMenuTitles.length > 0) {
                     if (position == 0) {
-                        toolbar.setTitle(organizationVO.getOrganizationName());
+                        toolbar.setTitle(organizationName);
                     } else {
                         toolbar.dismissPopupMenus();
                         toolbar.setTitle(mMenuTitles[position]);
@@ -570,7 +595,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                     }, R.id.or_avatar_1);
                     holder.bindDataToViewById(view -> {
                         TextView now = (TextView) view;
-                        if (organizationVO.getOrganizationName().equals(model.getOrganizationName())) {
+                        if (organizationName.equals(model.getOrganizationName())) {
                             now.setVisibility(View.VISIBLE);
                         } else {
                             now.setVisibility(View.GONE);
@@ -578,7 +603,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                     }, R.id.or_now);
                     holder.bindDataToViewById(view -> {
                         Button change = (Button) view;
-                        if (organizationVO.getOrganizationName().equals(model.getOrganizationName())) {
+                        if (organizationName.equals(model.getOrganizationName())) {
                             change.setVisibility(View.GONE);
                         } else {
                             change.setVisibility(View.VISIBLE);
@@ -607,22 +632,20 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         MyHttp.get("/user/switchOrganization", TokenUtils.getToken(), params, new MyHttp.Callback() {
             @Override
             public void success(JSONObject data) throws JSONException {
-                organizationVO = relationships.get(position);
-                toolbar.setTitle(organizationVO.getOrganizationName());
-
-                organizationBundle = new Bundle();
-                organizationBundle.putSerializable("organization", organizationVO);
+                organizationName = relationships.get(position).getOrganizationName();
+                int organizationId = relationships.get(position).getOrganizationId();
+                toolbar.setTitle(organizationName);
 
                // componentsFragment.setArguments(organizationBundle);
                // inputFragment.setArguments(organizationBundle);
                 XToastUtils.success("切换成功！");
-                TextView organizationName = findViewById(R.id.tv_organization);
-                organizationName.setText(organizationVO.getOrganizationName());
+                TextView Name = findViewById(R.id.tv_organization);
+                Name.setText(organizationName);
                 dialog.dismiss();
 
                 //更新全局VO对象
-                MapDataCache.putCache("organization",organizationVO);
-
+                MMKVUtils.put("organizationName",organizationName);
+                MMKVUtils.put("organizationId",organizationId);
             }
 
             @Override

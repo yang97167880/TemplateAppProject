@@ -17,6 +17,9 @@
 
 package com.yiflyplan.app.adapter.VO;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 public class OrganizationVO implements Serializable {

@@ -68,7 +68,7 @@ public class OrganizationFragment extends BaseFragment {
 
     private int totalPage = 1;
     private int pageNo = 1;
-    private int pageSize = 5;
+    private int pageSize = 15;
     private List<OrganizationVO> organizationVOS = new ArrayList<>();
     private final String RELATIONSHIPS = "relationships";
     private BroccoliSimpleDelegateAdapter<OrganizationVO> mOrganizationAdapter;
