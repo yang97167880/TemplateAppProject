@@ -136,6 +136,14 @@ public class ChartRoomFragment extends BaseFragment {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            String[] selectionArg = {String.valueOf(SessionId)};
+            String selections = MyCP.Session.id + "=?";
+
+            ContentValues cv = new ContentValues();
+            cv.put(MyCP.Session.unreadCount, 0);
+            cr.update(MyCP.Session.CONTENT_URI, cv, selections, selectionArg);
+
             popToBack();
         });
     }
@@ -174,10 +182,6 @@ public class ChartRoomFragment extends BaseFragment {
             @Override
             protected void onBindData(MyRecyclerViewHolder holder, ChartInfo model, int position) {
                 if (model != null) {
-//                    int position  = model.getPosition()==0?View.GONE:View.VISIBLE;
-//                    holder.bindDataToViewById(view ->{
-//
-//                    },R.id.right_chart);
                     int avatar_popup_id;
                     int avatar_text_id;
                     if (model.getPosition() == 0) {
@@ -352,7 +356,6 @@ public class ChartRoomFragment extends BaseFragment {
                 }
             }
         };
-
     }
 
 
@@ -376,11 +379,16 @@ public class ChartRoomFragment extends BaseFragment {
             cv.put(MyCP.Session.userAvatar, currentUserVO.getUserAvatar());
             cv.put(MyCP.Session.userName, currentUserVO.getUserName());
             cv.put(MyCP.Session.unreadCount, 0);
+            cv.put(MyCP.Session.LastMessage, "可以开始聊天了");
+
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            String createDate = df.format(new Date());
+            cv.put(MyCP.Session.LastDate,createDate);
             cr.insert(myURI, cv);
 
             Cursor cursor1 = cr.query(myURI, columns, selection, selectionArgs, null);
             while (cursor1.moveToNext()) {
-                SessionId = cursor1.getInt(cursor.getColumnIndex(MyCP.Session.id));
+                SessionId = cursor1.getInt(cursor1.getColumnIndex(MyCP.Session.id));
             }
             cursor1.close();
         }else {
@@ -459,6 +467,14 @@ public class ChartRoomFragment extends BaseFragment {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            String[] selectionArg = {String.valueOf(SessionId)};
+            String selections = MyCP.Session.id + "=?";
+
+            ContentValues cv = new ContentValues();
+            cv.put(MyCP.Session.unreadCount, 0);
+            cr.update(MyCP.Session.CONTENT_URI, cv, selections, selectionArg);
+
             popToBack();
             return true;
         }else {

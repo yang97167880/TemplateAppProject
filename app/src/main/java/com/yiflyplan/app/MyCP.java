@@ -30,7 +30,7 @@ public class MyCP extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, ChatRecords.TABLE_NAME, ChatRecords.CODE);
 
     }
-    String createSQL="create table session(id INTEGER PRIMARY KEY AUTOINCREMENT,ownId int(255) not null,userId int(255) not null,userAvatar varchar(255) not null, userName varchar(255) DEFAULT '昵称',unreadCount int(255) DEFAULT 0)";
+    String createSQL="create table session(id INTEGER PRIMARY KEY AUTOINCREMENT,ownId int(255) not null,userId int(255) not null,userAvatar varchar(255) not null, userName varchar(255) DEFAULT '昵称',unreadCount int(255) DEFAULT 0, LastMessage varchar(10000) not null, LastDate varchar(255) not null)";
 
 
     String createSQL2="create table chatRecords( id INTEGER PRIMARY KEY AUTOINCREMENT,sessionId int(255) not null , content varchar(10000) not null,position int(1) not null, createDate varchar(255) not null)";
@@ -144,7 +144,8 @@ public class MyCP extends ContentProvider {
         public static final String userAvatar="userAvatar";
         public static final String userName="userName";
         public static final String unreadCount="unreadCount";
-
+        public static final String LastDate="LastDate";
+        public static final String LastMessage="LastMessage";
 
         public static final int CODE=1;
 

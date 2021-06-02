@@ -41,10 +41,10 @@
             android:overScrollMode="never"
             tools:listitem="@layout/adapter_notices_view_item" />
 
-        <!--    注意修改包名时，这里也需要修改    -->
-        <com.yiflyplan.app.widget.MaterialFooter
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+<!--        &lt;!&ndash;    注意修改包名时，这里也需要修改    &ndash;&gt;-->
+<!--        <com.yiflyplan.app.widget.MaterialFooter-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 

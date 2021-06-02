@@ -17,7 +17,12 @@
 
 package com.yiflyplan.app.fragment.notices;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -36,15 +41,22 @@ import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 import com.xuexiang.xutil.tip.ToastUtils;
+import com.yiflyplan.app.MyCP;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter;
+import com.yiflyplan.app.adapter.entity.ChartInfo;
 import com.yiflyplan.app.adapter.entity.NoticeInfo;
 import com.yiflyplan.app.core.BaseFragment;
+import com.yiflyplan.app.core.http.MyHttp;
+import com.yiflyplan.app.fragment.UserInfoFragment;
 import com.yiflyplan.app.utils.DemoDataProvider;
 import com.yiflyplan.app.utils.MapDataCache;
+import com.yiflyplan.app.utils.ReflectUtil;
+import com.yiflyplan.app.utils.TokenUtils;
+import com.yiflyplan.app.utils.XToastUtils;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -52,6 +64,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -75,6 +92,11 @@ public class NoticesFragment extends BaseFragment {
     private WebSocketClient chatSocket;
     private static CurrentUserVO user;
     private SimpleDelegateAdapter<NoticeInfo> mNoticeAdapter;
+    private ContentResolver cr ;
+    private List<NoticeInfo> noticeInfos = new ArrayList<>();
+
+    private int SessionId = 0;
+    private Handler mMainHandler;
 
     /**
      * @return 返回为 null意为不需要导航栏
@@ -94,8 +116,13 @@ public class NoticesFragment extends BaseFragment {
      */
     @Override
     protected void initViews() {
+        //获取消息提供者
+        cr = getActivity().getContentResolver();
+
         user = (CurrentUserVO) MapDataCache.getCache("user", null);
         int userId = user.getUserId();
+
+        initHandler();
 
         connectSocket(userId);
 
@@ -180,18 +207,22 @@ public class NoticesFragment extends BaseFragment {
         refreshLayout.setOnRefreshListener(refreshLayout -> {
             // TODO: 2020-02-25 这里只是模拟了网络请求
             refreshLayout.getLayout().postDelayed(() -> {
-//                mNoticeAdapter.refresh(DemoDataProvider.getDemoNoticeInfos());
+                user = (CurrentUserVO) MapDataCache.getCache("user", null);
+                int userId = user.getUserId();
+
+                getSessionList(userId);
+                mNoticeAdapter.refresh(noticeInfos);
                 refreshLayout.finishRefresh();
             }, 1000);
         });
-        //上拉加载
-        refreshLayout.setOnLoadMoreListener(refreshLayout -> {
-            // TODO: 2020-02-25 这里只是模拟了网络请求
-            refreshLayout.getLayout().postDelayed(() -> {
-//                mNoticeAdapter.loadMore(DemoDataProvider.getDemoNoticeInfos());
-                refreshLayout.finishLoadMore();
-            }, 1000);
-        });
+//        //上拉加载
+//        refreshLayout.setOnLoadMoreListener(refreshLayout -> {
+//            refreshLayout.getLayout().postDelayed(() -> {
+////                mNoticeAdapter.loadMore(DemoDataProvider.getDemoNoticeInfos());
+//                refreshLayout.finishLoadMore();
+//            }, 1000);
+//        });
+
         refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
     }
 
@@ -215,10 +246,29 @@ public class NoticesFragment extends BaseFragment {
                 try {
                     JSONObject result = new JSONObject(message);
 
-//                    content = result.getString("content");
-//                    Message msg = Message.obtain();
-//                    msg.what = 0;
-//                    mMainHandler.sendMessage(msg);
+                    int fromUserId = result.getInt("fromUserId");
+                    int toUserId = result.getInt("toUserId");
+                    checkSession(fromUserId,toUserId);
+                    String newContent = result.getString("content");
+                    String date = result.getString("sendTime");
+                    String newCreateDate = date.substring(0,10);
+                    int unreadCount = result.getInt("unreadCount");
+
+
+                    String[] selectionArg = {String.valueOf(SessionId)};
+                    String selections = MyCP.Session.id + "=?";
+
+                    ContentValues cv = new ContentValues();
+                    cv.put(MyCP.Session.LastMessage, newContent);
+                    cv.put(MyCP.Session.LastDate, newCreateDate);
+                    cv.put(MyCP.Session.unreadCount, unreadCount);
+                    cr.update(MyCP.Session.CONTENT_URI, cv, selections, selectionArg);
+
+
+                    Message msg = Message.obtain();
+                    msg.what = 0;
+                    mMainHandler.sendMessage(msg);
+
                     Log.d("WEBSOCKET", result.toString());
 //                    ToastUtils.toast(result.toString());
                 } catch (JSONException e) {
@@ -246,5 +296,166 @@ public class NoticesFragment extends BaseFragment {
 //
     }
 
+
+    /**
+     * 初始化handler
+     */
+    private void initHandler(){
+        mMainHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 0:
+                        user = (CurrentUserVO) MapDataCache.getCache("user", null);
+                        int userId = user.getUserId();
+                        getSessionList(userId);
+                        //刷新UI
+                        mNoticeAdapter.refresh(noticeInfos);
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + msg.what);
+                }
+            }
+        };
+
+    }
+
+    /**
+     * 获取聊天列表
+     * @param ownId
+     */
+    private void getSessionList(int ownId){
+
+        Uri myURI = MyCP.Session.CONTENT_URI;
+
+        String[] selectionArgs = {String.valueOf(ownId)};
+        String[] columns = new String[]{MyCP.Session.id,MyCP.Session.userId,MyCP.Session.userAvatar,MyCP.Session.userName,MyCP.Session.unreadCount,MyCP.Session.LastMessage,MyCP.Session.LastDate};
+        String selection = MyCP.Session.ownId + "=?";
+        Cursor cursor = cr.query(myURI, columns, selection, selectionArgs, null);
+
+        List<NoticeInfo> newList = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex(MyCP.Session.id));
+            if(id == SessionId && SessionId!=0){
+                SessionId = 0;
+            }else {
+                getMessage(id);
+            }
+
+        }
+
+        cursor.close();
+
+
+        Cursor cursor1 = cr.query(myURI, columns, selection, selectionArgs, null);
+
+        while (cursor1.moveToNext()) {
+//            int id = cursor.getInt(cursor.getColumnIndex(MyCP.Session.id));
+            int userId = cursor1.getInt(cursor1.getColumnIndex(MyCP.Session.userId));
+            String userAvatar = cursor1.getString(cursor1.getColumnIndex(MyCP.Session.userAvatar));
+            String userName = cursor1.getString(cursor1.getColumnIndex(MyCP.Session.userName));
+            int unreadCount = cursor1.getInt(cursor1.getColumnIndex(MyCP.Session.unreadCount));
+            String lastMessage = cursor1.getString(cursor1.getColumnIndex(MyCP.Session.LastMessage));
+            String lastDate = cursor1.getString(cursor1.getColumnIndex(MyCP.Session.LastDate));
+
+            newList.add(new NoticeInfo(userName,userAvatar,lastMessage,lastDate,unreadCount,userId));
+
+
+
+
+        }
+
+        noticeInfos.clear();
+        noticeInfos.addAll(newList);
+
+
+        cursor1.close();
+    }
+
+    /**
+     * 获取最后一条消息
+     * @param sessionId
+     */
+    private void getMessage(int sessionId){
+        Uri myURI = MyCP.ChatRecords.CONTENT_URI;
+
+        String[] selectionArgs = {String.valueOf(sessionId)};
+        String[] columns = new String[]{MyCP.ChatRecords.content,MyCP.ChatRecords.createDate};
+        String selection = MyCP.ChatRecords.sessionId + "=?";
+        Cursor cursor = cr.query(myURI, columns, selection, selectionArgs, null);
+
+        String lastMessage = "开始聊天";
+        String lastDate = "2021-10-10";
+
+        while (cursor.moveToNext()) {
+            lastMessage = cursor.getString(cursor.getColumnIndex(MyCP.ChatRecords.content));
+            String date = cursor.getString(cursor.getColumnIndex(MyCP.ChatRecords.createDate));
+            lastDate = date.substring(0,10);
+        }
+
+        String[] selectionArg = {String.valueOf(sessionId)};
+        String selections = MyCP.Session.id + "=?";
+
+        ContentValues cv = new ContentValues();
+        cv.put(MyCP.Session.LastMessage, lastMessage);
+        cv.put(MyCP.Session.LastDate, lastDate);
+        cr.update(MyCP.Session.CONTENT_URI, cv, selections, selectionArg);
+
+        cursor.close();
+    }
+
+    /**
+     * 检查会话是否存在
+     * @param userId
+     */
+    private void checkSession(int userId,int ownId) {
+        Uri myURI = MyCP.Session.CONTENT_URI;
+
+        String[] selectionArgs = {String.valueOf(userId),String.valueOf(ownId)};
+        String[] columns = new String[]{MyCP.Session.id};
+        String selection = MyCP.Session.userId + "=? and "+MyCP.Session.ownId +"=?";
+        Cursor cursor = cr.query(myURI, columns, selection, selectionArgs, null);
+
+        if (cursor.getCount() == 0) {
+            LinkedHashMap<String, String> params = new LinkedHashMap<>();
+            params.put("userId", String.valueOf(userId));
+            MyHttp.get("/user/getUserInfo", TokenUtils.getToken(), params, new MyHttp.Callback() {
+                @Override
+                public void success(JSONObject data) {
+                    CurrentUserVO currentUserVO = ReflectUtil.convertToObject(data, CurrentUserVO.class);
+
+                    ContentValues cv = new ContentValues();
+                    cv.put(MyCP.Session.ownId, ownId);
+                    cv.put(MyCP.Session.userId, userId);
+                    cv.put(MyCP.Session.userAvatar, currentUserVO.getUserAvatar());
+                    cv.put(MyCP.Session.userName, currentUserVO.getUserName());
+                    cv.put(MyCP.Session.unreadCount, 0);
+                    cv.put(MyCP.Session.LastMessage, "可以开始聊天了");
+
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+                    String createDate = df.format(new Date());
+                    cv.put(MyCP.Session.LastDate,createDate);
+                    cr.insert(myURI, cv);
+
+                    Cursor cursor1 = cr.query(myURI, columns, selection, selectionArgs, null);
+                    while (cursor1.moveToNext()) {
+                        SessionId = cursor1.getInt(cursor1.getColumnIndex(MyCP.Session.id));
+                    }
+                    cursor1.close();
+                }
+                @Override
+                public void fail(JSONObject error) throws JSONException {
+                    XToastUtils.error(error.getString("message"));
+                }
+            });
+
+        }else {
+            while (cursor.moveToNext()) {
+                SessionId = cursor.getInt(cursor.getColumnIndex(MyCP.Session.id));
+            }
+        }
+        cursor.close();
+    }
 
 }
