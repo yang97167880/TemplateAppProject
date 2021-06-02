@@ -17,15 +17,22 @@
 
 package com.yiflyplan.app.activity;
 
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.xuexiang.xui.utils.KeyboardUtils;
 import com.xuexiang.xui.widget.activity.BaseSplashActivity;
 import com.xuexiang.xutil.app.ActivityUtils;
 import com.yiflyplan.app.R;
+import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.utils.SettingUtils;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.LinkedHashMap;
 
 import me.jessyan.autosize.internal.CancelAdapt;
 
@@ -39,6 +46,10 @@ public class SplashActivity extends BaseSplashActivity implements CancelAdapt {
 
     public final static String KEY_IS_DISPLAY = "key_is_display";
     public final static String KEY_ENABLE_ALPHA_ANIM = "key_enable_alpha_anim";
+
+    public final static String DATA = "data";
+    private static final String TOKEN_TIMEOUT = "token已过期";
+    private static final String HAS_TOKEN = "未过期";
 
     private boolean isDisplay = false;
     @Override
@@ -65,12 +76,26 @@ public class SplashActivity extends BaseSplashActivity implements CancelAdapt {
     }
 
     private void loginOrGoMainPage() {
-        if (TokenUtils.hasToken()) {
-            ActivityUtils.startActivity(MainActivity.class);
-        } else {
-            ActivityUtils.startActivity(LoginActivity.class);
-        }
-        finish();
+        LinkedHashMap<String,String> params = new LinkedHashMap<>();
+        params.put("token",TokenUtils.getToken());
+        MyHttp.postJson("/user/checkToken",TokenUtils.getToken(),params,new MyHttp.Callback(){
+
+            @Override
+            public void success(JSONObject data) throws JSONException {
+                    if (TokenUtils.hasToken()&&data.getString(DATA).equals(HAS_TOKEN )) {
+                        ActivityUtils.startActivity(MainActivity.class);
+                    } else {
+                        ActivityUtils.startActivity(LoginActivity.class);
+                    }
+                    finish();
+            }
+
+            @Override
+            public void fail(JSONObject error) throws JSONException {
+
+            }
+        });
+
     }
 
     /**

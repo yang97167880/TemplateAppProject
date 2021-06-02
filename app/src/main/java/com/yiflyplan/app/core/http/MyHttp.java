@@ -41,6 +41,8 @@ public final class MyHttp {
     private static final String Message = "message";
     private static final String SUCCESS = "success";
     private static final String DATA = "data";
+    private static final String TOKEN_TIMEOUT = "token已过期";
+    private static final String HAS_TOKEN = "未过期";
 
     private static final String API = "http://118.190.97.125:8080";
 
@@ -170,9 +172,17 @@ public final class MyHttp {
                     public void onResponse(JSONObject response) {// 获得后端返回的json数据，包括status和data两部分
                         try {
                             // 业务处理成功，success字段值为success
+                            Log.e("res",response.toString());
                             if (SUCCESS.equals(response.getString(Message))) {
-                                JSONObject data = response.getJSONObject(DATA);
-                                callback.success(data);
+                                if(response.getString(DATA).equals(TOKEN_TIMEOUT)){
+                                    callback.success(response);
+                                }else if(response.getString(DATA).equals(HAS_TOKEN)){
+                                    callback.success(response);
+                                }
+                                else{
+                                    JSONObject data = response.getJSONObject(DATA);
+                                    callback.success(data);
+                                }
                             } else {// 业务处理中产生的异常
                                 Log.e("TAG", response.getString(Message));
                                 XToastUtils.error(response.getString(Message));
@@ -249,6 +259,7 @@ public final class MyHttp {
                         try {
                             // 业务处理成功，success字段值为success
                             if (SUCCESS.equals(response.getString(Message))) {
+                                //token 验证
                                 JSONObject data = response.getJSONObject(DATA);
                                 callback.success(data);
                             } else {// 业务处理中产生的异常
