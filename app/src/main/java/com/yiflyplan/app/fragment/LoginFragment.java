@@ -139,6 +139,7 @@ public class LoginFragment extends BaseFragment {
                             public void success(JSONObject data) throws JSONException {
                                 Log.e("JSON:", data.toString());
                                 CurrentUserVO userVO = ReflectUtil.convertToObject(data, CurrentUserVO.class);
+                                MMKVUtils.put("userId",userVO.getUserId());
                                 MMKVUtils.put("userName",userVO.getUserName());
                                 MMKVUtils.put("userAvatar",userVO.getUserAvatar());
                                 MMKVUtils.put("organizationId",userVO.getCurrentOrganization().getOrganizationId());

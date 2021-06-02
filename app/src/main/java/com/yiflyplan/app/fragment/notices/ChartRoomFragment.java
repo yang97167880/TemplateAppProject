@@ -62,6 +62,7 @@ import com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.entity.ChartInfo;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.utils.DemoDataProvider;
+import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.XToastUtils;
 
@@ -115,9 +116,9 @@ public class ChartRoomFragment extends BaseFragment {
     private List<ChartInfo> chartInfos;
     private SimpleDelegateAdapter<ChartInfo> mChartAdapter;
     private static CurrentUserVO currentUserVO;
-    private static CurrentUserVO user;
     private String content;
     private int SessionId;
+    private String userAvatar;
 
 
     @Override
@@ -161,9 +162,9 @@ public class ChartRoomFragment extends BaseFragment {
         assert bundle != null;
         currentUserVO = (CurrentUserVO) bundle.getSerializable("currentUserVO");
 
-        user = (CurrentUserVO) MapDataCache.getCache("user", null);
+        userAvatar =  MMKVUtils.getString("userAvatar",null);
 
-        int userId = user.getUserId();
+        int userId = MMKVUtils.getInt("userId",0);
         int leftUserId = currentUserVO.getUserId();
 
         checkSession(leftUserId,userId);
@@ -266,7 +267,8 @@ public class ChartRoomFragment extends BaseFragment {
                     }
 
 
-                    chartInfos.add(new ChartInfo(user.getUserAvatar(), message, 1));
+
+                    chartInfos.add(new ChartInfo(userAvatar, message, 1));
                     insertMessage(SessionId,message,1);
 
                     mChartAdapter.refresh(chartInfos);
@@ -379,7 +381,7 @@ public class ChartRoomFragment extends BaseFragment {
             cv.put(MyCP.Session.userAvatar, currentUserVO.getUserAvatar());
             cv.put(MyCP.Session.userName, currentUserVO.getUserName());
             cv.put(MyCP.Session.unreadCount, 0);
-            cv.put(MyCP.Session.LastMessage, "可以开始聊天了");
+            cv.put(MyCP.Session.LastMessage, "有新的未读消息！");
 
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
             String createDate = df.format(new Date());
@@ -421,7 +423,7 @@ public class ChartRoomFragment extends BaseFragment {
             if(position == 0){
                 newList.add(new ChartInfo(currentUserVO.getUserAvatar(),content,position));
             }else {
-                newList.add(new ChartInfo(user.getUserAvatar(), content, position));
+                newList.add(new ChartInfo(userAvatar, content, position));
             }
         }
 

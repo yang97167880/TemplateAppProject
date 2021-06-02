@@ -21,6 +21,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -53,6 +54,7 @@ import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.UserInfoFragment;
 import com.yiflyplan.app.utils.DemoDataProvider;
+import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
@@ -80,7 +82,7 @@ import me.samlss.broccoli.Broccoli;
  * @author xuexiang
  * @since 2019/1/3 上午11:38
  */
-@Page(anim = CoreAnim.none)
+@Page(name = "Session",anim = CoreAnim.none)
 public class NoticesFragment extends BaseFragment {
 
 
@@ -90,13 +92,14 @@ public class NoticesFragment extends BaseFragment {
     SmartRefreshLayout refreshLayout;
 
     private WebSocketClient chatSocket;
-    private static CurrentUserVO user;
     private SimpleDelegateAdapter<NoticeInfo> mNoticeAdapter;
     private ContentResolver cr ;
     private List<NoticeInfo> noticeInfos = new ArrayList<>();
 
     private int SessionId = 0;
     private Handler mMainHandler;
+
+    private int userId;
 
     /**
      * @return 返回为 null意为不需要导航栏
@@ -116,11 +119,11 @@ public class NoticesFragment extends BaseFragment {
      */
     @Override
     protected void initViews() {
+
         //获取消息提供者
         cr = getActivity().getContentResolver();
 
-        user = (CurrentUserVO) MapDataCache.getCache("user", null);
-        int userId = user.getUserId();
+         userId = MMKVUtils.getInt("userId",0);
 
         initHandler();
 
@@ -207,21 +210,15 @@ public class NoticesFragment extends BaseFragment {
         refreshLayout.setOnRefreshListener(refreshLayout -> {
             // TODO: 2020-02-25 这里只是模拟了网络请求
             refreshLayout.getLayout().postDelayed(() -> {
-                user = (CurrentUserVO) MapDataCache.getCache("user", null);
-                int userId = user.getUserId();
+//                user = (CurrentUserVO) MapDataCache.getCache("user", null);
+//                int userId = user.getUserId();
 
                 getSessionList(userId);
                 mNoticeAdapter.refresh(noticeInfos);
                 refreshLayout.finishRefresh();
             }, 1000);
         });
-//        //上拉加载
-//        refreshLayout.setOnLoadMoreListener(refreshLayout -> {
-//            refreshLayout.getLayout().postDelayed(() -> {
-////                mNoticeAdapter.loadMore(DemoDataProvider.getDemoNoticeInfos());
-//                refreshLayout.finishLoadMore();
-//            }, 1000);
-//        });
+
 
         refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
     }
@@ -306,8 +303,8 @@ public class NoticesFragment extends BaseFragment {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 0:
-                        user = (CurrentUserVO) MapDataCache.getCache("user", null);
-                        int userId = user.getUserId();
+//                        user = (CurrentUserVO) MapDataCache.getCache("user", null);
+//                        int userId = user.getUserId();
                         getSessionList(userId);
                         //刷新UI
                         mNoticeAdapter.refresh(noticeInfos);
@@ -431,7 +428,7 @@ public class NoticesFragment extends BaseFragment {
                     cv.put(MyCP.Session.userAvatar, currentUserVO.getUserAvatar());
                     cv.put(MyCP.Session.userName, currentUserVO.getUserName());
                     cv.put(MyCP.Session.unreadCount, 0);
-                    cv.put(MyCP.Session.LastMessage, "可以开始聊天了");
+                    cv.put(MyCP.Session.LastMessage, "有新的未读消息");
 
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
                     String createDate = df.format(new Date());
