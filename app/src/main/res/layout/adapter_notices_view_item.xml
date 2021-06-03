@@ -16,21 +16,107 @@
   ~
   -->
 
-
-<com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/notices_view_item"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    app:sLeftIconRes="@drawable/icon_head_default"
-    app:sLeftTopTextString="扬尘。"
-    app:sLeftTopTextSize="@dimen/config_margin_16dp"
-    app:sLeftBottomTextString="在吗？"
-    app:sLeftBottomTextColor="?attr/xui_config_color_content_text"
-    app:sLeftBottomTextSize="@dimen/config_margin_12dp"
-    app:sRightTopTextString="21/2/14"
-    app:sRightTopTextSize="@dimen/config_margin_12dp"
-    app:sRightTopTextColor="?attr/xui_config_color_content_text"
-    app:sLeftViewGravity="left_center"
-    app:sRightViewGravity="left_center" />
+    app:cardBackgroundColor="@color/xui_config_color_white"
+    app:contentPaddingBottom="5dp"
+    app:contentPaddingLeft="16dp"
+    app:contentPaddingRight="16dp"
+    app:contentPaddingTop="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <com.xuexiang.xui.widget.imageview.RadiusImageView
+            android:id="@+id/user_avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerCrop"
+            app:riv_border_width="0dp"
+            app:riv_corner_radius="30dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:layout_marginStart="@dimen/config_margin_10dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/config_margin_5dp"
+                android:textColor="@color/black"
+                android:textSize="17dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_new_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/config_margin_5dp"
+                android:textSize="13dp"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_new_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/config_margin_5dp"
+                android:layout_gravity="end"
+                android:textSize="@dimen/config_margin_10dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_unread_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tv_circle_unread_count"
+                android:layout_marginTop="@dimen/config_margin_10dp"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:visibility="visible"
+                />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+
+</androidx.cardview.widget.CardView>
+
+
+<!--<com.xuexiang.xui.widget.textview.supertextview.SuperTextView-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:id="@+id/notices_view_item"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="80dp"-->
+<!--    app:sLeftIconRes="@drawable/icon_head_default"-->
+<!--    app:sLeftTopTextString="扬尘。"-->
+<!--    app:sLeftTopTextSize="@dimen/config_margin_16dp"-->
+<!--    app:sLeftBottomTextString="在吗？"-->
+<!--    app:sLeftBottomTextColor="?attr/xui_config_color_content_text"-->
+<!--    app:sLeftBottomTextSize="@dimen/config_margin_12dp"-->
+<!--    app:sRightTopTextString="21/2/14"-->
+<!--    app:sRightTopTextSize="@dimen/config_margin_12dp"-->
+<!--    app:sRightTopTextColor="?attr/xui_config_color_content_text"-->
+<!--    app:sLeftViewGravity="left_center"-->
+<!--    app:sRightViewGravity="left_center" />-->

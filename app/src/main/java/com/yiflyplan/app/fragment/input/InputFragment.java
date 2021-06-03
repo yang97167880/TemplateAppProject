@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +37,7 @@ import com.xuexiang.xaop.annotation.Permission;
 import com.xuexiang.xaop.enums.ThreadType;
 import com.xuexiang.xqrcode.util.QRCodeAnalyzeUtils;
 import com.xuexiang.xutil.app.PathUtils;
+import com.xuexiang.xutil.tip.ToastUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
@@ -55,9 +57,12 @@ import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -96,6 +101,7 @@ public class InputFragment extends BaseFragment {
 
     @BindView(R.id.bluetooth_card_instructions_info)
     TextView bluetoothCardInstructionsInfoTextView;
+
 
 
     /**
@@ -334,8 +340,6 @@ public class InputFragment extends BaseFragment {
             }
         });
     }
-
-
 
     @Permission(CAMERA)
     private void initPermission() {

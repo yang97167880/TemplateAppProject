@@ -164,6 +164,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         //organization
         organizationName = MMKVUtils.getString("organizationName",null);
 
+
         MobclickAgent.onProfileSignIn(DeviceUtils.getAndroidID());
 
         initViews();

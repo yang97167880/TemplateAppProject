@@ -29,7 +29,7 @@ public class NoticeInfo {
     /**
      * 用户头像
      */
-    private String Avator;
+    private String Avatar;
 
     /**
      * 最新消息通知
@@ -42,19 +42,36 @@ public class NoticeInfo {
     private String NewDate;
 
     /**
-     * 跳转路径
+     * 未读数
      */
-    private String MoveTo;
+    private int UnreadCount;
+
+    /**
+     * 用户id
+     */
+    private int UserId;;
+
+
 
     public NoticeInfo() {
 
     }
 
-    public NoticeInfo(String nickName, String avator, String newMessage, String newDate) {
+    public NoticeInfo(String nickName, String avatar, String newMessage, String newDate,int unreadCount,int userId) {
         NickName = nickName;
-        Avator = avator;
+        Avatar = avatar;
         NewMessage = newMessage;
         NewDate = newDate;
+        UnreadCount = unreadCount;
+        UserId = userId;
+    }
+
+    public int getUserId() {
+        return UserId;
+    }
+
+    public void setUserId(int userId) {
+        UserId = userId;
     }
 
     public String getNickName() {
@@ -65,12 +82,12 @@ public class NoticeInfo {
         NickName = nickName;
     }
 
-    public String getAvator() {
-        return Avator;
+    public String getAvatar() {
+        return Avatar;
     }
 
-    public void setAvator(String avator) {
-        Avator = avator;
+    public void setAvatar(String avatar) {
+        Avatar = avatar;
     }
 
     public String getNewMessage() {
@@ -89,22 +106,22 @@ public class NoticeInfo {
         NewDate = newDate;
     }
 
-    public String getMoveTo() {
-        return MoveTo;
+    public int getUnreadCount() {
+        return UnreadCount;
     }
 
-    public void setMoveTo(String moveTo) {
-        MoveTo = moveTo;
+    public void setUnreadCount(int unreadCount) {
+        UnreadCount = unreadCount;
     }
 
     @Override
     public String toString() {
         return "NoticeInfo{" +
                 "NickName='" + NickName + '\'' +
-                ", Avator='" + Avator + '\'' +
+                ", Avatar='" + Avatar + '\'' +
                 ", NewMessage='" + NewMessage + '\'' +
                 ", NewDate='" + NewDate + '\'' +
-                ", MoveTo='" + MoveTo + '\'' +
+                ", UnreadCount='" + UnreadCount + '\'' +
                 '}';
     }
 
