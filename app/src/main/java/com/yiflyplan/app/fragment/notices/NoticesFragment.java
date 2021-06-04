@@ -28,6 +28,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
@@ -220,6 +222,8 @@ public class NoticesFragment extends BaseFragment {
         });
 
 
+
+
         refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
     }
 
@@ -322,6 +326,8 @@ public class NoticesFragment extends BaseFragment {
      * @param ownId
      */
     private void getSessionList(int ownId){
+
+        XToastUtils.error("我回来了");
 
         Uri myURI = MyCP.Session.CONTENT_URI;
 
@@ -455,4 +461,11 @@ public class NoticesFragment extends BaseFragment {
         cursor.close();
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        XToastUtils.error("我回来了");
+        getSessionList(userId);
+    }
 }

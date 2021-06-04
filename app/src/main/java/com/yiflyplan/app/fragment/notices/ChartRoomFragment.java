@@ -131,22 +131,7 @@ public class ChartRoomFragment extends BaseFragment {
     protected TitleBar initTitle() {
         Bundle bundle = getArguments();
         currentUserVO = (CurrentUserVO) bundle.getSerializable("currentUserVO");
-        return TitleUtils.addTitleBarDynamic((ViewGroup) getRootView(),currentUserVO.getUserName(), v -> {
-            try {
-                chatSocket.closeBlocking();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            String[] selectionArg = {String.valueOf(SessionId)};
-            String selections = MyCP.Session.id + "=?";
-
-            ContentValues cv = new ContentValues();
-            cv.put(MyCP.Session.unreadCount, 0);
-            cr.update(MyCP.Session.CONTENT_URI, cv, selections, selectionArg);
-
-            popToBack();
-        });
+        return TitleUtils.addTitleBarDynamic((ViewGroup) getRootView(),currentUserVO.getUserName(), v -> back());
     }
 
     @Override
@@ -455,32 +440,30 @@ public class ChartRoomFragment extends BaseFragment {
     }
 
 
-    /**
-     * 监听返回键
-     * @param keyCode
-     * @param event
-     * @return
-     */
+
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            try {
-                chatSocket.closeBlocking();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+    public void onDestroyView() {
+        super.onDestroyView();
+        back();
+    }
 
-            String[] selectionArg = {String.valueOf(SessionId)};
-            String selections = MyCP.Session.id + "=?";
-
-            ContentValues cv = new ContentValues();
-            cv.put(MyCP.Session.unreadCount, 0);
-            cr.update(MyCP.Session.CONTENT_URI, cv, selections, selectionArg);
-
-            popToBack();
-            return true;
-        }else {
-            return super.onKeyDown(keyCode, event);
+    /**
+     *返回
+     */
+    private void back(){
+        try {
+            chatSocket.closeBlocking();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+        String[] selectionArg = {String.valueOf(SessionId)};
+        String selections = MyCP.Session.id + "=?";
+
+        ContentValues cv = new ContentValues();
+        cv.put(MyCP.Session.unreadCount, 0);
+        cr.update(MyCP.Session.CONTENT_URI, cv, selections, selectionArg);
+
+        popToBack();
     }
 }
