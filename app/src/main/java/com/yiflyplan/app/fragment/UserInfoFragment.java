@@ -39,6 +39,7 @@ import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.notices.ChartRoomFragment;
 import com.yiflyplan.app.fragment.organization.components.PersonalWarehouse;
+import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
@@ -89,12 +90,8 @@ public class UserInfoFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
-        CurrentUserVO user = (CurrentUserVO)MapDataCache.getCache("user",null);
-        if(user!=null){
-            userId = user.getUserId();
-        }
 
-
+        userId = MMKVUtils.getInt("userId",0);
 
         Bundle bundle = getArguments();
         currentUserVO = (CurrentUserVO) bundle.getSerializable("currentUserVO");

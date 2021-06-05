@@ -17,11 +17,13 @@
 
 package com.yiflyplan.app.activity;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
@@ -59,10 +61,12 @@ import com.xuexiang.xutil.XUtil;
 import com.xuexiang.xutil.common.ClickUtils;
 import com.xuexiang.xutil.common.CollectionUtils;
 import com.xuexiang.xutil.system.DeviceUtils;
+import com.xuexiang.xutil.tip.ToastUtils;
 import com.yarolegovich.slidingrootnav.SlideGravity;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 import com.yarolegovich.slidingrootnav.callback.DragStateListener;
+import com.yiflyplan.app.MyCP;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
 import com.yiflyplan.app.adapter.VO.MemberVO;
@@ -92,11 +96,14 @@ import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 import com.yiflyplan.app.widget.GuideTipsDialog;
 
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -656,5 +663,49 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
+//    /**
+//     * 关闭全局socket
+//     */
+//    private void closeSocket()  {
+//        int userId = MMKVUtils.getInt("userId",0);
+//        WebSocketClient chatSocket = new WebSocketClient(URI.create(String.format("ws://118.190.97.125:8080/ws/chat/unread/%s", userId))) {
+//            @Override
+//            public void onOpen(ServerHandshake handshakedata) {
+//                Log.d("WEBSOCKET", "connected");
+//            }
+//
+//            @Override
+//            public void onMessage(String message) {
+//            }
+//
+//            @Override
+//            public void onClose(int code, String reason, boolean remote) {
+//                Log.d("WEBSOCKET", "closed");
+//            }
+//
+//            @Override
+//            public void onError(Exception ex) {
+//                ToastUtils.toast("建立失败");
+//                Log.d("WEBSOCKET", String.valueOf(ex));
+//            }
+//        };
+//        try {
+//            chatSocket.connectBlocking();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//        try {
+//            chatSocket.closeBlocking();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
 
