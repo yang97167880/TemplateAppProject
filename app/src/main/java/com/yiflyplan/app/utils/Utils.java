@@ -40,7 +40,9 @@ import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xutil.XUtil;
 import com.yiflyplan.app.R;
+import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.webview.AgentWebActivity;
+import com.yiflyplan.app.fragment.AboutFragment;
 
 import static com.yiflyplan.app.core.webview.AgentWebFragment.KEY_URL;
 
@@ -61,6 +63,9 @@ public final class Utils {
      * 这里填写你的应用隐私政策网页地址
      */
     private static final String PRIVACY_URL = "https://gitee.com/xuexiangjys/TemplateAppProject/raw/master/LICENSE";
+
+
+
 
     /**
      * 显示隐私政策的提示
@@ -115,6 +120,7 @@ public final class Utils {
         dialog.show();
         return dialog;
     }
+
 
     /**
      * @return 隐私政策说明

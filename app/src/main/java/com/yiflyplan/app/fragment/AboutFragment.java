@@ -108,11 +108,6 @@ public class AboutFragment extends BaseFragment {
 
             }
         });
-        try{
-            Thread.sleep(1000);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         XUIGroupListView.newSection(getContext())
                 .addItemView(mAboutGroupListView.createItemView(getResources().getString(R.string.about_item_homepage)), v -> AgentWebActivity.goWeb(getContext(), getString(R.string.url_project)))
                 .addTo(mAboutGroupListView);
@@ -121,11 +116,16 @@ public class AboutFragment extends BaseFragment {
                     @Override
                     public void run() {
                         Looper.prepare();
-                        if(download()){
+                        if(newVersion.equals(VersionUtils.Version)){
                             XToastUtils.success("已是最新版本");
                         }else{
-                            XToastUtils.success("更新成功");
+                            if(download()){
+                                XToastUtils.success("已是最新版本");
+                            }else{
+                                XToastUtils.success("更新成功");
+                            }
                         }
+
                         Looper.loop();
                     }
                 }).start();})
@@ -137,8 +137,12 @@ public class AboutFragment extends BaseFragment {
     }
 
     private boolean download() {
+        try{
+            Thread.sleep(1000);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         try {
-
             URL url = new URL(appUrl);
             //打开连接
             URLConnection conn = url.openConnection();
@@ -150,31 +154,28 @@ public class AboutFragment extends BaseFragment {
             //创建文件夹 MyDownLoad，在存储卡下
             String dirName = Environment.getExternalStorageDirectory() + "/";
             //下载后的文件名
-            String fileName = dirName + "001";
-            File file1 = new File(fileName);
-            if (file1.exists()) {
-
-                Log.e("文件-----", "文件已经存在！");
-                return fileIsExists(fileName);
-            } else {
-                //创建字节流
-                byte[] bs = new byte[1024];
-                int len;
-                if(!isGrantExternalRW(this.getActivity())){
-                    return false;
-                }
-                file1.createNewFile();
-                OutputStream os = new FileOutputStream(fileName);
-                //写数据
-                while ((len = is.read(bs)) != -1) {
-                    os.write(bs, 0, len);
-                }
-                //完成后关闭流
-                Log.e("文件不存在", "下载成功！");
-                os.close();
-                is.close();
-
+            String fileName = dirName + VersionUtils.Version;
+            File updateFile = new File(fileName);
+            if (updateFile.exists()) {
+                Log.e("已更新", "文件已经存在！");
+                updateFile.delete();
             }
+            //创建字节流
+            byte[] bs = new byte[1024];
+            int len;
+            if(!isGrantExternalRW(this.getActivity())){
+                return false;
+            }
+            updateFile.createNewFile();
+            OutputStream os = new FileOutputStream(fileName);
+            //写数据
+            while ((len = is.read(bs)) != -1) {
+                os.write(bs, 0, len);
+            }
+            //完成后关闭流
+            Log.e("未更新", "下载成功！");
+            os.close();
+            is.close();
 
         } catch (Exception e) {
             e.printStackTrace();
