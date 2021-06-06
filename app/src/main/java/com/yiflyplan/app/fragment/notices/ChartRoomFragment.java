@@ -22,6 +22,8 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,6 +66,7 @@ import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.utils.DemoDataProvider;
 import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.MapDataCache;
+import com.yiflyplan.app.utils.VibrateUtil;
 import com.yiflyplan.app.utils.XToastUtils;
 
 import org.java_websocket.client.WebSocketClient;
@@ -279,33 +282,35 @@ public class ChartRoomFragment extends BaseFragment {
         chatSocket = new WebSocketClient(URI.create(String.format("ws://118.190.97.125:8080/ws/chat/simple/%s/%s", fromUserId, toUserId))) {
             @Override
             public void onOpen(ServerHandshake handshakedata) {
-                Log.d("WEBSOCKET", "connected");
+                Log.d("WEBSOCKET", "单聊connected");
             }
 
             @Override
             public void onMessage(String message) {
-                try {
-                    JSONObject result = new JSONObject(message);
-                    content = result.getString("content");
+                if(message!=null) {
+                    try {
+                        JSONObject result = new JSONObject(message);
+                        content = result.getString("content");
 
-                    chartInfos.add(new ChartInfo(currentUserVO.getUserAvatar(),content,0));
-                    insertMessage(SessionId,content,0);
+                        chartInfos.add(new ChartInfo(currentUserVO.getUserAvatar(), content, 0));
+                        insertMessage(SessionId, content, 0);
 
-                    Message msg = Message.obtain();
-                    msg.what = 0;
-                    mMainHandler.sendMessage(msg);
+                        Message msg = Message.obtain();
+                        msg.what = 0;
+                        mMainHandler.sendMessage(msg);
 
 
-                    Log.d("WEBSOCKET", content);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                        Log.d("WEBSOCKET", content);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("WEBSOCKET", message);
                 }
-                Log.d("WEBSOCKET", message);
             }
 
             @Override
             public void onClose(int code, String reason, boolean remote) {
-                Log.d("WEBSOCKET", "closed");
+                Log.d("WEBSOCKET", "单聊closed");
             }
 
             @Override
@@ -331,6 +336,14 @@ public class ChartRoomFragment extends BaseFragment {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 0:
+                        // 开启震动
+                        VibrateUtil.vibrate(getContext(), new long[]{50, 100, 0, 0}, -1);
+
+                        //提示音
+                        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                        Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
+                        r.play();
+
                         getMessage(SessionId);
                         //刷新UI
                         mChartAdapter.refresh(chartInfos);

@@ -256,47 +256,48 @@ public class NoticesFragment extends BaseFragment {
         chatSocket = new WebSocketClient(URI.create(String.format("ws://118.190.97.125:8080/ws/chat/unread/%s", userId))) {
             @Override
             public void onOpen(ServerHandshake handshakedata) {
-                Log.d("WEBSOCKET", "connected");
+                Log.d("WEBSOCKET", "全局connected");
             }
 
             @Override
             public void onMessage(String message) {
-                try {
+                if(message!=null){
+                    Log.d("WEBSOCKET", message);
+                    try {
+                        JSONObject result = new JSONObject(message);
+
+                        int fromUserId = result.getInt("fromUserId");
+                        int toUserId = result.getInt("toUserId");
+                        checkSession(fromUserId,toUserId);
+                        String newContent = result.getString("content");
+                        String date = result.getString("sendTime");
+                        int unreadCount = result.getInt("unreadCount");
 
 
-                    JSONObject result = new JSONObject(message);
+                        String[] selectionArg = {String.valueOf(SessionId)};
+                        String selections = MyCP.Session.id + "=?";
 
-                    int fromUserId = result.getInt("fromUserId");
-                    int toUserId = result.getInt("toUserId");
-                    checkSession(fromUserId,toUserId);
-                    String newContent = result.getString("content");
-                    String date = result.getString("sendTime");
-                    int unreadCount = result.getInt("unreadCount");
-
-
-                    String[] selectionArg = {String.valueOf(SessionId)};
-                    String selections = MyCP.Session.id + "=?";
-
-                    ContentValues cv = new ContentValues();
-                    cv.put(MyCP.Session.LastMessage, newContent);
-                    cv.put(MyCP.Session.LastDate, date);
-                    cv.put(MyCP.Session.unreadCount, unreadCount);
-                    cr.update(MyCP.Session.CONTENT_URI, cv, selections, selectionArg);
+                        ContentValues cv = new ContentValues();
+                        cv.put(MyCP.Session.LastMessage, newContent);
+                        cv.put(MyCP.Session.LastDate, date);
+                        cv.put(MyCP.Session.unreadCount, unreadCount);
+                        cr.update(MyCP.Session.CONTENT_URI, cv, selections, selectionArg);
 
 
-                    Message msg = Message.obtain();
-                    msg.what = 0;
-                    mMainHandler.sendMessage(msg);
+                        Message msg = Message.obtain();
+                        msg.what = 0;
+                        mMainHandler.sendMessage(msg);
 
-                    Log.d("WEBSOCKET", result.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             @Override
             public void onClose(int code, String reason, boolean remote) {
-                Log.d("WEBSOCKET", "closed");
+                Log.d("WEBSOCKET", "全局closed");
             }
 
             @Override
