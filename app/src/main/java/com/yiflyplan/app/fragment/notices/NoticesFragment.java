@@ -180,10 +180,8 @@ public class NoticesFragment extends BaseFragment {
                         String result = null;
                         if(diffDay<1){
                             result = date.substring(10,16);
-                        }else if(diffDay<30 && diffDay>=1 ){
-                            result = date.substring(5,16);
                         }else{
-                            result = date.substring(0,16);
+                            result = date.substring(0,10);
                         }
                         newDate.setText(result);
                     }, R.id.tv_new_date);
@@ -244,9 +242,6 @@ public class NoticesFragment extends BaseFragment {
                 refreshLayout.finishRefresh();
             }, 1000);
         });
-
-
-
 
         refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
     }
@@ -448,8 +443,8 @@ public class NoticesFragment extends BaseFragment {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroy() {
+        super.onDestroy();
         try {
             chatSocket.closeBlocking();
         } catch (InterruptedException e) {

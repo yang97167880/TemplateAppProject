@@ -62,15 +62,16 @@ public class DateUtil {
             return 0;
         // 转换为标准时间
         SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        java.util.Date date = null;
-        java.util.Date mydate = null;
+        java.util.Date date;
+        java.util.Date mydate;
         try {
             date = myFormatter.parse(date1);
             mydate = myFormatter.parse(date2);
+            return (date.getTime() - mydate.getTime()) / (24 * 60 * 60 * 1000);
         } catch (Exception e) {
         }
-        long day = (date.getTime() - mydate.getTime()) / (24 * 60 * 60 * 1000);
-        return day;
+
+        return 0;
     }
 
     /**

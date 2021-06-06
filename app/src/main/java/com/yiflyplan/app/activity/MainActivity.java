@@ -668,44 +668,5 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         super.onDestroy();
 
     }
-
-//    /**
-//     * 关闭全局socket
-//     */
-//    private void closeSocket()  {
-//        int userId = MMKVUtils.getInt("userId",0);
-//        WebSocketClient chatSocket = new WebSocketClient(URI.create(String.format("ws://118.190.97.125:8080/ws/chat/unread/%s", userId))) {
-//            @Override
-//            public void onOpen(ServerHandshake handshakedata) {
-//                Log.d("WEBSOCKET", "connected");
-//            }
-//
-//            @Override
-//            public void onMessage(String message) {
-//            }
-//
-//            @Override
-//            public void onClose(int code, String reason, boolean remote) {
-//                Log.d("WEBSOCKET", "closed");
-//            }
-//
-//            @Override
-//            public void onError(Exception ex) {
-//                ToastUtils.toast("建立失败");
-//                Log.d("WEBSOCKET", String.valueOf(ex));
-//            }
-//        };
-//        try {
-//            chatSocket.connectBlocking();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//            chatSocket.closeBlocking();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }
 
