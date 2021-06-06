@@ -80,7 +80,7 @@ public class OrganizationUser extends BaseFragment {
 
     private int totalPage = 1;
     private int pageNo = 1;
-    private int pageSize = 15;
+    private int pageSize = 10;
     private List<MemberVO> memberVOS = new ArrayList<>();
     private SimpleDelegateAdapter<MemberVO> mMemberAdapter;
 
@@ -91,9 +91,9 @@ public class OrganizationUser extends BaseFragment {
 
     @Override
     protected void initViews() {
-        initSearchView();
         search.setOnClickListener(v -> {
-            mSearchView.showSearch();
+//            mSearchView.showSearch();
+            openNewPage(SearchUser.class,"vos",memberVOS);
         });
         VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager(Objects.requireNonNull(getContext()));
         recyclerView.setLayoutManager(virtualLayoutManager);
@@ -254,7 +254,7 @@ public class OrganizationUser extends BaseFragment {
                 JSONArray members = new JSONArray(data.getString("list"));
                 List<MemberVO> newList = new ArrayList<>();
                 newList = ReflectUtil.convertToList(members, MemberVO.class);
-                memberCount.setText("成员数 (" + members.length() + "人)");
+                memberCount.setText("成员数 (" +data.getString("totalRow") + "人)");
                 totalPage = data.getInt("totalPage");
                 if (pageNo <= totalPage) {
                     memberVOS.addAll(newList);

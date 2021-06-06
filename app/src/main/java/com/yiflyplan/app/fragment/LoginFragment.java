@@ -144,8 +144,7 @@ public class LoginFragment extends BaseFragment {
                                 MMKVUtils.put("userAvatar",userVO.getUserAvatar());
                                 MMKVUtils.put("organizationId",userVO.getCurrentOrganization().getOrganizationId());
                                 MMKVUtils.put("organizationName",userVO.getCurrentOrganization().getOrganizationName());
-                                Log.e("list", String.valueOf(userVO.getRelationships()));
-                                MapDataCache.putCache("relationships",userVO.getRelationships());
+                                MMKVUtils.put("relationships",data.getString("relationships"));
                                 //用户初始化
                                 onLoginSuccess(userVO, data.getString("token"));
                             }

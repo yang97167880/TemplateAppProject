@@ -198,28 +198,14 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     }
 
     private void initData() {
-        if(relationships == null){
-            relationships = (List<OrganizationVO>) MapDataCache.getCache("relationships",null);
-//            LinkedHashMap<String, String> params = new LinkedHashMap<>();
-//            params.put("pageNo","1");
-//            params.put("pageSize","20");
-//            MyHttp.get("/organization/getOrganizationCreateByUser", TokenUtils.getToken(), params, new MyHttp.Callback() {
-//
-//                @Override
-//                public void success(JSONObject data) throws JSONException {
-//
-//                    JSONArray organizations = new JSONArray(data.getString("list"));
-//                    Log.e("rea",data.toString());
-//                    relationships  = ReflectUtil.convertToList(organizations, OrganizationVO.class);
-//
-//                }
-//
-//                @Override
-//                public void fail(JSONObject error) throws JSONException {
-//
-//                }
-//            });
-        }
+
+            String relationStr = MMKVUtils.getString("relationships",null);
+            try{
+                JSONArray relations = new JSONArray(relationStr);
+                relationships = ReflectUtil.convertToList(relations, OrganizationVO.class);
+            }catch (Exception e){
+                Log.e("JSONErr",e.getMessage());
+            }
         mMenuTitles = ResUtils.getStringArray(R.array.menu_titles);
         mMenuIcons = ResUtils.getDrawableArray(this, R.array.menu_icons);
     }
@@ -319,13 +305,13 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 if (isMenuOpened) {
                     if (!GuideCaseView.isShowOnce(MainActivity.this, getString(R.string.guide_key_sliding_root_navigation))) {
                         final GuideCaseView guideStep1 = new GuideCaseView.Builder(MainActivity.this)
-                                .title("点击进入，可切换主题样式哦～～")
+                                .title("点击进入，切换账号")
                                 .titleSize(18, TypedValue.COMPLEX_UNIT_SP)
                                 .focusOn(ivSetting)
                                 .build();
 
                         final GuideCaseView guideStep2 = new GuideCaseView.Builder(MainActivity.this)
-                                .title("点击进入，扫码关注哦～～")
+                                .title("点击进入，查看自己的二维码")
                                 .titleSize(18, TypedValue.COMPLEX_UNIT_SP)
                                 .focusOn(ivQrcode)
                                 .build();

@@ -105,9 +105,10 @@ public class UserInfoFragment extends BaseFragment {
             tvCityName.setText(currentUserVO.getUserCityName());
             tvUserRfid.setText(currentUserVO.getRfid());
             llWareHouse.setOnClickListener(view -> {
+                Bundle build = getArguments();
+                int id = build.getInt("id");
                 PersonalWareHouseBundle personalWareHouseBundle=new PersonalWareHouseBundle();
-                CurrentUserVO cache = (CurrentUserVO) MapDataCache.getCache(MapDataCache.Constants.LOGIN_USER, null);
-                personalWareHouseBundle.setOrganizationId(cache.getCurrentOrganization().getId());
+                personalWareHouseBundle.setOrganizationId(id);
                 personalWareHouseBundle.setUserId(currentUserVO.getUserId());
                 MapDataCache.putCache("personalWareHouseBundle",personalWareHouseBundle);
                 openNewPage(PersonalWarehouse.class);
