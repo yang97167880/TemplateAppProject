@@ -17,20 +17,39 @@
 
 package com.yiflyplan.app.fragment;
 
+import android.os.Environment;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.core.BaseFragment;
+import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.core.webview.AgentWebActivity;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.widget.grouplist.XUIGroupListView;
 import com.xuexiang.xutil.app.AppUtils;
+import com.yiflyplan.app.utils.TokenUtils;
+import com.yiflyplan.app.utils.VersionUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import butterknife.BindView;
+
+import static java.sql.DriverManager.getConnection;
 
 /**
  * @author xuexiang
@@ -53,14 +72,90 @@ public class AboutFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
-        mVersionTextView.setText(String.format("版本号：%s", AppUtils.getAppVersionName()));
+
+        mVersionTextView.setText(String.format("版本号：%s", VersionUtils.Version));
 
         XUIGroupListView.newSection(getContext())
                 .addItemView(mAboutGroupListView.createItemView(getResources().getString(R.string.about_item_homepage)), v -> AgentWebActivity.goWeb(getContext(), getString(R.string.url_project)))
+                .addTo(mAboutGroupListView);
+        XUIGroupListView.newSection(getContext())
+                .addItemView(mAboutGroupListView.createItemView(getResources().getString(R.string.about_item_update)), v -> {new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        download();
+                    }
+                }).start();})
                 .addTo(mAboutGroupListView);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy", Locale.CHINA);
         String currentYear = dateFormat.format(new Date());
         mCopyrightTextView.setText(String.format(getResources().getString(R.string.about_copyright), currentYear));
+    }
+
+    private boolean download() {
+        MyHttp.getDownload("/system/getNewestAppDownloadUrl", TokenUtils.getToken(), new MyHttp.Callback() {
+            @Override
+            public void success(JSONObject data) throws JSONException {
+                String appUrl = data.getString("data");
+                try {
+                    URL url = new URL(appUrl);
+                    //打开连接
+                    URLConnection conn = url.openConnection();
+                    //打开输入流
+                    InputStream is = conn.getInputStream();
+                    //获得长度
+                    int contentLength = conn.getContentLength();
+                    Log.e("", "文件长度 = " + contentLength);
+                    //创建文件夹 MyDownLoad，在存储卡下
+                    String dirName = Environment.getExternalStorageDirectory() + "/";
+                    //下载后的文件名
+                    String fileName = dirName + "001";
+                    File file1 = new File(fileName);
+
+                    if (file1.exists()) {
+                        Log.e("文件-----", "文件已经存在！");
+                    } else {
+                        //创建字节流
+                        byte[] bs = new byte[1024];
+                        int len;
+                        OutputStream os = new FileOutputStream(fileName);
+                        //写数据
+                        while ((len = is.read(bs)) != -1) {
+                            os.write(bs, 0, len);
+                        }
+                        //完成后关闭流
+                        Log.e("文件不存在", "下载成功！");
+                        os.close();
+                        is.close();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void fail(JSONObject error) throws JSONException {
+
+            }
+        });
+
+        return false;
+    }
+
+    //判断文件是否存在
+    public boolean fileIsExists(String strFile) {
+        try {
+            File f = new File(strFile);
+            if (!f.exists()) {
+                return false;
+            }
+
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
     }
 }
