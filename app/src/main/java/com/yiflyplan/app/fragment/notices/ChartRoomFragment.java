@@ -119,6 +119,7 @@ public class ChartRoomFragment extends BaseFragment {
     private String content;
     private int SessionId;
     private String userAvatar;
+    private String lastDate;
 
 
     @Override
@@ -131,22 +132,7 @@ public class ChartRoomFragment extends BaseFragment {
     protected TitleBar initTitle() {
         Bundle bundle = getArguments();
         currentUserVO = (CurrentUserVO) bundle.getSerializable("currentUserVO");
-        return TitleUtils.addTitleBarDynamic((ViewGroup) getRootView(),currentUserVO.getUserName(), v -> {
-            try {
-                chatSocket.closeBlocking();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            String[] selectionArg = {String.valueOf(SessionId)};
-            String selections = MyCP.Session.id + "=?";
-
-            ContentValues cv = new ContentValues();
-            cv.put(MyCP.Session.unreadCount, 0);
-            cr.update(MyCP.Session.CONTENT_URI, cv, selections, selectionArg);
-
-            popToBack();
-        });
+        return TitleUtils.addTitleBarDynamic((ViewGroup) getRootView(),currentUserVO.getUserName(), v -> back());
     }
 
     @Override
@@ -289,12 +275,10 @@ public class ChartRoomFragment extends BaseFragment {
      * @param toUserId
      */
     private void connectSocket(int fromUserId, int toUserId) {
-        ToastUtils.toast("--------------------------建立连接开始--------------------------------");
         System.out.printf("from %s to %s\n", fromUserId, toUserId);
         chatSocket = new WebSocketClient(URI.create(String.format("ws://118.190.97.125:8080/ws/chat/simple/%s/%s", fromUserId, toUserId))) {
             @Override
             public void onOpen(ServerHandshake handshakedata) {
-                ToastUtils.toast(String.format("from %s to %s建立成功", fromUserId, toUserId));
                 Log.d("WEBSOCKET", "connected");
             }
 
@@ -410,7 +394,7 @@ public class ChartRoomFragment extends BaseFragment {
         Uri myURI = MyCP.ChatRecords.CONTENT_URI;
 
         String[] selectionArgs = {String.valueOf(sessionId)};
-        String[] columns = new String[]{MyCP.ChatRecords.content,MyCP.ChatRecords.position};
+        String[] columns = new String[]{MyCP.ChatRecords.content,MyCP.ChatRecords.position,MyCP.ChatRecords.createDate};
         String selection = MyCP.ChatRecords.sessionId + "=?";
         Cursor cursor = cr.query(myURI, columns, selection, selectionArgs, null);
 
@@ -419,6 +403,8 @@ public class ChartRoomFragment extends BaseFragment {
         while (cursor.moveToNext()) {
             String content = cursor.getString(cursor.getColumnIndex(MyCP.ChatRecords.content));
             int position = cursor.getInt(cursor.getColumnIndex(MyCP.ChatRecords.position));
+
+            lastDate = cursor.getString(cursor.getColumnIndex(MyCP.ChatRecords.createDate));
 
             if(position == 0){
                 newList.add(new ChartInfo(currentUserVO.getUserAvatar(),content,position));
@@ -444,7 +430,7 @@ public class ChartRoomFragment extends BaseFragment {
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
         String createDate = df.format(new Date());
-
+        lastDate = createDate;
         ContentValues cv = new ContentValues();
         cv.put(MyCP.ChatRecords.sessionId, sessionId);
         cv.put(MyCP.ChatRecords.content, content);
@@ -454,33 +440,59 @@ public class ChartRoomFragment extends BaseFragment {
         cr.insert(myURI, cv);
     }
 
-
     /**
      * 监听返回键
      * @param keyCode
      * @param event
      * @return
+     *返回
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            try {
-                chatSocket.closeBlocking();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            String[] selectionArg = {String.valueOf(SessionId)};
-            String selections = MyCP.Session.id + "=?";
-
-            ContentValues cv = new ContentValues();
-            cv.put(MyCP.Session.unreadCount, 0);
-            cr.update(MyCP.Session.CONTENT_URI, cv, selections, selectionArg);
-
-            popToBack();
+            back();
             return true;
         }else {
             return super.onKeyDown(keyCode, event);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        back();
+    }
+
+    /**
+     *返回
+     */
+    private void back(){
+        try {
+            chatSocket.closeBlocking();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        String[] selectionArg = {String.valueOf(SessionId)};
+        String selections = MyCP.Session.id + "=?";
+
+        ContentValues cv = new ContentValues();
+        cv.put(MyCP.Session.unreadCount, 0);
+
+        if(chartInfos.size()!=0){
+            String lastMessage = chartInfos.get(chartInfos.size()-1).getContent();
+            cv.put(MyCP.Session.LastMessage,lastMessage);
+            cv.put(MyCP.Session.LastDate, lastDate);
+        }else {
+            cv.put(MyCP.Session.LastMessage,"可以开始聊天了～");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+            String lastDate = df.format(new Date());
+            cv.put(MyCP.Session.LastDate, lastDate);
+        }
+
+        cr.update(MyCP.Session.CONTENT_URI, cv, selections, selectionArg);
+
+
+        popToBack();
     }
 }
