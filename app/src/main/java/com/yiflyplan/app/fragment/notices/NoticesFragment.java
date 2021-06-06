@@ -262,8 +262,6 @@ public class NoticesFragment extends BaseFragment {
             @Override
             public void onMessage(String message) {
                 try {
-
-
                     JSONObject result = new JSONObject(message);
 
                     int fromUserId = result.getInt("fromUserId");
