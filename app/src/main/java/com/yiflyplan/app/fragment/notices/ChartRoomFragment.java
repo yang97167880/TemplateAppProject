@@ -104,7 +104,7 @@ public class ChartRoomFragment extends BaseFragment {
 
 
 
-//
+    //
     private WebSocketClient chatSocket;
     // 主线程Handler
     // 用于将从服务器获取的消息显示出来

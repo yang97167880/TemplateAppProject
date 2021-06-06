@@ -198,14 +198,13 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     }
 
     private void initData() {
-
-            String relationStr = MMKVUtils.getString("relationships",null);
-            try{
-                JSONArray relations = new JSONArray(relationStr);
-                relationships = ReflectUtil.convertToList(relations, OrganizationVO.class);
-            }catch (Exception e){
-                Log.e("JSONErr",e.getMessage());
-            }
+        String relationStr = MMKVUtils.getString("relationships",null);
+        try{
+            JSONArray relations = new JSONArray(relationStr);
+            relationships = ReflectUtil.convertToList(relations, OrganizationVO.class);
+        }catch (Exception e){
+            Log.e("JSONErr",e.getMessage());
+        }
         mMenuTitles = ResUtils.getStringArray(R.array.menu_titles);
         mMenuIcons = ResUtils.getDrawableArray(this, R.array.menu_icons);
     }
@@ -305,13 +304,13 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 if (isMenuOpened) {
                     if (!GuideCaseView.isShowOnce(MainActivity.this, getString(R.string.guide_key_sliding_root_navigation))) {
                         final GuideCaseView guideStep1 = new GuideCaseView.Builder(MainActivity.this)
-                                .title("点击进入，切换账号")
+                                .title("点击进入，可切换主题样式哦～～")
                                 .titleSize(18, TypedValue.COMPLEX_UNIT_SP)
                                 .focusOn(ivSetting)
                                 .build();
 
                         final GuideCaseView guideStep2 = new GuideCaseView.Builder(MainActivity.this)
-                                .title("点击进入，查看自己的二维码")
+                                .title("点击进入，扫码关注哦～～")
                                 .titleSize(18, TypedValue.COMPLEX_UNIT_SP)
                                 .focusOn(ivQrcode)
                                 .build();
@@ -346,7 +345,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 
             case R.id.organization_change:
                 showBottomSheetListDialog();
-                        break;
+                break;
             default:
                 break;
         }
@@ -630,8 +629,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 int organizationId = relationships.get(position).getOrganizationId();
                 toolbar.setTitle(organizationName);
 
-               // componentsFragment.setArguments(organizationBundle);
-               // inputFragment.setArguments(organizationBundle);
+                // componentsFragment.setArguments(organizationBundle);
+                // inputFragment.setArguments(organizationBundle);
                 XToastUtils.success("切换成功！");
                 TextView Name = findViewById(R.id.tv_organization);
                 Name.setText(organizationName);
@@ -655,4 +654,3 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 
     }
 }
-
