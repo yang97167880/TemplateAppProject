@@ -19,22 +19,24 @@ package com.yiflyplan.app.fragment;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 
+import androidx.core.content.FileProvider;
+
+import com.xuexiang.xutil.tip.ToastUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.core.webview.AgentWebActivity;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.widget.grouplist.XUIGroupListView;
-import com.xuexiang.xutil.app.AppUtils;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.VersionUtils;
 import com.yiflyplan.app.utils.XToastUtils;
@@ -42,8 +44,6 @@ import com.yiflyplan.app.utils.XToastUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -51,6 +51,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -65,6 +66,9 @@ import static java.sql.DriverManager.getConnection;
  */
 @Page(name = "关于")
 public class AboutFragment extends BaseFragment {
+    private static final String APK_SUFFIX = ".apk";
+    private static final String SAVE_DIR = "yiflyplan";
+    private static final String ACCESS_DIR_PREFIX = "file";
 
     @BindView(R.id.tv_version)
     TextView mVersionTextView;
@@ -112,23 +116,16 @@ public class AboutFragment extends BaseFragment {
                 .addItemView(mAboutGroupListView.createItemView(getResources().getString(R.string.about_item_homepage)), v -> AgentWebActivity.goWeb(getContext(), getString(R.string.url_project)))
                 .addTo(mAboutGroupListView);
         XUIGroupListView.newSection(getContext())
-                .addItemView(mAboutGroupListView.createItemView(getResources().getString(R.string.about_item_update)), v -> {new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Looper.prepare();
-                        if(newVersion.equals(VersionUtils.Version)){
-                            XToastUtils.success("已是最新版本");
-                        }else{
-                            if(download()){
-                                XToastUtils.success("已是最新版本");
-                            }else{
-                                XToastUtils.success("更新成功");
-                            }
+                .addItemView(mAboutGroupListView.createItemView(getResources().getString(R.string.about_item_update)), v -> {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Looper.prepare();
+                            download();
+                            Looper.loop();
                         }
-
-                        Looper.loop();
-                    }
-                }).start();})
+                    }).start();
+                })
                 .addTo(mAboutGroupListView);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy", Locale.CHINA);
@@ -136,52 +133,82 @@ public class AboutFragment extends BaseFragment {
         mCopyrightTextView.setText(String.format(getResources().getString(R.string.about_copyright), currentYear));
     }
 
-    private boolean download() {
-        try{
-            Thread.sleep(1000);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    private void download() {
+        OutputStream os = null;
+        InputStream is = null;
         try {
+            Thread.sleep(1000);
+            if (!isGrantExternalRW(this.getActivity())) {
+                XToastUtils.success("您当前已经是最新版本的应用");
+                return;
+            }
+
+            //获取存储位置路径
+            String externalStorageDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+            //拼装app专属存储目录路径
+            String storagePath = String.format("%s%s%s%s%s", externalStorageDir, File.separator, ACCESS_DIR_PREFIX, File.separator, SAVE_DIR);
+            //拼接下载后的全限定文件名
+            long timestamp = System.currentTimeMillis();
+            String appFileAbsolutePath = String.format("%s%s%s", storagePath, timestamp, APK_SUFFIX);
+            File appFile = new File(appFileAbsolutePath);
+            if (!appFile.getParentFile().exists()) {
+                boolean mkdirs = appFile.getParentFile().mkdirs();
+                if (mkdirs) {
+                    Log.e("AboutFragment", "创建文件夹成功");
+                } else {
+                    Log.e("AboutFragment", "创建文件夹失败");
+                    XToastUtils.error("下载安装包失败");
+                    return;
+                }
+            }
+            XToastUtils.info("正在下载...");
             URL url = new URL(appUrl);
             //打开连接
             URLConnection conn = url.openConnection();
             //打开输入流
-            InputStream is = conn.getInputStream();
+            is = conn.getInputStream();
             //获得长度
             int contentLength = conn.getContentLength();
             Log.e("", "文件长度 = " + contentLength);
-            //创建文件夹 MyDownLoad，在存储卡下
-            String dirName = Environment.getExternalStorageDirectory() + "/";
-            //下载后的文件名
-            String fileName = dirName + VersionUtils.Version;
-            File updateFile = new File(fileName);
-            if (updateFile.exists()) {
-                Log.e("已更新", "文件已经存在！");
-                updateFile.delete();
-            }
             //创建字节流
             byte[] bs = new byte[1024];
             int len;
-            if(!isGrantExternalRW(this.getActivity())){
-                return false;
-            }
-            updateFile.createNewFile();
-            OutputStream os = new FileOutputStream(fileName);
+
+            os = new FileOutputStream(appFileAbsolutePath);
             //写数据
             while ((len = is.read(bs)) != -1) {
                 os.write(bs, 0, len);
             }
             //完成后关闭流
-            Log.e("未更新", "下载成功！");
+            Log.e("AboutFragment", "下载成功！");
+            XToastUtils.success("下载完成！正在准备安装...");
             os.close();
             is.close();
 
+            //拉起App安装
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            Uri uri = FileProvider.getUriForFile(getContext(), "com.yiflyplan.app.provider", appFile);
+            intent.setDataAndType(uri, "application/vnd.android.package-archive");
+            startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        } finally {
 
-        return false;
+            try {
+                if (os != null) {
+                    os.close();
+                }
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     //动态申请权限
