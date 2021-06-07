@@ -112,11 +112,6 @@ public class AboutFragment extends BaseFragment {
 
             }
         });
-        try {
-            Thread.sleep(1000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         XUIGroupListView.newSection(getContext())
                 .addItemView(mAboutGroupListView.createItemView(getResources().getString(R.string.about_item_homepage)), v -> AgentWebActivity.goWeb(getContext(), getString(R.string.url_project)))
                 .addTo(mAboutGroupListView);
@@ -142,6 +137,7 @@ public class AboutFragment extends BaseFragment {
         OutputStream os = null;
         InputStream is = null;
         try {
+            Thread.sleep(1000);
             if (!isGrantExternalRW(this.getActivity())) {
                 XToastUtils.success("您当前已经是最新版本的应用");
                 return;
