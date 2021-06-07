@@ -229,9 +229,9 @@ public class InputFragment extends BaseFragment {
     private void startBlueTooth() {
        // Bundle bundle = getArguments();
         //OrganizationVO organizationVO = (OrganizationVO) bundle.getSerializable("organization");
-        Map<String, Object> bundle= MapDataCache.getCacheMap();
-        OrganizationVO organizationVO = (OrganizationVO)bundle.get("organization");
-        openNewPage(SearchFragment.class,"organization",organizationVO);
+//        Map<String, Object> bundle= MapDataCache.getCacheMap();
+//        OrganizationVO organizationVO = (OrganizationVO)bundle.get("organization");
+        openNewPage(SearchFragment.class);
     }
 
     @Override

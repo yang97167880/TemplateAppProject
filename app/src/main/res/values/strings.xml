@@ -31,6 +31,7 @@
 
     <string name="about_copyright">© %1$s gs-plant All rights reserved.</string>
     <string name="about_item_homepage">访问官网</string>
+    <string name="about_item_update">版本更新</string>
 <!--    <string name="about_item_author_github">关于作者</string>-->
 <!--    <string name="about_item_donation_link">捐赠作者</string>-->
 <!--    <string name="about_item_add_qq_group">QQ交流群</string>-->
@@ -43,6 +44,8 @@
     <string name="lab_no">否</string>
     <string name="lab_open_third_app">是否允许页面打开第三方应用?</string>
 
+    <string name="update_agree">立即更新</string>
+    <string name="update_disagree">不更新</string>
     <!-- 隐私政策弹窗   -->
     <string name="lab_exit_app">退出应用</string>
     <string name="lab_agree">同意</string>

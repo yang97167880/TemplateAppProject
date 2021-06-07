@@ -107,10 +107,7 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
                     openNewPage(OrganizationUser.class,"id",organizationId);
                     break;
                 case "个人仓库":
-                    PersonalWareHouseBundle personalWareHouseBundle=new PersonalWareHouseBundle();
-                    personalWareHouseBundle.setOrganizationId(organizationId);
-                    MapDataCache.putCache("personalWareHouseBundle",personalWareHouseBundle);
-                    openNewPage(PersonalWarehouse.class);
+                    openNewPage(PersonalWarehouse.class,"id",organizationId);
                     break;
                 case "审核申请":
                     openNewPage(Examine.class,"id",organizationId);

@@ -17,7 +17,9 @@
 
 package com.yiflyplan.app.activity;
 
+import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -25,6 +27,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.InputType;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -52,6 +56,7 @@ import com.xuexiang.xui.adapter.FragmentAdapter;
 import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.utils.ThemeUtils;
 import com.xuexiang.xui.widget.dialog.DialogLoader;
+import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xui.widget.guidview.GuideCaseQueue;
 import com.xuexiang.xui.widget.guidview.GuideCaseView;
@@ -84,6 +89,7 @@ import com.yiflyplan.app.fragment.AboutFragment;
 import com.yiflyplan.app.fragment.QRCodeFragment;
 import com.yiflyplan.app.fragment.SettingsFragment;
 import com.yiflyplan.app.fragment.input.InputFragment;
+import com.yiflyplan.app.fragment.notices.ChartRoomFragment;
 import com.yiflyplan.app.fragment.notices.NoticesFragment;
 import com.yiflyplan.app.fragment.organization.SearchOrganizationFragment;
 import com.yiflyplan.app.fragment.organization.components.ApplyFormFragment;
@@ -93,6 +99,8 @@ import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
+import com.yiflyplan.app.utils.Utils;
+import com.yiflyplan.app.utils.VersionUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 import com.yiflyplan.app.widget.GuideTipsDialog;
 
@@ -171,6 +179,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         //organization
         organizationName = MMKVUtils.getString("organizationName",null);
 
+        isUpdate(this);
 
         MobclickAgent.onProfileSignIn(DeviceUtils.getAndroidID());
 
@@ -198,27 +207,12 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     }
 
     private void initData() {
-        if(relationships == null){
-            relationships = (List<OrganizationVO>) MapDataCache.getCache("relationships",null);
-//            LinkedHashMap<String, String> params = new LinkedHashMap<>();
-//            params.put("pageNo","1");
-//            params.put("pageSize","20");
-//            MyHttp.get("/organization/getOrganizationCreateByUser", TokenUtils.getToken(), params, new MyHttp.Callback() {
-//
-//                @Override
-//                public void success(JSONObject data) throws JSONException {
-//
-//                    JSONArray organizations = new JSONArray(data.getString("list"));
-//                    Log.e("rea",data.toString());
-//                    relationships  = ReflectUtil.convertToList(organizations, OrganizationVO.class);
-//
-//                }
-//
-//                @Override
-//                public void fail(JSONObject error) throws JSONException {
-//
-//                }
-//            });
+        String relationStr = MMKVUtils.getString("relationships",null);
+        try{
+            JSONArray relations = new JSONArray(relationStr);
+            relationships = ReflectUtil.convertToList(relations, OrganizationVO.class);
+        }catch (Exception e){
+            Log.e("JSONErr",e.getMessage());
         }
         mMenuTitles = ResUtils.getStringArray(R.array.menu_titles);
         mMenuIcons = ResUtils.getDrawableArray(this, R.array.menu_icons);
@@ -237,10 +231,6 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 openMenu();
             }
         });
-//        componentsFragment = new ComponentsFragment();
-//        inputFragment = new InputFragment();
-//        componentsFragment.setArguments(organizationBundle);
-//        inputFragment.setArguments(organizationBundle);
 
         //主页内容填充
         BaseFragment[] fragments = new BaseFragment[]{
@@ -351,16 +341,16 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.action_privacy:
-//                //Utils.showPrivacyDialog(this, null);
-//                break;
+            case R.id.action_update:
+                showUpdateDialog(this, null);
+                break;
             case R.id.organization_add:
                 openNewPage(SearchOrganizationFragment.class);
                 break;
 
             case R.id.organization_change:
                 showBottomSheetListDialog();
-                        break;
+                break;
             default:
                 break;
         }
@@ -644,8 +634,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 int organizationId = relationships.get(position).getOrganizationId();
                 toolbar.setTitle(organizationName);
 
-               // componentsFragment.setArguments(organizationBundle);
-               // inputFragment.setArguments(organizationBundle);
+                // componentsFragment.setArguments(organizationBundle);
+                // inputFragment.setArguments(organizationBundle);
                 XToastUtils.success("切换成功！");
                 TextView Name = findViewById(R.id.tv_organization);
                 Name.setText(organizationName);
@@ -668,5 +658,58 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         super.onDestroy();
 
     }
-}
 
+    public void isUpdate(Context context){
+        MyHttp.getDownload("/system/getNewestAppVersion", TokenUtils.getToken(), new MyHttp.Callback() {
+            @Override
+            public void success(JSONObject data) throws JSONException {
+               if(!VersionUtils.Version.equals(data.getString("data"))){
+                   showUpdateDialog(context,null);
+               }
+            }
+
+            @Override
+            public void fail(JSONObject error) throws JSONException {
+
+            }
+        });
+    }
+    /**
+     * 显示更新的提示
+     *
+     * @param context
+     * @param submitListener 同意的监听
+     * @return
+     */
+    public Dialog showUpdateDialog(Context context, MaterialDialog.SingleButtonCallback submitListener) {
+        MaterialDialog dialog = new MaterialDialog.Builder(context).title(R.string.title_reminder).autoDismiss(false).cancelable(false)
+                .positiveText(R.string.update_agree).onPositive((dialog1, which) -> {
+                    if (submitListener != null) {
+                        submitListener.onClick(dialog1, which);
+                    } else {
+                        dialog1.dismiss();
+                        openNewPage(AboutFragment.class);
+                    }
+                })
+                .negativeText(R.string.update_disagree).onNegative(new MaterialDialog.SingleButtonCallback() {
+
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                }).build();
+        dialog.setContent(getUpdateContent(context));
+        //开始响应点击事件
+        dialog.getContentView().setMovementMethod(LinkMovementMethod.getInstance());
+        dialog.show();
+        return dialog;
+    }
+    /**
+     * @return 更新说明
+     */
+    private static SpannableStringBuilder getUpdateContent(Context context) {
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder()
+                .append("    检测到最新版本，是否更新？\n");
+        return stringBuilder;
+    }
+}

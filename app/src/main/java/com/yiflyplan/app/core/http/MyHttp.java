@@ -244,6 +244,91 @@ public final class MyHttp {
 
     // 参数为：请求方式、请求路径（前面默认添加API）、请求参数列表、返回结果回调接口
     // 请求参数列表使用LinkedHashMap，确保添加顺序和读取顺序一致
+    private static void requestString(int method, final String url, final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
+        //JSONObject请求不支持Map传递参数列表，需要自行构造请求参数对象，如果没有参数，则为null
+        JSONObject jsonRequest = (params == null || params.isEmpty()) ? null : new JSONObject(params);
+        //生成请求对象
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                method,//请求方式，GET、POST
+                API + url,//请求url
+                jsonRequest,//请求参数列表
+                new Response.Listener<JSONObject>() {
+                    // 成功返回
+                    @Override
+                    public void onResponse(JSONObject response) {// 获得后端返回的json数据，包括status和data两部分
+                        try {
+                            // 业务处理成功，success字段值为success
+                            Log.e("res",response.toString());
+                            if (SUCCESS.equals(response.getString(Message))) {
+                                if(response.getString(DATA).equals(TOKEN_TIMEOUT)){
+                                    callback.success(response);
+                                }else if(response.getString(DATA).equals(HAS_TOKEN)){
+                                    callback.success(response);
+                                }
+                                else{
+                                    callback.success(response);
+                                }
+                            } else {// 业务处理中产生的异常
+                                Log.e("TAG", response.getString(Message));
+                                XToastUtils.error(response.getString(Message));
+                                callback.fail(response);
+                            }
+                        } catch (JSONException e) {
+                            XToastUtils.error(e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                // 请求过程的出错处理
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("TAGERR", error.getMessage(), error);
+                        try {
+                            JSONObject err = new JSONObject("{err:" + error.getMessage() + "}");
+                            callback.fail(err);
+                        } catch (Exception e) {
+                            Log.e("Ex:", e.getMessage());
+                        }
+                        XToastUtils.error("请求失败！请检查网络问题。");
+                    }
+                }) {
+            // 对返回的数据的编码格式进行处理
+            // 本身返回的是字符串，由于返回处理函数参数为JSONObject，需要进行转换
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                try {
+                    //获取字符串信息
+                    String jsonString = new String(response.data, StandardCharsets.UTF_8);
+                    //后端不返回数据时，返回数据中的data值为null，但是JSONObject不能自动生成空对象，所以需要转换
+                    jsonString = jsonString.replace("\"data\":null", "\"data\":{}");
+                    //返回由字符串生成的JSONObject
+                    return Response.success(new JSONObject(jsonString), HttpHeaderParser.parseCacheHeaders(response));
+                } catch (Exception e) {
+                    return Response.error(new ParseError(e));
+                }
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                LinkedHashMap<String, String> headers = new LinkedHashMap<>();
+                headers.put("Charset", "UTF-8");
+                headers.put("Content-Type", "application/json;charset=utf-8");
+                headers.put("Accept-Encoding", "gzip,deflate");
+                headers.put("Authorization", token);
+                return headers;
+            }
+
+        };
+        // 超时设置,10秒超时，失败后不重试
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 0, 1.0f));
+        //将请求放入请求队列等待发送
+        mQueue.add(jsonObjectRequest);
+    }
+
+    // 参数为：请求方式、请求路径（前面默认添加API）、请求参数列表、返回结果回调接口
+    // 请求参数列表使用LinkedHashMap，确保添加顺序和读取顺序一致
     private static void requestJsonByForm(int method, final String url, final String token, final LinkedHashMap<String, ?> params, final Callback callback) {
         //JSONObject请求不支持Map传递参数列表，需要自行构造请求参数对象，如果没有参数，则为null
         JSONObject jsonRequest = (params == null || params.isEmpty()) ? null : new JSONObject(params);
@@ -441,6 +526,11 @@ public final class MyHttp {
     // 使用GET模式获得后端返回数据，不传参给后端（查询数据）
     public static void getWithoutParams(final String url, final String token, final Callback callback) {
         requestJson(Request.Method.GET, url, token, null, callback);
+    }
+
+    // 使用GET模式获得后端返回数据，不传参给后端（查询数据）
+    public static void getDownload(final String url, final String token, final Callback callback) {
+        requestString(Request.Method.GET, url, token, null, callback);
     }
 
     // 使用GET模式传参给后端，并获得后端返回数据（查询数据）

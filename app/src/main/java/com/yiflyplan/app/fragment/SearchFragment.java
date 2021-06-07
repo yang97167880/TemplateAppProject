@@ -38,6 +38,7 @@ import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.blueTooth.BlueToothFragment;
+import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
@@ -67,7 +68,8 @@ public class SearchFragment extends BaseFragment {
     @BindView(R.id.organization)
     TextView organizationView;
 
-    OrganizationVO organizationVO;
+   String organizationName;
+   String organizationId;
     UploadData uploadData;
 
     String[] departments;
@@ -96,13 +98,13 @@ public class SearchFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
-        Bundle bundle = getArguments();
-        organizationVO = (OrganizationVO) bundle.getSerializable("organization");
-        organizationView.setText(organizationVO.getOrganizationName());
+        organizationName = MMKVUtils.getString("organizationName",null);
+        organizationId = MMKVUtils.getString("organizationId",null);
+        organizationView.setText(organizationName);
 
         uploadData = new UploadData();
-        uploadData.setOrganizationId(String.valueOf(organizationVO.getOrganizationId()));
-        uploadData.setOrganizationName(organizationVO.getOrganizationName());
+        uploadData.setOrganizationId(String.valueOf(organizationId));
+        uploadData.setOrganizationName(organizationName);
 
         mSearchView.setVoiceSearch(false);
         mSearchView.setEllipsize(true);

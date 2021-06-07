@@ -17,7 +17,12 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    <item
+        android:id="@+id/action_update"
+        android:icon="@drawable/ic_menu_privacy"
+        android:orderInCategory="100"
+        android:title="版本更新"
+        app:showAsAction="always" />
     <item
         android:id="@+id/organization_change"
         android:orderInCategory="100"
