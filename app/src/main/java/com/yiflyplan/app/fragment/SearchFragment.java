@@ -69,7 +69,7 @@ public class SearchFragment extends BaseFragment {
     TextView organizationView;
 
    String organizationName;
-   String organizationId;
+   int organizationId;
     UploadData uploadData;
 
     String[] departments;
@@ -99,11 +99,11 @@ public class SearchFragment extends BaseFragment {
     @Override
     protected void initViews() {
         organizationName = MMKVUtils.getString("organizationName",null);
-        organizationId = MMKVUtils.getString("organizationId",null);
+        organizationId = MMKVUtils.getInt("organizationId",0);
         organizationView.setText(organizationName);
 
         uploadData = new UploadData();
-        uploadData.setOrganizationId(String.valueOf(organizationId));
+        uploadData.setOrganizationId( String.valueOf(organizationId ));
         uploadData.setOrganizationName(organizationName);
 
         mSearchView.setVoiceSearch(false);
@@ -120,6 +120,7 @@ public class SearchFragment extends BaseFragment {
                 if(uploadData.getDepartmentId() == null){
                     XToastUtils.error("暂无该科室！");
                 }else{
+
                     SnackbarUtils.Short(mSearchView, "选择设置了科室：" + query).show();
                     uploadData.setDepartmentName(query);
                     departmentView.setText(query);
