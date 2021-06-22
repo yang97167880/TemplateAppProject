@@ -147,6 +147,7 @@ public class LoginFragment extends BaseFragment {
                                 MMKVUtils.put("relationships",data.getString("relationships"));
                                 //用户初始化
                                 onLoginSuccess(userVO, data.getString("token"));
+
                             }
 
                             @Override
