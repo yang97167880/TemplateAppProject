@@ -74,9 +74,16 @@ public class PersonalWarehouse extends BaseFragment {
     private int pageNo = 1;
     private int pageSize = 5;
     private List<ProductVO> productVOS = new ArrayList<>();
+    private int id;
+    private PersonalWareHouseBundle personalWareHouseBundle;
 
     @Override
     protected void initViews() {
+        Bundle build = getArguments();
+        id = build.getInt("id");
+        personalWareHouseBundle = (PersonalWareHouseBundle) build.getSerializable("personalWareHouseBundle");
+
+
         VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager(Objects.requireNonNull(getContext()));
         recyclerView.setLayoutManager(virtualLayoutManager);
         RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
@@ -179,8 +186,12 @@ public class PersonalWarehouse extends BaseFragment {
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
                 if (pageNo == 1) {
-                    PersonalWareHouseBundle personalWareHouseBundle = (PersonalWareHouseBundle) MapDataCache.getCache("personalWareHouseBundle",null);
-                    apiLoadMoreProduct(String.valueOf(personalWareHouseBundle.getOrganizationId()),String.valueOf(personalWareHouseBundle.getUserId()));
+                    if(personalWareHouseBundle == null){
+                        apiLoadMoreProduct(String.valueOf(id),null);
+                    }else{
+                        apiLoadMoreProduct(String.valueOf(personalWareHouseBundle.getOrganizationId()),String.valueOf(personalWareHouseBundle.getUserId()));
+                    }
+
                 }
                 mProductAdapter.refresh(productVOS);
                 refreshLayout.finishRefresh();
@@ -190,10 +201,11 @@ public class PersonalWarehouse extends BaseFragment {
         refreshLayout.setOnLoadMoreListener(refreshLayout -> {
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
-                Bundle bundle = getArguments();
-                PersonalWareHouseBundle personalWareHouseBundle = (PersonalWareHouseBundle) bundle.get("personalWareHouseBundle");
-                apiLoadMoreProduct(String.valueOf(personalWareHouseBundle.getOrganizationId()), String.valueOf(personalWareHouseBundle.getUserId()));
-
+                if(personalWareHouseBundle == null){
+                    apiLoadMoreProduct(String.valueOf(id),null);
+                }else{
+                    apiLoadMoreProduct(String.valueOf(personalWareHouseBundle.getOrganizationId()),String.valueOf(personalWareHouseBundle.getUserId()));
+                }
                 refreshLayout.finishLoadMore();
             }, 500);
         });

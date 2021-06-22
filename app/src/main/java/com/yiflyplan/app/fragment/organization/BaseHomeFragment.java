@@ -18,13 +18,10 @@
 package com.yiflyplan.app.fragment.organization;
 
 import android.content.res.Configuration;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.xuexiang.xaop.annotation.SingleClick;
@@ -35,24 +32,19 @@ import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.activity.MainActivity;
-import com.yiflyplan.app.adapter.VO.CurrentUserVO;
-import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.adapter.WidgetItemAdapter;
-import com.yiflyplan.app.bundle.PersonalWareHouseBundle;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.fragment.organization.components.Examine;
+import com.yiflyplan.app.fragment.organization.components.OrganizationContainersFragment;
 import com.yiflyplan.app.fragment.organization.components.OrganizationUser;
-import com.yiflyplan.app.fragment.organization.components.OrganizationWarehouse;
 import com.yiflyplan.app.fragment.organization.components.PersonalWarehouse;
 import com.yiflyplan.app.fragment.organization.components.Receive;
 import com.yiflyplan.app.fragment.organization.components.Share;
 import com.yiflyplan.app.fragment.organization.components.Transfer;
 import com.yiflyplan.app.utils.MMKVUtils;
-import com.yiflyplan.app.utils.MapDataCache;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 
@@ -113,7 +105,7 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
                     openNewPage(Examine.class,"id",organizationId);
                     break;
                 case "机构仓库":
-                    openNewPage(OrganizationWarehouse.class,"id",organizationId);
+                    openNewPage(OrganizationContainersFragment.class,"id",organizationId);
                     break;
                 case "分享机构":
                     openNewPage(Share.class,"id",organizationId);

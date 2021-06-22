@@ -293,35 +293,6 @@ public class NoticesFragment extends BaseFragment {
                         e.printStackTrace();
                     }
                 }
-                try {
-                    JSONObject result = new JSONObject(message);
-
-                    int fromUserId = result.getInt("fromUserId");
-                    int toUserId = result.getInt("toUserId");
-                    checkSession(fromUserId,toUserId);
-                    String newContent = result.getString("content");
-                    String date = result.getString("sendTime");
-                    int unreadCount = result.getInt("unreadCount");
-
-
-                    String[] selectionArg = {String.valueOf(SessionId)};
-                    String selections = MyCP.Session.id + "=?";
-
-                    ContentValues cv = new ContentValues();
-                    cv.put(MyCP.Session.LastMessage, newContent);
-                    cv.put(MyCP.Session.LastDate, date);
-                    cv.put(MyCP.Session.unreadCount, unreadCount);
-                    cr.update(MyCP.Session.CONTENT_URI, cv, selections, selectionArg);
-
-
-                    Message msg = Message.obtain();
-                    msg.what = 0;
-                    mMainHandler.sendMessage(msg);
-
-                    Log.d("WEBSOCKET", result.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
 
             @Override

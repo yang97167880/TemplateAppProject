@@ -106,11 +106,10 @@ public class UserInfoFragment extends BaseFragment {
             tvUserRfid.setText(currentUserVO.getRfid());
             llWareHouse.setOnClickListener(view -> {
                 PersonalWareHouseBundle personalWareHouseBundle=new PersonalWareHouseBundle();
-                CurrentUserVO cache = (CurrentUserVO) MapDataCache.getCache(MapDataCache.Constants.LOGIN_USER, null);
-                personalWareHouseBundle.setOrganizationId(cache.getCurrentOrganization().getId());
+                int id = (int) MapDataCache.getCache("organizationId",null);
+                personalWareHouseBundle.setOrganizationId(id);
                 personalWareHouseBundle.setUserId(currentUserVO.getUserId());
-                MapDataCache.putCache("personalWareHouseBundle",personalWareHouseBundle);
-                openNewPage(PersonalWarehouse.class);
+                openNewPage(PersonalWarehouse.class,"personalWareHouseBundle",personalWareHouseBundle);
             });
 
             if (currentUserVO.getUserId() == userId){

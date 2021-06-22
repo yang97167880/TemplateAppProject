@@ -303,23 +303,6 @@ public class ChartRoomFragment extends BaseFragment {
                     }
                     Log.d("WEBSOCKET", message);
                 }
-                try {
-                    JSONObject result = new JSONObject(message);
-                    content = result.getString("content");
-
-                    chartInfos.add(new ChartInfo(currentUserVO.getUserAvatar(),content,0));
-                    insertMessage(SessionId,content,0);
-
-                    Message msg = Message.obtain();
-                    msg.what = 0;
-                    mMainHandler.sendMessage(msg);
-
-
-                    Log.d("WEBSOCKET", content);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("WEBSOCKET", message);
             }
 
             @Override

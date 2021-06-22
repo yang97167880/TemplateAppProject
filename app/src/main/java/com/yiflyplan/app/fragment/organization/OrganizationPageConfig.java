@@ -48,8 +48,8 @@ public class OrganizationPageConfig {
         mComponents.add(new PageInfo("个人仓库","com.yiflyplan.app.fragment.organization.components.OrganizationUser","{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_personal));
         mPages.add(new PageInfo("个人仓库", "com.yiflyplan.app.fragment.organization.components.PersonalWarehouse", "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_personal));
 
-        mComponents.add(new PageInfo("机构仓库","com.yiflyplan.app.fragment.organization.components.OrganizationWarehouse","{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_warehouse));
-        mPages.add(new PageInfo("机构仓库", "com.yiflyplan.app.fragment.organization.components.OrganizationWarehouse", "{\"\":\"\"}", CoreAnim.slide,  R.drawable.ic_warehouse));
+        mComponents.add(new PageInfo("机构仓库","com.yiflyplan.app.fragment.organization.components.ProductFragment","{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_warehouse));
+        mPages.add(new PageInfo("机构仓库", "com.yiflyplan.app.fragment.organization.components.ProductFragment", "{\"\":\"\"}", CoreAnim.slide,  R.drawable.ic_warehouse));
 
         mComponents.add(new PageInfo("产品转移","com.yiflyplan.app.fragment.organization.components.Transfer","{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_transfer));
         mPages.add(new PageInfo("产品转移", "com.yiflyplan.app.fragment.organization.components.Transfer", "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_transfer));

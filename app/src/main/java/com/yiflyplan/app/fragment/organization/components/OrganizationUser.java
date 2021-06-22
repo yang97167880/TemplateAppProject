@@ -48,6 +48,7 @@ import com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.UserInfoFragment;
+import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
@@ -83,6 +84,7 @@ public class OrganizationUser extends BaseFragment {
     private int pageSize = 10;
     private List<MemberVO> memberVOS = new ArrayList<>();
     private SimpleDelegateAdapter<MemberVO> mMemberAdapter;
+    private int id;
 
     @Override
     protected int getLayoutId() {
@@ -91,6 +93,9 @@ public class OrganizationUser extends BaseFragment {
 
     @Override
     protected void initViews() {
+        Bundle build = getArguments();
+        id = build.getInt("id");
+
         search.setOnClickListener(v -> {
 //            mSearchView.showSearch();
             openNewPage(SearchUser.class,"vos",memberVOS);
@@ -128,6 +133,7 @@ public class OrganizationUser extends BaseFragment {
                             @Override
                             public void success(JSONObject data) {
                                 CurrentUserVO currentUserVO = ReflectUtil.convertToObject(data, CurrentUserVO.class);
+                                MapDataCache.putCache("organizationId",id);
                                 openNewPage(UserInfoFragment.class, "currentUserVO", currentUserVO);
                             }
 
@@ -221,8 +227,6 @@ public class OrganizationUser extends BaseFragment {
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
                 if (pageNo == 1) {
-                    Bundle build = getArguments();
-                    int id = build.getInt("id");
                     apiLoadMoreMember(String.valueOf(id));
                 }
                 mMemberAdapter.refresh(memberVOS);
@@ -233,8 +237,6 @@ public class OrganizationUser extends BaseFragment {
         refreshLayout.setOnLoadMoreListener(refreshLayout -> {
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
-                Bundle build = getArguments();
-                int id = build.getInt("id");
                 apiLoadMoreMember(String.valueOf(id));
                 refreshLayout.finishLoadMore();
             }, 500);
