@@ -26,7 +26,7 @@ public class TransitBoxVO implements Serializable {
     private int transitBoxTypeId;
     private String transitBoxTypeName;
     private String transitEncoding;
-    private Number weightRatio;
+    private double weightRatio;
 
     @Override
     public String toString() {
@@ -93,7 +93,7 @@ public class TransitBoxVO implements Serializable {
         return weightRatio;
     }
 
-    public void setWeightRatio(Number weightRatio) {
+    public void setWeightRatio(double weightRatio) {
         this.weightRatio = weightRatio;
     }
 

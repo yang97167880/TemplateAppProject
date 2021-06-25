@@ -15,27 +15,56 @@
   ~
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_gravity="center_vertical">
-
-        <com.xuexiang.xui.widget.searchview.MaterialSearchView
-            android:id="@+id/search_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            />
 
         <FrameLayout
             android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/department_refreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srlEnableAutoLoadMore="true"
+                app:srlEnableLoadMore="true">
+
+
+                <com.scwang.smartrefresh.header.WaterDropHeader
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/department_recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"
+                    tools:listitem="@layout/adapter_department_item" />
+
+<!--                &lt;!&ndash;    注意修改包名时，这里也需要修改    &ndash;&gt;-->
+                <com.yiflyplan.app.widget.MaterialFooter
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+                </com.yiflyplan.app.widget.MaterialFooter>
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            <com.xuexiang.xui.widget.searchview.MaterialSearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+        </FrameLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:background="@color/white">
 
             <LinearLayout
@@ -69,21 +98,19 @@
                     android:layout_marginStart="@dimen/config_margin_10dp"
                     style="@style/TextStyle.Explain" />
             </LinearLayout>
-        </FrameLayout>
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorAccent">
 
-            <com.xuexiang.xui.widget.button.ButtonView
-                android:id="@+id/match_start"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:gravity="center"
-                android:text="开启蓝牙"
-                android:textColor="@color/white" />
-        </FrameLayout>
-    </LinearLayout>
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent">
 
-
-</FrameLayout>
+                <com.xuexiang.xui.widget.button.ButtonView
+                    android:id="@+id/match_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:text="开启蓝牙"
+                    android:textColor="@color/white" />
+            </FrameLayout>
+        </LinearLayout>
+</LinearLayout>

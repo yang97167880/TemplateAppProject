@@ -26,6 +26,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.alibaba.android.vlayout.DelegateAdapter;
+import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
+import com.google.gson.Gson;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.utils.SnackbarUtils;
@@ -34,10 +39,14 @@ import com.xuexiang.xui.widget.button.ButtonView;
 import com.xuexiang.xui.widget.searchview.MaterialSearchView;
 import com.xuexiang.xutil.tip.ToastUtils;
 import com.yiflyplan.app.R;
+import com.yiflyplan.app.adapter.VO.ContainersVO;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
+import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
+import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.blueTooth.BlueToothFragment;
+import com.yiflyplan.app.fragment.organization.components.TransitBoxFragment;
 import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
@@ -48,9 +57,18 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.OnClick;
+import me.samlss.broccoli.Broccoli;
 
 /**
  * @author admin
@@ -68,8 +86,19 @@ public class SearchFragment extends BaseFragment {
     @BindView(R.id.organization)
     TextView organizationView;
 
-   String organizationName;
-   int organizationId;
+    @BindView(R.id.department_recyclerView)
+    RecyclerView recyclerView;
+    @BindView(R.id.department_refreshLayout)
+    SmartRefreshLayout refreshLayout;
+
+    private BroccoliSimpleDelegateAdapter<String> mUploadDataAdapter;
+
+    private List<String> departmentList = new ArrayList<>();
+
+
+
+    String organizationName;
+    int organizationId;
     UploadData uploadData;
 
     String[] departments;
@@ -106,6 +135,57 @@ public class SearchFragment extends BaseFragment {
         uploadData.setOrganizationId( String.valueOf(organizationId ));
         uploadData.setOrganizationName(organizationName);
 
+
+        VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager(Objects.requireNonNull(getContext()));
+        recyclerView.setLayoutManager(virtualLayoutManager);
+        RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
+        recyclerView.setRecycledViewPool(viewPool);
+        viewPool.setMaxRecycledViews(0, 10);
+
+        mUploadDataAdapter = new BroccoliSimpleDelegateAdapter<String>(R.layout.adapter_department_item, new LinearLayoutHelper()) {
+            @Override
+            protected void onBindData(MyRecyclerViewHolder holder, String model, int position) {
+
+                if (model != null) {
+
+                    holder.bindDataToViewById(view -> {
+                        TextView organization = (TextView) view;
+                        organization.setText(organizationName);
+                    }, R.id.organization);
+
+                    holder.bindDataToViewById(view -> {
+                        TextView department = (TextView) view;
+                        department.setText(model);
+                    }, R.id.department);
+
+                    holder.click(R.id.department_view, v -> {
+                        departmentList.remove(model);
+                        departmentList.add(0,model);
+                        mUploadDataAdapter.refresh(departmentList);
+
+                        Gson gson=new Gson();
+                        String stringJson=gson.toJson(departmentList);
+                        MMKVUtils.put("department",stringJson);
+
+                        SnackbarUtils.Short(mSearchView, "选择设置了科室：" + model).show();
+                        departmentView.setText(model);
+                    });
+                }
+            }
+
+            @Override
+            protected void onBindBroccoli(MyRecyclerViewHolder holder, Broccoli broccoli) {
+                broccoli.addPlaceholders(
+                        holder.findView(R.id.department_view)
+                );
+            }
+        };
+
+        DelegateAdapter delegateAdapter = new DelegateAdapter(virtualLayoutManager);
+        delegateAdapter.addAdapter(mUploadDataAdapter);
+        recyclerView.setAdapter(delegateAdapter);
+
+
         mSearchView.setVoiceSearch(false);
         mSearchView.setEllipsize(true);
         getAllDepartment();
@@ -122,9 +202,22 @@ public class SearchFragment extends BaseFragment {
                 }else{
 
                     SnackbarUtils.Short(mSearchView, "选择设置了科室：" + query).show();
-                    uploadData.setDepartmentName(query);
                     departmentView.setText(query);
                     uploadData.setDepartmentName(query);
+
+                    if(departmentList!=null && departmentList.contains(query)){
+                        if(!departmentList.get(0).equals(query)){
+                            departmentList.remove(query);
+                            departmentList.add(0,query);
+                        }
+                    }else {
+                        departmentList.add(query);
+                    }
+                    mUploadDataAdapter.refresh(departmentList);
+
+                    Gson gson=new Gson();
+                    String stringJson=gson.toJson(departmentList);
+                    MMKVUtils.put("department",stringJson);
                 }
                 return false;
             }
@@ -148,6 +241,23 @@ public class SearchFragment extends BaseFragment {
         });
         mSearchView.setSubmitOnClick(true);
     }
+
+
+    @Override
+    protected void initListeners() {
+        //下拉刷新
+        refreshLayout.setOnRefreshListener(refreshLayout -> {
+            // TODO: 2020-02-25 网络请求
+            refreshLayout.getLayout().postDelayed(() -> {
+                getDepartmentCacheList();
+                mUploadDataAdapter.refresh(departmentList);
+                refreshLayout.finishRefresh();
+            }, 500);
+        });
+        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
+
+    }
+
 
     @Override
     public void onDestroyView() {
@@ -181,6 +291,9 @@ public class SearchFragment extends BaseFragment {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
+
 
     public static class UploadData implements Serializable {
 
@@ -240,6 +353,19 @@ public class SearchFragment extends BaseFragment {
         public void setOrganizationName(String organizationName) {
             this.organizationName = organizationName;
         }
+    }
+
+    private void getDepartmentCacheList(){
+
+        String stringJson= MMKVUtils.getString("department",null);
+        Gson gson=new Gson();
+        List<String> list =  gson.fromJson(stringJson, ArrayList.class);
+
+        departmentList.clear();
+        if(stringJson!=null){
+            departmentList.addAll(list);
+        }
+
     }
 
     private void getAllDepartment() {

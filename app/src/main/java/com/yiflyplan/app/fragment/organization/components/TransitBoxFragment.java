@@ -26,6 +26,7 @@ import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.xuexiang.xpage.annotation.Page;
+import com.xuexiang.xui.widget.progress.HorizontalProgressView;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.ContainersVO;
 import com.yiflyplan.app.adapter.VO.ProductVO;
@@ -41,6 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -57,7 +59,6 @@ public class TransitBoxFragment extends BaseFragment {
     RecyclerView recyclerView;
     @BindView(R.id.transit_box_refreshLayout)
     SmartRefreshLayout refreshLayout;
-
 
     private BroccoliSimpleDelegateAdapter<TransitBoxVO> mTransitBoxAdapter;
 
@@ -86,8 +87,6 @@ public class TransitBoxFragment extends BaseFragment {
                 if (model != null) {
 
 
-
-
                     holder.bindDataToViewById(view -> {
                         TextView tvTransitBoxTypeName = (TextView) view;
                         tvTransitBoxTypeName.setText(model.getTransitBoxTypeName());
@@ -100,9 +99,17 @@ public class TransitBoxFragment extends BaseFragment {
 
                     holder.bindDataToViewById(view -> {
                         TextView tvWeightRatio = (TextView) view;
-                        String weightRatio = String.valueOf(model.getWeightRatio())+"%";
+                        String result = String.format("%.4f", model.getWeightRatio());
+                        String weightRatio = result+"%";
                         tvWeightRatio.setText(weightRatio);
                     }, R.id.tv_weight_ratio);
+
+                    holder.bindDataToViewById(view -> {
+                        HorizontalProgressView horizontalProgressView =(HorizontalProgressView)view;
+                        String result = String.format("%.4f", model.getWeightRatio());
+                        horizontalProgressView.setProgress(Float.valueOf(result));
+//                        horizontalProgressView.setProgress(89);
+                    }, R.id.horizontal_progress_view);
 
 
                     holder.click(R.id.transit_box_view, v -> {
@@ -158,6 +165,7 @@ public class TransitBoxFragment extends BaseFragment {
         params.put("containerId", id);
         params.put("pageNo", String.valueOf(pageNo));
         params.put("pageSize", String.valueOf(pageSize));
+        params.put("status", String.valueOf(1));
         MyHttp.postJson("/container/getTransitBoxByContainerId", TokenUtils.getToken(), params, new MyHttp.Callback() {
             @Override
             public void success(JSONObject data) throws JSONException {
