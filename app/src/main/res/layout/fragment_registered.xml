@@ -164,27 +164,29 @@
 
 
         <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
-            android:id="@+id/et_verify_code"
+            android:id="@+id/et_dynamic_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
-            android:hint="@string/hint_please_input_verify_code"
-            android:inputType="text"
+            android:hint="@string/hint_please_input_dynamic_code"
+            android:inputType="number"
             app:met_clearButton="false"
-            app:met_errorMessage="@string/tip_verify_code_error"
+            app:met_errorMessage="@string/tip_dynamic_code_error"
             app:met_floatingLabel="normal"
             app:met_floatingLabelText="@string/lab_verify_code"
-            app:met_maxCharacters="4"
-            app:met_regexp="@string/regex_verify_code" />
+            app:met_maxCharacters="6"
+            app:met_regexp="@string/regex_dynamic_code" />
 
-        <ImageView
-            android:id="@+id/code_image"
-            android:layout_width="120dp"
-            android:layout_height="36dp"
+        <Button
+            android:id="@+id/btn_get_dynamic_code"
+            android:layout_width="130dp"
+            android:layout_height="34dp"
             android:layout_gravity="end|center"
             android:paddingStart="10dp"
             android:paddingTop="3dp"
             android:textSize="13sp"
+            android:text="@string/get_dynamic_code"
+            android:background="@color/xui_config_color_blue"
             android:paddingBottom="3dp" />
 
 

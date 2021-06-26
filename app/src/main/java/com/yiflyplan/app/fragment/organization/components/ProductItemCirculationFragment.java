@@ -69,6 +69,7 @@ public class ProductItemCirculationFragment extends BaseFragment {
 
     private final static String TAKEOUT = "取出";
     private final static String DEPOSIT = "存入";
+    private final static String PRODUCE = "产生";
 
     private int totalPage = 1;
     private int pageNo = 1;
@@ -118,8 +119,14 @@ public class ProductItemCirculationFragment extends BaseFragment {
 
 
 
+
                     holder.bindDataToViewById(v -> {
-                        if(model.getOperator().equals(DEPOSIT)) {
+                        if(model.getOperator().equals(DEPOSIT) || model.getOperator().equals(PRODUCE)) {
+                            holder.bindDataToViewById(view -> {
+                                TextView operator = (TextView) view;
+                                operator.setText(model.getOperator());
+                            }, R.id.tv_operator);
+
                             RelativeLayout relativeLayout = (RelativeLayout) v;
                             relativeLayout.setVisibility(View.GONE);
                         }

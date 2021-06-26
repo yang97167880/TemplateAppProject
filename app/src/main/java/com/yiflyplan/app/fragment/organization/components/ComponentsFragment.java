@@ -29,6 +29,7 @@ public class ComponentsFragment extends BaseHomeFragment {
 
     @Override
     protected List<PageInfo> getPageContents() {
+        OrganizationPageConfig organizationPageConfig = new OrganizationPageConfig();
         return OrganizationPageConfig.getInstance().getComponents();
     }
 

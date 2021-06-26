@@ -644,6 +644,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 //更新全局VO对象
                 MMKVUtils.put("organizationName",organizationName);
                 MMKVUtils.put("organizationId",organizationId);
+
+
             }
 
             @Override

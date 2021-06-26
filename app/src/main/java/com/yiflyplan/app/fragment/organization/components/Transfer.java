@@ -184,6 +184,11 @@ public class Transfer extends BaseFragment {
                         TextView code = (TextView) view;
                         code.setText(model.getItemCoding());
                     }, R.id.item_Coding);
+
+                    holder.bindDataToViewById(view -> {
+                        TextView info = (TextView) view;
+                        info.setVisibility(View.INVISIBLE);
+                    }, R.id.item_infor);
                 }
             }
 
