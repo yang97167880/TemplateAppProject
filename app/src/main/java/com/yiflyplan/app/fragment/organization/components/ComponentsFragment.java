@@ -17,6 +17,8 @@
 
 package com.yiflyplan.app.fragment.organization.components;
 
+import android.util.Log;
+
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.model.PageInfo;
 import com.yiflyplan.app.fragment.organization.BaseHomeFragment;
@@ -29,7 +31,7 @@ public class ComponentsFragment extends BaseHomeFragment {
 
     @Override
     protected List<PageInfo> getPageContents() {
-        OrganizationPageConfig organizationPageConfig = new OrganizationPageConfig();
+        Log.d("====", String.valueOf(OrganizationPageConfig.getInstance().getComponents().size()));
         return OrganizationPageConfig.getInstance().getComponents();
     }
 

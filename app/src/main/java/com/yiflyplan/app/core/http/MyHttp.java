@@ -17,6 +17,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonObject;
 import com.yiflyplan.app.MyApp;
 import com.yiflyplan.app.utils.XToastUtils;
 
@@ -178,10 +179,16 @@ public final class MyHttp {
                                     callback.success(response);
                                 }else if(response.getString(DATA).equals(HAS_TOKEN)){
                                     callback.success(response);
-                                }
-                                else{
-                                    JSONObject data = response.getJSONObject(DATA);
-                                    callback.success(data);
+                                } else{
+                                    Object responseData = response.get(DATA);
+                                    if(responseData instanceof JSONObject){
+                                        callback.success((JSONObject)responseData);
+                                    }else {
+                                        JSONObject jsonObject = new JSONObject();
+                                        jsonObject.put("list",responseData);
+                                        callback.success(jsonObject);
+                                    }
+//                                    callback.success(data);
                                 }
                             } else {// 业务处理中产生的异常
                                 Log.e("TAG", response.getString(Message));

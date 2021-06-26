@@ -24,6 +24,7 @@ import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xpage.model.PageInfo;
 import com.xuexiang.xutil.tip.ToastUtils;
 import com.yiflyplan.app.R;
+import com.yiflyplan.app.adapter.VO.ContainersVO;
 import com.yiflyplan.app.adapter.VO.MenuListVO;
 import com.yiflyplan.app.adapter.VO.ProductCirculationVO;
 import com.yiflyplan.app.core.http.MyHttp;
@@ -59,7 +60,6 @@ public class OrganizationPageConfig {
         mComponents = new ArrayList<>();
         mUtils = new ArrayList<>();
         mExpands = new ArrayList<>();
-        getMenuList();
 
         mComponents.add(new PageInfo("机构成员","com.yiflyplan.app.fragment.organization.components.OrganizationUser","{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_member));
         mPages.add(new PageInfo("机构成员", "com.yiflyplan.app.fragment.organization.components.OrganizationUser", "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_member));
@@ -70,31 +70,34 @@ public class OrganizationPageConfig {
         mComponents.add(new PageInfo("分享机构","com.yiflyplan.app.fragment.organization.components.Share","{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_share));
         mPages.add(new PageInfo("分享机构", "com.yiflyplan.app.fragment.organization.components.Share", "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_share));
 
+        getMenuList();
+        Log.d("getMenuList", String.valueOf(menuListVOS.size()));
 
-
-        for (int i=0;i< menuListVOS.size();i++){
-            switch (menuListVOS.get(i).getMenuName()){
+        for (MenuListVO menuListVO : menuListVOS){
+            Log.d("getMenuList",menuListVO.getMenuName());
+            Log.d("getMenuList",menuListVO.getMenuPath());
+            switch (menuListVO.getMenuName()){
                 case "机构仓库":
-                    mComponents.add(new PageInfo(menuListVOS.get(i).getMenuName(),menuListVOS.get(i).getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_warehouse));
-                    mPages.add(new PageInfo(menuListVOS.get(i).getMenuName(),menuListVOS.get(i).getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_warehouse));
+                    mComponents.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_warehouse));
+                    mPages.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_warehouse));
                     break;
                 case "产品转移":
-                    mComponents.add(new PageInfo(menuListVOS.get(i).getMenuName(),menuListVOS.get(i).getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_transfer));
-                    mPages.add(new PageInfo(menuListVOS.get(i).getMenuName(),menuListVOS.get(i).getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_transfer));
+                    mComponents.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_transfer));
+                    mPages.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_transfer));
                     break;
                 case "产品接收":
-                    mComponents.add(new PageInfo(menuListVOS.get(i).getMenuName(),menuListVOS.get(i).getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_receive));
-                    mPages.add(new PageInfo(menuListVOS.get(i).getMenuName(),menuListVOS.get(i).getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_receive));
+                    mComponents.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_receive));
+                    mPages.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_receive));
                     break;
                 case "审核申请":
-                    mComponents.add(new PageInfo(menuListVOS.get(i).getMenuName(),menuListVOS.get(i).getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_examine));
-                    mPages.add(new PageInfo(menuListVOS.get(i).getMenuName(),menuListVOS.get(i).getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_examine));
+                    mComponents.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_examine));
+                    mPages.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_examine));
                     break;
 
             }
-
-
         }
+
+
 
 
 
@@ -126,16 +129,17 @@ public class OrganizationPageConfig {
                 Log.d("getMenuList",data.toString());
 
 
+                JSONArray MenuList = new JSONArray(data.getString("list"));
 
-                JSONArray MenuList = new JSONArray();
 
                 List<MenuListVO> newList = new ArrayList<>();
 
                 newList = ReflectUtil.convertToList(MenuList, MenuListVO.class);
+
                 menuListVOS.clear();
                 menuListVOS.addAll(newList);
 
-                Log.d("getMenuList",menuListVOS.toString());
+                Log.d("getMenuList", String.valueOf(menuListVOS.size()));
 
             }
 
