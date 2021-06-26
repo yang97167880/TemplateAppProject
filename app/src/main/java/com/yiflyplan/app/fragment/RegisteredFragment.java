@@ -131,7 +131,7 @@ public class RegisteredFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.btn_get_dynamic_code:
                 if(etPhoneNumber.getText().toString().length() == 0){
-                    XToastUtils.warning("请先确认手机号，再点击发送");
+                    XToastUtils.error("请先确认手机号，再点击发送");
                 }else {
                     getDynamicCode(etPhoneNumber.getText().toString());
                 }
@@ -202,7 +202,7 @@ public class RegisteredFragment extends BaseFragment {
 
                                             @Override
                                             public void fail(JSONObject error) throws JSONException {
-                                                XToastUtils.warning(error.getString("message"));
+                                                XToastUtils.error(error.getString("message"));
                                             }
                                         });
                                     }

@@ -188,8 +188,6 @@
             android:text="@string/get_dynamic_code"
             android:background="@color/xui_config_color_blue"
             android:paddingBottom="3dp" />
-
-
     </FrameLayout>
         <com.xuexiang.xui.widget.textview.supertextview.SuperButton
             android:id="@+id/btn_register"

@@ -24,6 +24,8 @@ import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.RequiresApi;
@@ -36,6 +38,7 @@ import com.xuexiang.xui.utils.KeyboardUtils;
 import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.utils.ThemeUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
+import com.xuexiang.xui.widget.alpha.XUIAlphaTextView;
 import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
 import com.xuexiang.xutil.app.ActivityUtils;
 import com.yiflyplan.app.R;
@@ -48,6 +51,7 @@ import com.yiflyplan.app.utils.MD5Util;
 import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.ReflectUtil;
+import com.yiflyplan.app.utils.TimeCountUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
@@ -78,12 +82,33 @@ public class LoginFragment extends BaseFragment {
     MaterialEditText etVerifyCode;
     @BindView(R.id.code_image)
     ImageView codeImage;
+    @BindView(R.id.et_dynamic_code)
+    MaterialEditText etDynamicCode;
+    @BindView(R.id.btn_get_dynamic_code)
+    Button btnGetDynamicCode;
+
+    @BindView(R.id.fl_verify_code)
+    FrameLayout flVerifyCode;
+
+    @BindView(R.id.fl_dynamic_code)
+    FrameLayout flDynamicCode;
+
+    @BindView(R.id.fl_password)
+    FrameLayout flPassword;
+
+    @BindView(R.id.tv_other_login)
+    XUIAlphaTextView tvOtherLogin;
 
     private final String CURRENTUSER = "currentUser";
     private String savedVerificationCode;
     private Bitmap verificationCodeImage;
 //    @BindView(R.id.btn_get_verify_code)
 //    RoundButton btnGetVerifyCode;
+
+    private boolean isOtherLogin = false;
+    private static final int MILLIS_IN_FUTURE = 300;
+    private static final String MESSAGE_LOGIN = "短信登录";
+    private static final String PASSWORD_LOGIN = "账号密码登录";
 
     private CountDownButtonHelper mCountDownHelper;
 
@@ -110,7 +135,7 @@ public class LoginFragment extends BaseFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SingleClick
-    @OnClick({R.id.btn_login, R.id.tv_register, R.id.tv_other_login, R.id.tv_forget_password, R.id.tv_user_protocol, R.id.tv_privacy_protocol, R.id.et_password_number, R.id.et_verify_code, R.id.code_image})
+    @OnClick({R.id.et_dynamic_code,R.id.btn_get_dynamic_code,R.id.btn_login, R.id.tv_register, R.id.tv_other_login, R.id.tv_forget_password, R.id.tv_user_protocol, R.id.tv_privacy_protocol, R.id.et_password_number, R.id.et_verify_code, R.id.code_image})
     public void onViewClicked(View view) {
         switch (view.getId()) {
 //            case R.id.btn_get_verify_code:
@@ -118,53 +143,68 @@ public class LoginFragment extends BaseFragment {
 //                    getVerifyCode(etPhoneNumber.getEditValue());
 //                }
 //                break;
+            case R.id.btn_get_dynamic_code:
+                if(etPhoneNumber.getText().toString().length() == 0){
+                    XToastUtils.error("请先确认手机号，再点击发送");
+                }else {
+                    getDynamicCode(etPhoneNumber.getText().toString());
+                }
+                break;
+
             case R.id.code_image:
                 getVerifyCode();
                 break;
             case R.id.btn_login:
-                if (etPhoneNumber.validate()) {
-                    if (etVerifyCode.validate()) {
-                        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-                        params.put("tel", String.valueOf(etPhoneNumber.getText()));
-                        String md5psd = null;
-                        try {
-                            md5psd = MD5Util.getMD5(String.valueOf(etPasswordNumber.getText()));
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                if(!isOtherLogin){
+                    if (etPhoneNumber.validate()) {
+                        if (etVerifyCode.validate()) {
+                            LinkedHashMap<String, String> params = new LinkedHashMap<>();
+                            params.put("tel", String.valueOf(etPhoneNumber.getText()));
+                            String md5psd = null;
+                            try {
+                                md5psd = MD5Util.getMD5(String.valueOf(etPasswordNumber.getText()));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            params.put("password", md5psd);
+                            params.put("verificationCode", String.valueOf(etVerifyCode.getText()));
+                            MyHttp.postJson("/user/login", "", params, new MyHttp.Callback() {
+                                @Override
+                                public void success(JSONObject data) throws JSONException {
+                                    Log.e("JSON:", data.toString());
+                                    CurrentUserVO userVO = ReflectUtil.convertToObject(data, CurrentUserVO.class);
+                                    MMKVUtils.put("userId",userVO.getUserId());
+                                    MMKVUtils.put("userName",userVO.getUserName());
+                                    MMKVUtils.put("userAvatar",userVO.getUserAvatar());
+                                    MMKVUtils.put("organizationId",userVO.getCurrentOrganization().getOrganizationId());
+                                    MMKVUtils.put("organizationName",userVO.getCurrentOrganization().getOrganizationName());
+                                    MMKVUtils.put("relationships",data.getString("relationships"));
+                                    //用户初始化
+                                    onLoginSuccess(userVO, data.getString("token"));
+
+                                }
+
+                                @Override
+                                public void fail(JSONObject error) throws JSONException {
+                                    Log.e("TAG1:", error.toString());
+                                    if (error.getInt("code") == 40004) {
+                                        getVerifyCode();
+                                    }
+                                    if (error.getInt("code") == 20002) {
+                                        openNewPage(RegisteredFragment.class);
+                                    }
+                                }
+                            });
                         }
-                        params.put("password", md5psd);
-                        params.put("verificationCode", String.valueOf(etVerifyCode.getText()));
-                        MyHttp.postJson("/user/login", "", params, new MyHttp.Callback() {
-                            @Override
-                            public void success(JSONObject data) throws JSONException {
-                                Log.e("JSON:", data.toString());
-                                CurrentUserVO userVO = ReflectUtil.convertToObject(data, CurrentUserVO.class);
-                                MMKVUtils.put("userId",userVO.getUserId());
-                                MMKVUtils.put("userName",userVO.getUserName());
-                                MMKVUtils.put("userAvatar",userVO.getUserAvatar());
-                                MMKVUtils.put("organizationId",userVO.getCurrentOrganization().getOrganizationId());
-                                MMKVUtils.put("organizationName",userVO.getCurrentOrganization().getOrganizationName());
-                                MMKVUtils.put("relationships",data.getString("relationships"));
-                                //用户初始化
-                                onLoginSuccess(userVO, data.getString("token"));
-
-                            }
-
-                            @Override
-                            public void fail(JSONObject error) throws JSONException {
-                                Log.e("TAG1:", error.toString());
-                                if (error.getInt("code") == 40004) {
-                                    getVerifyCode();
-                                }
-                                if (error.getInt("code") == 20002) {
-                                    openNewPage(RegisteredFragment.class);
-                                }
-                            }
-                        });
+                    }else {
+                        XToastUtils.info("测试中");
                     }
+                }else {
+
                 }
                 break;
             case R.id.et_password_number:
+            case R.id.et_dynamic_code:
             case R.id.et_verify_code:
                 KeyboardUtils.isSoftInputShow(getActivity());
                 KeyboardUtils.showSoftInputForce(getActivity());
@@ -173,7 +213,22 @@ public class LoginFragment extends BaseFragment {
                 openNewPage(RegisteredFragment.class);
                 break;
             case R.id.tv_other_login:
-                XToastUtils.info("其他登录方式");
+
+                if(!isOtherLogin){
+                    XToastUtils.info(MESSAGE_LOGIN);
+                    tvOtherLogin.setText(MESSAGE_LOGIN);
+                    flVerifyCode.setVisibility(View.GONE);
+                    flPassword.setVisibility(View.GONE);
+                    flDynamicCode.setVisibility(View.VISIBLE);
+                    isOtherLogin = true;
+                }else {
+                    XToastUtils.info(PASSWORD_LOGIN);
+                    tvOtherLogin.setText(PASSWORD_LOGIN);
+                    flVerifyCode.setVisibility(View.VISIBLE);
+                    flPassword.setVisibility(View.VISIBLE);
+                    flDynamicCode.setVisibility(View.GONE);
+                    isOtherLogin = false;
+                }
                 break;
             case R.id.tv_forget_password:
                 XToastUtils.info("忘记密码");
@@ -213,6 +268,30 @@ public class LoginFragment extends BaseFragment {
         });
 
     }
+
+    /**
+     * 获取短信验证码
+     */
+    private void getDynamicCode(String tel) {
+
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("tel",tel);
+        MyHttp.get("/captcha/getLoginDynamicCode", "", params, new MyHttp.Callback() {
+            @Override
+            public void success(JSONObject data) throws JSONException {
+                XToastUtils.info("短信发送成功");
+                TimeCountUtil timeCount = new TimeCountUtil(MILLIS_IN_FUTURE * 1000, 1000,btnGetDynamicCode);
+                timeCount.start();
+            }
+
+            @Override
+            public void fail(JSONObject error) throws JSONException {
+                XToastUtils.error(error.getString("message"));
+            }
+        });
+
+    }
+
 
     /**
      * 根据验证码登录
