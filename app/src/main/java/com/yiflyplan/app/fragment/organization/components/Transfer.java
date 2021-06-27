@@ -235,11 +235,11 @@ public class Transfer extends BaseFragment {
 
     protected void apiLoadMoreProduct(String id) {
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("queryOwn", "true");
-        params.put("organizationId", id);
+//        params.put("queryOwn", "true");
+//        params.put("organizationId", id);
         params.put("pageNo", String.valueOf(pageNo));
         params.put("pageSize", String.valueOf(pageSize));
-        MyHttp.postJson("/product/getAllProduct", TokenUtils.getToken(), params, new MyHttp.Callback() {
+        MyHttp.get("/product/getTransferableProduct", TokenUtils.getToken(), params, new MyHttp.Callback() {
             @Override
             public void success(JSONObject data) throws JSONException {
                 totalPage = data.getInt("totalPage");
