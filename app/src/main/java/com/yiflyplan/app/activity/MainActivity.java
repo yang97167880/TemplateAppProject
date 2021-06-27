@@ -161,6 +161,10 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     private static final int POS_LOGOUT = 5;
     private static final String ACTION = "com.test.action";
     private CurrentUserVO userVO;
+    private BaseFragment[] fragments;
+    private FragmentAdapter<BaseFragment> adapter;
+    private InputFragment inputFragment;
+    private NoticesFragment noticesFragment;
     /*user*/
     String userName;
     String userAvatar;
@@ -169,8 +173,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 
     List<OrganizationVO> relationships;
 
+
     ComponentsFragment componentsFragment;
-    InputFragment inputFragment;
     BottomSheetDialog dialog;
 
     @Override
@@ -245,15 +249,12 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
             }
         });
 
+        inputFragment = new InputFragment();
+        noticesFragment = new NoticesFragment();
         //主页内容填充
-        BaseFragment[] fragments = new BaseFragment[]{
-                new ComponentsFragment(),
-                new InputFragment(),
-//                new ProfileFragment(),
-                new NoticesFragment(),
-        };
+        fragments = new BaseFragment[]{new ComponentsFragment(), inputFragment, noticesFragment};
 
-        FragmentAdapter<BaseFragment> adapter = new FragmentAdapter<>(getSupportFragmentManager(), fragments);
+        adapter = new FragmentAdapter<>(getSupportFragmentManager(), fragments);
         viewPager.setOffscreenPageLimit(mTitles.length - 1);
         viewPager.setAdapter(adapter);
 
@@ -658,6 +659,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 MMKVUtils.put("organizationName",organizationName);
                 MMKVUtils.put("organizationId",organizationId);
 
+                refreshMenu();
 
             }
 
@@ -728,7 +730,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         return stringBuilder;
     }
 
-    //广播接收器
+    //聊天广播接收器
     private BroadcastReceiver deviceEventReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -740,6 +742,16 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
             }
          }
     };
+
+
+
+    /**
+     * 刷新界面
+     */
+    private void refreshMenu(){
+        viewPager.setOffscreenPageLimit(mTitles.length - 1);
+        viewPager.setAdapter(adapter);
+    }
 
 
     /**
@@ -776,17 +788,18 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 
 
 
-    //注册广播
+    //注册聊天广播
     private void registerDeviceEventReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(deviceEventReceiver, intentFilter);
     }
 
-    //注销广播
+    //注销聊天广播
     private void unregisterDeviceEventReceiver() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(deviceEventReceiver);
     }
+
 
 
 

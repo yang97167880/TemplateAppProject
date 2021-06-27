@@ -17,7 +17,9 @@
 
 package com.yiflyplan.app.fragment.organization;
 
+import android.content.Context;
 import android.content.res.Configuration;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.xuexiang.xaop.annotation.SingleClick;
+import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xpage.model.PageInfo;
 import com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder;
 import com.xuexiang.xui.utils.DensityUtils;
@@ -32,8 +35,10 @@ import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.activity.MainActivity;
+import com.yiflyplan.app.adapter.VO.MenuListVO;
 import com.yiflyplan.app.adapter.WidgetItemAdapter;
 import com.yiflyplan.app.core.BaseFragment;
+import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.organization.components.Examine;
 import com.yiflyplan.app.fragment.organization.components.OrganizationContainersFragment;
 import com.yiflyplan.app.fragment.organization.components.OrganizationUser;
@@ -42,15 +47,30 @@ import com.yiflyplan.app.fragment.organization.components.Receive;
 import com.yiflyplan.app.fragment.organization.components.Share;
 import com.yiflyplan.app.fragment.organization.components.Transfer;
 import com.yiflyplan.app.utils.MMKVUtils;
+import com.yiflyplan.app.utils.ReflectUtil;
+import com.yiflyplan.app.utils.TokenUtils;
+import com.yiflyplan.app.utils.XToastUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import butterknife.BindView;
 
-public abstract class BaseHomeFragment extends BaseFragment implements RecyclerViewHolder.OnItemClickListener<PageInfo> {
+public abstract class BaseHomeFragment extends BaseFragment implements RecyclerViewHolder.OnItemClickListener<PageInfo>{
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
+
+    private List<PageInfo> mPages;
+
+    private List<PageInfo> mComponents;
+
+    private WidgetItemAdapter mWidgetItemAdapter;
 
     @Override
     protected TitleBar initTitle() { return null; }
@@ -65,13 +85,84 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
         initRecyclerView();
     }
 
-    private void initRecyclerView() {
-        WidgetUtils.initGridRecyclerView(mRecyclerView, 3, DensityUtils.dp2px(2));
-
-        WidgetItemAdapter mWidgetItemAdapter = new WidgetItemAdapter(sortPageInfo(getPageContents()));
-        mWidgetItemAdapter.setOnItemClickListener(this);
-        mRecyclerView.setAdapter(mWidgetItemAdapter);
+    private void initRecyclerView()  {
+        getMenuList(this);
     }
+
+
+    /**
+     * 获取菜单项
+     */
+    private void getMenuList(RecyclerViewHolder.OnItemClickListener<PageInfo> OnItemClickListener) {
+
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        MyHttp.get("/route/getMenuListByOrganization", TokenUtils.getToken(), params, new MyHttp.Callback() {
+            @Override
+            public void success(JSONObject data) throws JSONException {
+
+                mPages = new ArrayList<>();
+                mComponents = new ArrayList<>();
+
+
+
+                mComponents.add(new PageInfo("机构成员","com.yiflyplan.app.fragment.organization.components.OrganizationUser","{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_member));
+                mPages.add(new PageInfo("机构成员", "com.yiflyplan.app.fragment.organization.components.OrganizationUser", "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_member));
+
+                mComponents.add(new PageInfo("个人仓库","com.yiflyplan.app.fragment.organization.components.PersonalWarehouse","{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_personal));
+                mPages.add(new PageInfo("个人仓库", "com.yiflyplan.app.fragment.organization.components.PersonalWarehouse", "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_personal));
+
+                mComponents.add(new PageInfo("分享机构","com.yiflyplan.app.fragment.organization.components.Share","{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_share));
+                mPages.add(new PageInfo("分享机构", "com.yiflyplan.app.fragment.organization.components.Share", "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_share));
+
+
+
+
+                JSONArray MenuList = new JSONArray(data.getString("list"));
+
+                List<MenuListVO> newList = new ArrayList<>();
+
+                newList = ReflectUtil.convertToList(MenuList, MenuListVO.class);
+
+//                menuListVOS.clear();
+//                menuListVOS.addAll(newList);
+
+                for (MenuListVO menuListVO : newList){
+                    Log.d("getMenuList",menuListVO.getMenuName());
+                    Log.d("getMenuList",menuListVO.getMenuPath());
+                    switch (menuListVO.getMenuName()){
+                        case "机构仓库":
+                            mComponents.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_warehouse));
+                            mPages.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_warehouse));
+                            break;
+                        case "产品转移":
+                            mComponents.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_transfer));
+                            mPages.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_transfer));
+                            break;
+                        case "产品接收":
+                            mComponents.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_receive));
+                            mPages.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_receive));
+                            break;
+                        case "审核申请":
+                            mComponents.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_examine));
+                            mPages.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_examine));
+                            break;
+                    }
+                }
+
+                WidgetUtils.initGridRecyclerView(mRecyclerView, 3, DensityUtils.dp2px(2));
+                mWidgetItemAdapter = new WidgetItemAdapter(sortPageInfo(mComponents));
+                mWidgetItemAdapter.setOnItemClickListener(OnItemClickListener);
+                mRecyclerView.setAdapter(mWidgetItemAdapter);
+            }
+
+            @Override
+            public void fail(JSONObject error) throws JSONException {
+                XToastUtils.error(error.getString("message"));
+            }
+        });
+
+    }
+
 
     /**
      * @return 页面内容

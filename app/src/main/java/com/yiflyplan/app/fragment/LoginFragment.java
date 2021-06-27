@@ -44,18 +44,15 @@ import com.xuexiang.xutil.app.ActivityUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.activity.MainActivity;
 import com.yiflyplan.app.adapter.VO.CurrentUserVO;
-import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.utils.MD5Util;
 import com.yiflyplan.app.utils.MMKVUtils;
-import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TimeCountUtil;
 import com.yiflyplan.app.utils.TokenUtils;
 import com.yiflyplan.app.utils.XToastUtils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -102,10 +99,9 @@ public class LoginFragment extends BaseFragment {
     private final String CURRENTUSER = "currentUser";
     private String savedVerificationCode;
     private Bitmap verificationCodeImage;
-//    @BindView(R.id.btn_get_verify_code)
-//    RoundButton btnGetVerifyCode;
 
-    private boolean isOtherLogin = false;
+
+    private boolean isMessageLogin = false;
     private static final int MILLIS_IN_FUTURE = 300;
     private static final String MESSAGE_LOGIN = "短信登录";
     private static final String PASSWORD_LOGIN = "账号密码登录";
@@ -138,11 +134,6 @@ public class LoginFragment extends BaseFragment {
     @OnClick({R.id.et_dynamic_code,R.id.btn_get_dynamic_code,R.id.btn_login, R.id.tv_register, R.id.tv_other_login, R.id.tv_forget_password, R.id.tv_user_protocol, R.id.tv_privacy_protocol, R.id.et_password_number, R.id.et_verify_code, R.id.code_image})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-//            case R.id.btn_get_verify_code:
-//                if (etPhoneNumber.validate()) {
-//                    getVerifyCode(etPhoneNumber.getEditValue());
-//                }
-//                break;
             case R.id.btn_get_dynamic_code:
                 if(etPhoneNumber.getText().toString().length() == 0){
                     XToastUtils.error("请先确认手机号，再点击发送");
@@ -155,53 +146,18 @@ public class LoginFragment extends BaseFragment {
                 getVerifyCode();
                 break;
             case R.id.btn_login:
-                if(!isOtherLogin){
                     if (etPhoneNumber.validate()) {
-                        if (etVerifyCode.validate()) {
-                            LinkedHashMap<String, String> params = new LinkedHashMap<>();
-                            params.put("tel", String.valueOf(etPhoneNumber.getText()));
-                            String md5psd = null;
-                            try {
-                                md5psd = MD5Util.getMD5(String.valueOf(etPasswordNumber.getText()));
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                        if(!isMessageLogin){
+                            if (etVerifyCode.validate()) {
+                                passwordLogin();
                             }
-                            params.put("password", md5psd);
-                            params.put("verificationCode", String.valueOf(etVerifyCode.getText()));
-                            MyHttp.postJson("/user/login", "", params, new MyHttp.Callback() {
-                                @Override
-                                public void success(JSONObject data) throws JSONException {
-                                    Log.e("JSON:", data.toString());
-                                    CurrentUserVO userVO = ReflectUtil.convertToObject(data, CurrentUserVO.class);
-                                    MMKVUtils.put("userId",userVO.getUserId());
-                                    MMKVUtils.put("userName",userVO.getUserName());
-                                    MMKVUtils.put("userAvatar",userVO.getUserAvatar());
-                                    MMKVUtils.put("organizationId",userVO.getCurrentOrganization().getOrganizationId());
-                                    MMKVUtils.put("organizationName",userVO.getCurrentOrganization().getOrganizationName());
-                                    MMKVUtils.put("relationships",data.getString("relationships"));
-                                    //用户初始化
-                                    onLoginSuccess(userVO, data.getString("token"));
-
-                                }
-
-                                @Override
-                                public void fail(JSONObject error) throws JSONException {
-                                    Log.e("TAG1:", error.toString());
-                                    if (error.getInt("code") == 40004) {
-                                        getVerifyCode();
-                                    }
-                                    if (error.getInt("code") == 20002) {
-                                        openNewPage(RegisteredFragment.class);
-                                    }
-                                }
-                            });
+                        }else {
+                            if (etDynamicCode.validate()) {
+                                messageLogin();
+                            }
                         }
-                    }else {
-                        XToastUtils.info("测试中");
                     }
-                }else {
 
-                }
                 break;
             case R.id.et_password_number:
             case R.id.et_dynamic_code:
@@ -214,20 +170,20 @@ public class LoginFragment extends BaseFragment {
                 break;
             case R.id.tv_other_login:
 
-                if(!isOtherLogin){
+                if(!isMessageLogin){
                     XToastUtils.info(MESSAGE_LOGIN);
                     tvOtherLogin.setText(MESSAGE_LOGIN);
                     flVerifyCode.setVisibility(View.GONE);
                     flPassword.setVisibility(View.GONE);
                     flDynamicCode.setVisibility(View.VISIBLE);
-                    isOtherLogin = true;
+                    isMessageLogin = true;
                 }else {
                     XToastUtils.info(PASSWORD_LOGIN);
                     tvOtherLogin.setText(PASSWORD_LOGIN);
                     flVerifyCode.setVisibility(View.VISIBLE);
                     flPassword.setVisibility(View.VISIBLE);
                     flDynamicCode.setVisibility(View.GONE);
-                    isOtherLogin = false;
+                    isMessageLogin = false;
                 }
                 break;
             case R.id.tv_forget_password:
@@ -242,6 +198,81 @@ public class LoginFragment extends BaseFragment {
             default:
                 break;
         }
+    }
+
+    /**
+     * 密码登录
+     */
+    private void messageLogin(){
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("tel", String.valueOf(etPhoneNumber.getText()));
+        params.put("dynamicCode", String.valueOf(etDynamicCode.getText()));
+        MyHttp.postJson("/user/dynamicLogin", "", params, new MyHttp.Callback() {
+            @Override
+            public void success(JSONObject data) throws JSONException {
+                initUserData(data);
+            }
+
+            @Override
+            public void fail(JSONObject error) throws JSONException {
+                Log.e("TAG1:", error.toString());
+                if (error.getInt("code") == 20002) {
+                    openNewPage(RegisteredFragment.class);
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 密码登录
+     */
+    private void passwordLogin(){
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("tel", String.valueOf(etPhoneNumber.getText()));
+        String md5psd = null;
+        try {
+            md5psd = MD5Util.getMD5(String.valueOf(etPasswordNumber.getText()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        params.put("password", md5psd);
+        params.put("verificationCode", String.valueOf(etVerifyCode.getText()));
+        MyHttp.postJson("/user/login", "", params, new MyHttp.Callback() {
+            @Override
+            public void success(JSONObject data) throws JSONException {
+                initUserData(data);
+            }
+
+            @Override
+            public void fail(JSONObject error) throws JSONException {
+                Log.e("TAG1:", error.toString());
+                if (error.getInt("code") == 40004) {
+                    getVerifyCode();
+                }
+                if (error.getInt("code") == 20002) {
+                    openNewPage(RegisteredFragment.class);
+                }
+            }
+        });
+    }
+
+    /**
+     * 初始化用户数据
+     */
+
+    private void initUserData(JSONObject data) throws JSONException {
+        Log.e("JSON:", data.toString());
+        CurrentUserVO userVO = ReflectUtil.convertToObject(data, CurrentUserVO.class);
+        MMKVUtils.put("userId",userVO.getUserId());
+        MMKVUtils.put("userName",userVO.getUserName());
+        MMKVUtils.put("userAvatar",userVO.getUserAvatar());
+        MMKVUtils.put("organizationId",userVO.getCurrentOrganization().getOrganizationId());
+        MMKVUtils.put("organizationName",userVO.getCurrentOrganization().getOrganizationName());
+        MMKVUtils.put("relationships",data.getString("relationships"));
+        //用户初始化
+        onLoginSuccess(userVO, data.getString("token"));
+
     }
 
     /**
@@ -291,18 +322,6 @@ public class LoginFragment extends BaseFragment {
         });
 
     }
-
-
-    /**
-     * 根据验证码登录
-     *
-     * @param phoneNumber 手机号
-     * @param verifyCode  验证码
-     */
-//    private void loginByVerifyCode(String phoneNumber, String verifyCode) {
-//        // TODO: 2020/8/29 这里只是界面演示而已
-//        onLoginSuccess();
-//    }
 
     /**
      * 登录成功的处理
