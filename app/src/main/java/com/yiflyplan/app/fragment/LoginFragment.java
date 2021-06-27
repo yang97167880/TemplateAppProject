@@ -169,17 +169,16 @@ public class LoginFragment extends BaseFragment {
                 openNewPage(RegisteredFragment.class);
                 break;
             case R.id.tv_other_login:
-
                 if(!isMessageLogin){
-                    XToastUtils.info(MESSAGE_LOGIN);
-                    tvOtherLogin.setText(MESSAGE_LOGIN);
+                    XToastUtils.info(PASSWORD_LOGIN);
+                    tvOtherLogin.setText(PASSWORD_LOGIN);
                     flVerifyCode.setVisibility(View.GONE);
                     flPassword.setVisibility(View.GONE);
                     flDynamicCode.setVisibility(View.VISIBLE);
                     isMessageLogin = true;
                 }else {
-                    XToastUtils.info(PASSWORD_LOGIN);
-                    tvOtherLogin.setText(PASSWORD_LOGIN);
+                    XToastUtils.info(MESSAGE_LOGIN);
+                    tvOtherLogin.setText(MESSAGE_LOGIN);
                     flVerifyCode.setVisibility(View.VISIBLE);
                     flPassword.setVisibility(View.VISIBLE);
                     flDynamicCode.setVisibility(View.GONE);

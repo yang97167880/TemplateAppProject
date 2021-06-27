@@ -89,8 +89,11 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
     @SuppressLint("SetTextI18n")
     @Override
     protected void initViews() {
-        organizationVO = (OrganizationVO) MMKVUtils.get("organization",OrganizationVO.class);
-        assert organizationVO != null;
+        Bundle bundle = getArguments();
+        organizationVO = (OrganizationVO)bundle.getSerializable("organization");
+
+//        organizationVO = (OrganizationVO) MMKVUtils.get("organization",OrganizationVO.class);
+//        assert organizationVO != null;
         organizationId = organizationVO.getId();
         RadiusImageView radiusImageView = findViewById(R.id.or_avatar);
         GlideImageLoadStrategy lodeImg = new GlideImageLoadStrategy();
