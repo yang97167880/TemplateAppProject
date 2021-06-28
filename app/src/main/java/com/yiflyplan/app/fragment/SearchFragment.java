@@ -134,7 +134,7 @@ public class SearchFragment extends BaseFragment {
         uploadData = new UploadData();
         uploadData.setOrganizationId( String.valueOf(organizationId ));
         uploadData.setOrganizationName(organizationName);
-
+        getAllDepartment();
 
         VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager(Objects.requireNonNull(getContext()));
         recyclerView.setLayoutManager(virtualLayoutManager);
@@ -169,6 +169,14 @@ public class SearchFragment extends BaseFragment {
 
                         SnackbarUtils.Short(mSearchView, "选择设置了科室：" + model).show();
                         departmentView.setText(model);
+
+                        for(int i = 0;i<departments.length;i++){
+                            if(departments[i].equals(model)){
+                                uploadData.setDepartmentId(departmentsId[i]);
+                            }
+                        }
+                        uploadData.setDepartmentName(model);
+
                     });
                 }
             }
@@ -188,7 +196,6 @@ public class SearchFragment extends BaseFragment {
 
         mSearchView.setVoiceSearch(false);
         mSearchView.setEllipsize(true);
-        getAllDepartment();
         mSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
