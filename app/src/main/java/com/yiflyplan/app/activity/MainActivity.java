@@ -233,6 +233,19 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
         }
         mMenuTitles = ResUtils.getStringArray(R.array.menu_titles);
         mMenuIcons = ResUtils.getDrawableArray(this, R.array.menu_icons);
+
+
+        Intent intent = getIntent();
+        int organizationId = intent.getIntExtra("organizationId",-1);
+        if(organizationId != -1){
+            String organizationName = intent.getStringExtra("organizationName");
+            for(int i = 0;i<relationships.size();i++){
+                if(relationships.get(i).getOrganizationName().equals(organizationName)){
+                    apiChangeOrganization(String.valueOf(organizationId),i);
+                }
+            }
+        }
+
     }
 
     private void initViews() {
@@ -622,6 +635,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                         }
                     }, R.id.or_change);
                     holder.click(R.id.or_change, view -> {
+                        dialog.dismiss();
                         apiChangeOrganization(String.valueOf(model.getOrganizationId()),position);
                     });
                 }
@@ -653,7 +667,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 XToastUtils.success("切换成功！");
                 TextView Name = findViewById(R.id.tv_organization);
                 Name.setText(organizationName);
-                dialog.dismiss();
+
 
                 //更新全局VO对象
                 MMKVUtils.put("organizationName",organizationName);
