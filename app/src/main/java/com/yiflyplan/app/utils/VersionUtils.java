@@ -21,5 +21,5 @@ package com.yiflyplan.app.utils;
  * @author admin
  */
 public class VersionUtils {
-    public static final String Version ="v0.9.3";
+    public static final String Version ="v0.9.4";
 }
