@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.umeng.commonsdk.debug.I;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
@@ -142,7 +143,10 @@ public class ApplyFormFragment extends BaseFragment implements View.OnClickListe
         switch (v.getId()) {
             case R.id.btn_apply_or:
             if (belongsTo) {
-
+                Intent intent = new Intent(getContext(),MainActivity.class);
+                intent.putExtra("organizationName",organizationVO.getOrganizationName());
+                intent.putExtra("organizationId",organizationId);
+                startActivity(intent);
             }else {
                 LinkedHashMap<String, String> params = new LinkedHashMap<>();
                 params.put("organizationId", String.valueOf(organizationId));
