@@ -31,6 +31,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.FormField;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.utils.MD5Util;
+import com.yiflyplan.app.utils.TimeCountUtil;
 import com.yiflyplan.app.utils.XToastUtils;
 
 import org.json.JSONException;
@@ -84,13 +86,12 @@ public class RegisteredFragment extends BaseFragment {
     MaterialEditText etConfirmPasswordNumber;
     @BindView(R.id.et_user_name)
     MaterialEditText etUserName;
-    @BindView(R.id.et_verify_code)
-    MaterialEditText etVerifyCode;
-    @BindView(R.id.code_image)
-    ImageView codeImage;
+    @BindView(R.id.et_dynamic_code)
+    MaterialEditText etDynamicCode;
+    @BindView(R.id.btn_get_dynamic_code)
+    Button btnGetDynamicCode;
 
-    private String savedVerificationCode;
-    private Bitmap verificationCodeImage;
+
     private Uri mImageUri;
     private File file;
 
@@ -100,7 +101,8 @@ public class RegisteredFragment extends BaseFragment {
     private static final int REQUEST_IMAGE_GET = 0;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_BIG_IMAGE_CUTTING = 3;
-    private static final String IMAGE_FILE_NAME = "icon.jpg";
+    private static final String IMAGE_FILE_NAME = String.format("file%sicon.jpg", File.separator);
+    private static final int MILLIS_IN_FUTURE = 300;
 
 
     @Override
@@ -110,7 +112,6 @@ public class RegisteredFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
-        getVerifyCode();
         disallowSpacesUtil(etUserName);
     }
 
@@ -124,11 +125,15 @@ public class RegisteredFragment extends BaseFragment {
 
     @SuppressLint("NonConstantResourceId")
     @SingleClick
-    @OnClick({R.id.btn_register, R.id.iv_avatar, R.id.et_verify_code, R.id.code_image})
+    @OnClick({R.id.btn_register, R.id.iv_avatar, R.id.et_dynamic_code, R.id.btn_get_dynamic_code})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.code_image:
-                getVerifyCode();
+            case R.id.btn_get_dynamic_code:
+                if (etPhoneNumber.getText().toString().length() == 0) {
+                    XToastUtils.error("请先确认手机号，再点击发送");
+                } else {
+                    getDynamicCode(etPhoneNumber.getText().toString());
+                }
                 break;
             case R.id.btn_register:
                 if (mImageUri != null) {
@@ -138,7 +143,7 @@ public class RegisteredFragment extends BaseFragment {
                         } else if (etUserName.validate()) {
                             if (etPasswordNumber.validate()) {
                                 if (Objects.requireNonNull(etConfirmPasswordNumber.getText()).toString().equals(Objects.requireNonNull(etPasswordNumber.getText()).toString())) {
-                                    if (etVerifyCode.validate()) {
+                                    if (etDynamicCode.validate()) {
                                         List<FormField<?>> formFields = new ArrayList<>();
 
                                         String md5psd = null;
@@ -167,14 +172,14 @@ public class RegisteredFragment extends BaseFragment {
                                         formField4.setFieldValue(String.valueOf(etUserName.getText()));
 
                                         FormField<String> formField5 = new FormField<>();
-                                        formField5.setFieldName("verificationCode");
-                                        formField5.setFieldValue(String.valueOf(etVerifyCode.getText()));
+                                        formField5.setFieldName("dynamicCode");
+                                        formField5.setFieldValue(String.valueOf(etDynamicCode.getText()));
 
                                         FormField<File> formField6 = new FormField<>();
                                         formField6.setFieldName("userAvatar");
                                         formField6.setExtras(new FormField.Pair<>("filename", file.getName()));
                                         formField6.setContentType("image/jpeg");
-                                        
+
                                         formField6.setFieldValue(file);
 
                                         formFields.add(formField1);
@@ -183,8 +188,6 @@ public class RegisteredFragment extends BaseFragment {
                                         formFields.add(formField4);
                                         formFields.add(formField5);
                                         formFields.add(formField6);
-
-
 
 
                                         MyHttp.postForm("/user/register", "", formFields, new MyHttp.Callback() {
@@ -196,9 +199,7 @@ public class RegisteredFragment extends BaseFragment {
 
                                             @Override
                                             public void fail(JSONObject error) throws JSONException {
-                                                if (error.getInt("code") == 40004) {
-                                                    getVerifyCode();
-                                                }
+                                                XToastUtils.error(error.getString("message"));
                                             }
                                         });
                                     }
@@ -213,7 +214,7 @@ public class RegisteredFragment extends BaseFragment {
                 }
 
                 break;
-            case R.id.et_verify_code:
+            case R.id.et_dynamic_code:
                 KeyboardUtils.isSoftInputShow(getActivity());
                 KeyboardUtils.showSoftInputForce(getActivity());
                 break;
@@ -285,6 +286,29 @@ public class RegisteredFragment extends BaseFragment {
 
 
     /**
+     * 获取验证码
+     */
+    private void getDynamicCode(String tel) {
+
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("tel", tel);
+        MyHttp.get("/captcha/getRegisteredDynamicCode", "", params, new MyHttp.Callback() {
+            @Override
+            public void success(JSONObject data) throws JSONException {
+                XToastUtils.info("短信发送成功");
+                TimeCountUtil timeCount = new TimeCountUtil(MILLIS_IN_FUTURE * 1000, 1000, btnGetDynamicCode);
+                timeCount.start();
+            }
+
+            @Override
+            public void fail(JSONObject error) throws JSONException {
+                XToastUtils.error(error.getString("message"));
+            }
+        });
+
+    }
+
+    /**
      * 处理回调结果
      */
     @Override
@@ -309,7 +333,7 @@ public class RegisteredFragment extends BaseFragment {
                     break;
                 // 拍照
                 case REQUEST_IMAGE_CAPTURE:
-                    File temp = new File(Environment.getExternalStorageDirectory() + "/" + IMAGE_FILE_NAME);
+                    File temp = new File(String.format("%s%s%s", Environment.getExternalStorageDirectory(), File.separator, IMAGE_FILE_NAME));
                     startBigPhotoZoom(temp);
             }
         }
@@ -352,13 +376,14 @@ public class RegisteredFragment extends BaseFragment {
     private void imageCapture() {
         Intent intent;
         Uri pictureUri;
-        File pictureFile = new File(Environment.getExternalStorageDirectory(), IMAGE_FILE_NAME);
+        File pictureFile = new File(String.format("%s%s%s", Environment.getExternalStorageDirectory(), File.separator, IMAGE_FILE_NAME));
         // 判断当前系统
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             pictureUri = FileProvider.getUriForFile(getContext(),
-                    "com.yiflyplan.app.fileProvider", pictureFile);
+                    "com.yiflyplan.app.provider", pictureFile);
         } else {
             intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             pictureUri = Uri.fromFile(pictureFile);
@@ -465,32 +490,6 @@ public class RegisteredFragment extends BaseFragment {
                 return null;
             }
         }
-    }
-
-
-    /**
-     * 获取验证码
-     */
-    private void getVerifyCode() {
-
-        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("type", "0");
-        MyHttp.get("/captcha/getRegisteredVerificationCode", "", params, new MyHttp.Callback() {
-            @Override
-            public void success(JSONObject data) throws JSONException {
-                savedVerificationCode = data.toString();
-                verificationCodeImage = stringtoBitmap(savedVerificationCode);
-                codeImage.setImageBitmap(verificationCodeImage);
-            }
-
-            @Override
-            public void fail(JSONObject error) {
-                codeImage.setImageResource(R.drawable.ic_img);
-                Log.e("TAG:", error.toString());
-
-            }
-        });
-
     }
 
 

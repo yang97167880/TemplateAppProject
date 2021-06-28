@@ -16,6 +16,9 @@
     <external-files-path
         name="externalFPath"
         path="file" />
-
+    <!-- 注意包名 -->
+    <external-path
+        path="."
+        name="files_root" />
 
 </paths>

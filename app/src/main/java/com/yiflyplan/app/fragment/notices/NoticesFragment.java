@@ -19,6 +19,7 @@ package com.yiflyplan.app.fragment.notices;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -32,6 +33,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
@@ -97,6 +99,8 @@ public class NoticesFragment extends BaseFragment {
     RecyclerView recyclerView;
     @BindView(R.id.notices_refreshLayout)
     SmartRefreshLayout refreshLayout;
+
+    private static final String ACTION = "com.test.action";
 
     private WebSocketClient chatSocket;
     private SimpleDelegateAdapter<NoticeInfo> mNoticeAdapter;
@@ -293,35 +297,6 @@ public class NoticesFragment extends BaseFragment {
                         e.printStackTrace();
                     }
                 }
-                try {
-                    JSONObject result = new JSONObject(message);
-
-                    int fromUserId = result.getInt("fromUserId");
-                    int toUserId = result.getInt("toUserId");
-                    checkSession(fromUserId,toUserId);
-                    String newContent = result.getString("content");
-                    String date = result.getString("sendTime");
-                    int unreadCount = result.getInt("unreadCount");
-
-
-                    String[] selectionArg = {String.valueOf(SessionId)};
-                    String selections = MyCP.Session.id + "=?";
-
-                    ContentValues cv = new ContentValues();
-                    cv.put(MyCP.Session.LastMessage, newContent);
-                    cv.put(MyCP.Session.LastDate, date);
-                    cv.put(MyCP.Session.unreadCount, unreadCount);
-                    cr.update(MyCP.Session.CONTENT_URI, cv, selections, selectionArg);
-
-
-                    Message msg = Message.obtain();
-                    msg.what = 0;
-                    mMainHandler.sendMessage(msg);
-
-                    Log.d("WEBSOCKET", result.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
 
             @Override
@@ -365,6 +340,11 @@ public class NoticesFragment extends BaseFragment {
                         getSessionList(userId);
                         //刷新UI
                         mNoticeAdapter.refresh(noticeInfos);
+
+                        //发送广播
+                        Intent intent = new Intent(ACTION);
+                        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+
                         break;
                     default:
                         throw new IllegalStateException("Unexpected value: " + msg.what);
@@ -465,6 +445,7 @@ public class NoticesFragment extends BaseFragment {
 
 
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -475,6 +456,7 @@ public class NoticesFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         try {
             chatSocket.closeBlocking();
         } catch (InterruptedException e) {

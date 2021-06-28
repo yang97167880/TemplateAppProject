@@ -63,123 +63,131 @@
 
                 </RelativeLayout>
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingBottom="@dimen/config_margin_10dp"
-                    android:paddingTop="@dimen/config_margin_7dp"
-                    android:paddingStart="@dimen/config_margin_10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
 
-                    >
 
-                    <com.xuexiang.xui.widget.imageview.RadiusImageView
-                        android:id="@+id/create_member_avatar"
-                        android:layout_width="@dimen/config_margin_30dp"
-                        android:layout_height="@dimen/config_margin_30dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/xui_ic_default_img"
-                        app:riv_border_width="0dp"
-                        app:riv_corner_radius="30dp" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingBottom="@dimen/config_margin_10dp"
+                        android:paddingTop="@dimen/config_margin_7dp"
+                        android:paddingStart="@dimen/config_margin_10dp"
 
-                    <TextView
-                        android:id="@+id/create_member_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/create_member_avatar"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginBottom="7dp"
-                        android:layout_toEndOf="@+id/create_member_avatar"
-                        android:text="super"
-                        android:textSize="@dimen/config_margin_15dp" />
+                        >
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/create_member_name"
-                        android:layout_marginStart="@dimen/config_margin_8dp"
-                        android:layout_toEndOf="@+id/create_member_name"
-                        android:text="于"
-                        android:textSize="12sp" />
-                    <TextView
-                        android:id="@+id/create_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/create_member_name"
-                        android:layout_marginStart="@dimen/config_margin_24dp"
-                        android:layout_toEndOf="@+id/create_member_name"
-                        android:text="2019-10-9 12:34"
-                        android:textSize="12sp" />
+                        <com.xuexiang.xui.widget.imageview.RadiusImageView
+                            android:id="@+id/create_member_avatar"
+                            android:layout_width="@dimen/config_margin_30dp"
+                            android:layout_height="@dimen/config_margin_30dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/xui_ic_default_img"
+                            app:riv_border_width="0dp"
+                            app:riv_corner_radius="30dp" />
 
-                    <TextView
-                        android:id="@+id/tv_operator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/create_member_name"
-                        android:layout_marginStart="@dimen/config_margin_20dp"
-                        android:layout_toEndOf="@+id/create_time"
-                        android:text="存入"
-                        android:textColor="@color/xui_btn_green_normal_color" />
+                        <TextView
+                            android:id="@+id/create_member_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/create_member_avatar"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginBottom="7dp"
+                            android:layout_toEndOf="@+id/create_member_avatar"
+                            android:text="super"
+                            android:textSize="@dimen/config_margin_15dp" />
 
-                </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/create_member_name"
+                            android:layout_marginStart="@dimen/config_margin_8dp"
+                            android:layout_toEndOf="@+id/create_member_name"
+                            android:text="于"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/create_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/create_member_name"
+                            android:layout_marginStart="@dimen/config_margin_24dp"
+                            android:layout_toEndOf="@+id/create_member_name"
+                            android:text="2019-10-9 12:34"
+                            android:textSize="12sp" />
 
-                <RelativeLayout
-                    android:id="@+id/rl_take_out"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingBottom="@dimen/config_margin_10dp"
-                    android:paddingTop="@dimen/config_margin_7dp"
-                    android:paddingStart="@dimen/config_margin_10dp">
+                        <TextView
+                            android:id="@+id/tv_operator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/create_member_name"
+                            android:layout_marginStart="@dimen/config_margin_20dp"
+                            android:layout_toEndOf="@+id/create_time"
+                            android:text="存入"
+                            android:textColor="@color/xui_btn_green_normal_color" />
 
-                    <com.xuexiang.xui.widget.imageview.RadiusImageView
-                        android:id="@+id/update_member_avatar"
-                        android:layout_width="@dimen/config_margin_30dp"
-                        android:layout_height="@dimen/config_margin_30dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/xui_ic_default_img"
-                        app:riv_border_width="0dp"
-                        app:riv_corner_radius="30dp" />
+                    </RelativeLayout>
 
-                    <TextView
-                        android:id="@+id/update_member_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/update_member_avatar"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginBottom="7dp"
-                        android:layout_toEndOf="@+id/update_member_avatar"
-                        android:text="super"
-                        android:textSize="@dimen/config_margin_15dp" />
+                    <RelativeLayout
+                        android:id="@+id/rl_take_out"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:paddingBottom="@dimen/config_margin_10dp"
+                        android:paddingTop="@dimen/config_margin_7dp"
+                        android:paddingStart="@dimen/config_margin_10dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/update_member_name"
-                        android:layout_marginStart="@dimen/config_margin_8dp"
-                        android:layout_toEndOf="@+id/update_member_name"
-                        android:text="于"
-                        android:textSize="12sp" />
-                    <TextView
-                        android:id="@+id/update_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/update_member_name"
-                        android:layout_marginStart="@dimen/config_margin_24dp"
-                        android:layout_toEndOf="@+id/update_member_name"
-                        android:text="2019-10-9 12:34"
-                        android:textSize="12sp" />
+                        <com.xuexiang.xui.widget.imageview.RadiusImageView
+                            android:id="@+id/update_member_avatar"
+                            android:layout_width="@dimen/config_margin_30dp"
+                            android:layout_height="@dimen/config_margin_30dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/xui_ic_default_img"
+                            app:riv_border_width="0dp"
+                            app:riv_corner_radius="30dp" />
 
-                    <TextView
-                        android:id="@+id/tv_operator_out"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/update_member_name"
-                        android:layout_marginStart="@dimen/config_margin_20dp"
-                        android:layout_toEndOf="@+id/update_time"
-                        android:text="取出"
-                        android:textColor="@color/xui_config_color_red" />
+                        <TextView
+                            android:id="@+id/update_member_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/update_member_avatar"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginBottom="7dp"
+                            android:layout_toEndOf="@+id/update_member_avatar"
+                            android:text="super"
+                            android:textSize="@dimen/config_margin_15dp" />
 
-                </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/update_member_name"
+                            android:layout_marginStart="@dimen/config_margin_8dp"
+                            android:layout_toEndOf="@+id/update_member_name"
+                            android:text="于"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/update_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/update_member_name"
+                            android:layout_marginStart="@dimen/config_margin_24dp"
+                            android:layout_toEndOf="@+id/update_member_name"
+                            android:text="2019-10-9 12:34"
+                            android:textSize="12sp" />
 
+                        <TextView
+                            android:id="@+id/tv_operator_out"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/update_member_name"
+                            android:layout_marginStart="@dimen/config_margin_20dp"
+                            android:layout_toEndOf="@+id/update_time"
+                            android:text="取出"
+                            android:textColor="@color/xui_config_color_red" />
+
+                    </RelativeLayout>
+                </LinearLayout>
             </LinearLayout>
 
        </LinearLayout>

@@ -20,6 +20,7 @@ package com.yiflyplan.app.fragment.notices;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
@@ -38,6 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
@@ -111,6 +113,7 @@ public class ChartRoomFragment extends BaseFragment {
     private Handler mMainHandler;
 
     private ContentResolver cr ;
+    private static final String ACTION = "com.test.action";
 
 
     private List<ChartInfo> chartInfos;
@@ -303,23 +306,6 @@ public class ChartRoomFragment extends BaseFragment {
                     }
                     Log.d("WEBSOCKET", message);
                 }
-                try {
-                    JSONObject result = new JSONObject(message);
-                    content = result.getString("content");
-
-                    chartInfos.add(new ChartInfo(currentUserVO.getUserAvatar(),content,0));
-                    insertMessage(SessionId,content,0);
-
-                    Message msg = Message.obtain();
-                    msg.what = 0;
-                    mMainHandler.sendMessage(msg);
-
-
-                    Log.d("WEBSOCKET", content);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("WEBSOCKET", message);
             }
 
             @Override
@@ -479,6 +465,10 @@ public class ChartRoomFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        //发送广播
+        Intent intent = new Intent(ACTION);
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+
         back();
     }
 

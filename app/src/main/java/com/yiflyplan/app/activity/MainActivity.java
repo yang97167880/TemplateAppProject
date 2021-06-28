@@ -18,10 +18,14 @@
 package com.yiflyplan.app.activity;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,6 +46,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -78,6 +83,7 @@ import com.yiflyplan.app.adapter.VO.MemberVO;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
+import com.yiflyplan.app.adapter.entity.NoticeInfo;
 import com.yiflyplan.app.adapter.menu.DrawerAdapter;
 import com.yiflyplan.app.adapter.menu.DrawerItem;
 import com.yiflyplan.app.adapter.menu.SimpleItem;
@@ -132,6 +138,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     Toolbar toolbar;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
+    @BindView(R.id.tv_unread_count)
+    TextView tvUnreadCount;
     /**
      * 底部导航栏
      */
@@ -139,6 +147,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     BottomNavigationView bottomNavigation;
 
     private String[] mTitles;
+    private ContentResolver cr ;
 
     private final String CURRENTUSER = "currentUser";
     private SlidingRootNav mSlidingRootNav;
@@ -150,7 +159,12 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     private static final int POS_NOTICES = 2;
     private static final int POS_ABOUT = 3;
     private static final int POS_LOGOUT = 5;
+    private static final String ACTION = "com.test.action";
     private CurrentUserVO userVO;
+    private BaseFragment[] fragments;
+    private FragmentAdapter<BaseFragment> adapter;
+    private InputFragment inputFragment;
+    private NoticesFragment noticesFragment;
     /*user*/
     String userName;
     String userAvatar;
@@ -159,8 +173,8 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
 
     List<OrganizationVO> relationships;
 
+
     ComponentsFragment componentsFragment;
-    InputFragment inputFragment;
     BottomSheetDialog dialog;
 
     @Override
@@ -171,6 +185,9 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //获取消息提供者
+        cr = getContentResolver();
 
         //获取传递过来的用户数据
         //user
@@ -232,15 +249,12 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
             }
         });
 
+        inputFragment = new InputFragment();
+        noticesFragment = new NoticesFragment();
         //主页内容填充
-        BaseFragment[] fragments = new BaseFragment[]{
-                new ComponentsFragment(),
-                new InputFragment(),
-//                new ProfileFragment(),
-                new NoticesFragment(),
-        };
+        fragments = new BaseFragment[]{new ComponentsFragment(), inputFragment, noticesFragment};
 
-        FragmentAdapter<BaseFragment> adapter = new FragmentAdapter<>(getSupportFragmentManager(), fragments);
+        adapter = new FragmentAdapter<>(getSupportFragmentManager(), fragments);
         viewPager.setOffscreenPageLimit(mTitles.length - 1);
         viewPager.setAdapter(adapter);
 
@@ -644,6 +658,9 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 //更新全局VO对象
                 MMKVUtils.put("organizationName",organizationName);
                 MMKVUtils.put("organizationId",organizationId);
+
+                refreshMenu();
+
             }
 
             @Override
@@ -656,7 +673,7 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        unregisterDeviceEventReceiver();
     }
 
     public void isUpdate(Context context){
@@ -712,4 +729,91 @@ public class MainActivity extends BaseActivity implements DrawerAdapter.OnItemSe
                 .append("    检测到最新版本，是否更新？\n");
         return stringBuilder;
     }
+
+    //聊天广播接收器
+    private BroadcastReceiver deviceEventReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() == null) {
+               return;
+            }
+            if (ACTION.equals(intent.getAction())) {
+                getUnreadCount();
+            }
+         }
+    };
+
+
+
+    /**
+     * 刷新界面
+     */
+    private void refreshMenu(){
+        viewPager.setOffscreenPageLimit(mTitles.length - 1);
+        viewPager.setAdapter(adapter);
+    }
+
+
+    /**
+     * 获取全局未读数
+     */
+    private void getUnreadCount(){
+
+        int userId = MMKVUtils.getInt("userId",0);
+
+        Uri myURI = MyCP.Session.CONTENT_URI;
+
+        String[] selectionArgs = {String.valueOf(userId)};
+        String[] columns = new String[]{MyCP.Session.id,MyCP.Session.userId,MyCP.Session.unreadCount};
+        String selection = MyCP.Session.ownId + "=?";
+
+
+        Cursor cursor = cr.query(myURI, columns, selection, selectionArgs, null);
+
+        int count = 0;
+        while (cursor.moveToNext()) {
+            int unreadCount = cursor.getInt(cursor.getColumnIndex(MyCP.Session.unreadCount));
+            count += unreadCount;
+        }
+        cursor.close();
+
+        if(count!=0){
+            tvUnreadCount.setVisibility(View.VISIBLE);
+            tvUnreadCount.setText(String.valueOf(count));
+        }else {
+            tvUnreadCount.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+
+
+    //注册聊天广播
+    private void registerDeviceEventReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(deviceEventReceiver, intentFilter);
+    }
+
+    //注销聊天广播
+    private void unregisterDeviceEventReceiver() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(deviceEventReceiver);
+    }
+
+
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterDeviceEventReceiver();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerDeviceEventReceiver();
+        getUnreadCount();
+    }
+
 }

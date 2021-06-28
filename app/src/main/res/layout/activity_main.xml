@@ -30,12 +30,32 @@
 
     </FrameLayout>
 
-    <!--  主内容填充  -->
-    <include
-        layout="@layout/layout_main_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <!--  主内容填充  -->
+        <include
+            layout="@layout/layout_main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/tv_unread_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="38dp"
+            android:layout_marginEnd="40dp"
+            android:gravity="center"
+            android:background="@drawable/tv_circle_unread_count"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
 <!--    &lt;!&ndash; 侧边栏   &ndash;&gt;-->
 <!--    <com.google.android.material.navigation.NavigationView-->
 <!--        android:id="@+id/nav_view"-->

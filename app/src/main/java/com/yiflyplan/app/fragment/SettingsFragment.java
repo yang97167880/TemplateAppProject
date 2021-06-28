@@ -54,6 +54,8 @@ public class SettingsFragment extends BaseFragment implements SuperTextView.OnSu
     @BindView(R.id.menu_logout)
     SuperTextView menuLogout;
 
+    private final static String TESTING = "测试中";
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_settings;
@@ -78,7 +80,7 @@ public class SettingsFragment extends BaseFragment implements SuperTextView.OnSu
             case R.id.menu_privacy:
             case R.id.menu_push:
             case R.id.menu_helper:
-                XToastUtils.toast(superTextView.getLeftString());
+                XToastUtils.toast(TESTING);
                 break;
             case R.id.menu_change_account:
                 XToastUtils.toast(superTextView.getCenterString());

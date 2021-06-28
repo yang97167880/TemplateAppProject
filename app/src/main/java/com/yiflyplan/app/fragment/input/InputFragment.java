@@ -52,6 +52,7 @@ import com.yiflyplan.app.fragment.ProductInfoFragment;
 import com.yiflyplan.app.fragment.SearchFragment;
 import com.yiflyplan.app.fragment.UserInfoFragment;
 import com.yiflyplan.app.fragment.organization.components.ApplyFormFragment;
+import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
@@ -319,7 +320,9 @@ public class InputFragment extends BaseFragment {
                         openNewPage(ProductInfoFragment.class,"productVO",productVO);
                         break;
                     case USER_QR_CODE:
+                        int organizationId =  MMKVUtils.getInt("organizationId",0);
                         CurrentUserVO currentUserVO = ReflectUtil.convertToObject(parseResult, CurrentUserVO.class);
+                        MapDataCache.putCache("organizationId",organizationId);
                         openNewPage(UserInfoFragment.class,"currentUserVO",currentUserVO);
                         break;
                     case ORGANIZATION_QR_CODE:

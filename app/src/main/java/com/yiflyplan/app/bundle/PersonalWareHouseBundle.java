@@ -17,7 +17,9 @@
 
 package com.yiflyplan.app.bundle;
 
-public class PersonalWareHouseBundle {
+import java.io.Serializable;
+
+public class PersonalWareHouseBundle implements Serializable {
     private Integer organizationId;
     private Integer userId;
 

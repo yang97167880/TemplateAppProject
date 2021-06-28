@@ -125,6 +125,7 @@
             />
 
 
+
         <EditText
             android:id="@+id/medical_waste_transfer_information_code"
             android:layout_width="300dp"
@@ -138,7 +139,9 @@
             android:maxLength="13"
             android:paddingEnd="@dimen/config_margin_60dp"
             android:textAlignment="center"
-            android:textSize="@dimen/config_margin_24dp" />
+            android:textSize="@dimen/config_margin_24dp"
+            android:visibility="invisible"
+            />
 
         <Button
             android:id="@+id/btn_query"
@@ -151,6 +154,8 @@
             android:background="@drawable/btn_rounded_rectangle_search"
             android:text="@string/query"
             android:textSize="@dimen/config_margin_18dp"
+            android:visibility="invisible"
+
 
             />
 
@@ -163,7 +168,9 @@
             android:layout_marginBottom="80dp"
             android:text="@string/title_manually_enter"
             android:textColor="@color/app_color_theme_6"
-            android:textSize="@dimen/config_margin_14dp" />
+            android:textSize="@dimen/config_margin_14dp"
+            android:visibility="invisible"
+            />
 
         <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/scan_card"
