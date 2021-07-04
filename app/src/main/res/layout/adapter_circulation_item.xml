@@ -75,8 +75,6 @@
                         android:layout_height="match_parent"
                         android:paddingBottom="@dimen/config_margin_10dp"
                         android:paddingTop="@dimen/config_margin_7dp"
-                        android:paddingStart="@dimen/config_margin_10dp"
-
                         >
 
                         <com.xuexiang.xui.widget.imageview.RadiusImageView
@@ -136,7 +134,7 @@
                         android:visibility="visible"
                         android:paddingBottom="@dimen/config_margin_10dp"
                         android:paddingTop="@dimen/config_margin_7dp"
-                        android:paddingStart="@dimen/config_margin_10dp">
+                        >
 
                         <com.xuexiang.xui.widget.imageview.RadiusImageView
                             android:id="@+id/update_member_avatar"

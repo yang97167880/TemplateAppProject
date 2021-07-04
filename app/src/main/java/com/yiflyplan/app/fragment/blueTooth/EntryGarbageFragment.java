@@ -79,7 +79,7 @@ import butterknife.OnClick;
 public class EntryGarbageFragment extends BaseFragment {
 
     @BindView(R.id.garbage_weight)
-    AppCompatEditText garbageWeight;
+    TextView garbageWeight;
     @BindView(R.id.btn_type)
     Button btnType;
     @BindView(R.id.btn_package)

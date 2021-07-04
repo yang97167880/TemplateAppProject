@@ -134,11 +134,11 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
                             mComponents.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_warehouse));
                             mPages.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_warehouse));
                             break;
-                        case "产品转移":
+                        case "医废转移":
                             mComponents.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_transfer));
                             mPages.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_transfer));
                             break;
-                        case "产品接收":
+                        case "医废接收":
                             mComponents.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(),"{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_receive));
                             mPages.add(new PageInfo(menuListVO.getMenuName(),menuListVO.getMenuPath(), "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_receive));
                             break;
@@ -201,10 +201,10 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
                 case "分享机构":
                     openNewPage(Share.class,"id",organizationId);
                     break;
-                case "产品转移":
+                case "医废转移":
                     openNewPage(Transfer.class,"id",organizationId);
                     break;
-                case "产品接收":
+                case "医废接收":
                     openNewPage(Receive.class,"id",organizationId);
                     break;
                 default:

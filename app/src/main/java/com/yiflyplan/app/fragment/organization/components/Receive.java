@@ -52,7 +52,7 @@ import butterknife.BindView;
 import static android.app.Activity.RESULT_OK;
 import static com.xuexiang.xaop.consts.PermissionConsts.CAMERA;
 
-@Page(name = "产品接收", extra = R.drawable.ic_receive)
+@Page(name = "医废接收", extra = R.drawable.ic_receive)
 public class Receive extends BaseFragment {
 
     @BindView(R.id.scan_card)
