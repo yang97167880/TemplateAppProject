@@ -59,7 +59,7 @@ import me.samlss.broccoli.Broccoli;
 
 import static com.yiflyplan.app.utils.ImageConversionUtil.base64ToBitmap;
 
-@Page(name = "产品转移", extra = R.drawable.ic_transfer)
+@Page(name = "医废转移", extra = R.drawable.ic_transfer)
 public class Transfer extends BaseFragment {
     @BindView(R.id.product_recyclerView)
     RecyclerView recyclerView;
@@ -235,8 +235,6 @@ public class Transfer extends BaseFragment {
 
     protected void apiLoadMoreProduct(String id) {
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
-//        params.put("queryOwn", "true");
-//        params.put("organizationId", id);
         params.put("pageNo", String.valueOf(pageNo));
         params.put("pageSize", String.valueOf(pageSize));
         MyHttp.get("/product/getTransferableProduct", TokenUtils.getToken(), params, new MyHttp.Callback() {

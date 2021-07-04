@@ -36,12 +36,12 @@
             android:text="重量："
             android:textSize="@dimen/config_margin_18dp" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <TextView
             android:id="@+id/garbage_weight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:inputType="number" />
+            />
     </LinearLayout>
 
     <LinearLayout
