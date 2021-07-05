@@ -24,9 +24,6 @@
     app:cardBackgroundColor="@color/xui_config_color_white"
    >
 
-
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +33,7 @@
 
             <ImageView
                 android:id="@+id/logo"
-                android:layout_height="120dp"
+                android:layout_height="125dp"
                 android:layout_width="40dp"
                 android:src="@drawable/ico_logistics_line"/>
 
@@ -49,6 +46,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/config_margin_5dp"
                     android:paddingTop="@dimen/config_margin_7dp"
                    >
 
@@ -70,121 +68,152 @@
                     android:orientation="vertical">
 
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingBottom="@dimen/config_margin_10dp"
-                        android:paddingTop="@dimen/config_margin_7dp"
+                        android:paddingBottom="@dimen/config_margin_5dp"
+                        android:orientation="horizontal"
                         >
 
                         <com.xuexiang.xui.widget.imageview.RadiusImageView
                             android:id="@+id/create_member_avatar"
                             android:layout_width="@dimen/config_margin_30dp"
                             android:layout_height="@dimen/config_margin_30dp"
+                            android:layout_gravity="center_vertical"
                             android:scaleType="centerCrop"
                             android:src="@drawable/xui_ic_default_img"
                             app:riv_border_width="0dp"
                             app:riv_corner_radius="30dp" />
 
-                        <TextView
-                            android:id="@+id/create_member_name"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/create_member_avatar"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginBottom="7dp"
-                            android:layout_toEndOf="@+id/create_member_avatar"
-                            android:text="super"
-                            android:textSize="@dimen/config_margin_15dp" />
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/create_member_name"
-                            android:layout_marginStart="@dimen/config_margin_8dp"
-                            android:layout_toEndOf="@+id/create_member_name"
-                            android:text="于"
-                            android:textSize="12sp" />
-                        <TextView
-                            android:id="@+id/create_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/create_member_name"
-                            android:layout_marginStart="@dimen/config_margin_24dp"
-                            android:layout_toEndOf="@+id/create_member_name"
-                            android:text="2019-10-9 12:34"
-                            android:textSize="12sp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/tv_operator"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/create_member_name"
-                            android:layout_marginStart="@dimen/config_margin_20dp"
-                            android:layout_toEndOf="@+id/create_time"
-                            android:text="存入"
-                            android:textColor="@color/xui_btn_green_normal_color" />
 
-                    </RelativeLayout>
+                                <TextView
+                                    android:id="@+id/create_member_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/config_margin_5dp"
+                                    android:text="super"
+                                    android:textSize="@dimen/config_margin_15dp" />
 
-                    <RelativeLayout
-                        android:id="@+id/rl_take_out"
+
+                                <TextView
+                                    android:id="@+id/create_user_rfid"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/config_margin_10dp"
+                                    android:text="GZKJ-000000015-1"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/tv_operator"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/config_margin_10dp"
+                                    android:text="存入"
+                                    android:textColor="@color/xui_btn_green_normal_color" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/config_margin_5dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/create_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/config_margin_5dp"
+                                    android:text="2019-10-9 12:34"
+                                    android:textSize="10sp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_take_out"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:visibility="visible"
-                        android:paddingBottom="@dimen/config_margin_10dp"
-                        android:paddingTop="@dimen/config_margin_7dp"
+                        android:paddingBottom="@dimen/config_margin_5dp"
+                        android:layout_marginTop="@dimen/config_margin_5dp"
+                        android:orientation="horizontal"
                         >
 
                         <com.xuexiang.xui.widget.imageview.RadiusImageView
                             android:id="@+id/update_member_avatar"
                             android:layout_width="@dimen/config_margin_30dp"
                             android:layout_height="@dimen/config_margin_30dp"
+                            android:layout_gravity="center_vertical"
                             android:scaleType="centerCrop"
                             android:src="@drawable/xui_ic_default_img"
                             app:riv_border_width="0dp"
                             app:riv_corner_radius="30dp" />
-
-                        <TextView
-                            android:id="@+id/update_member_name"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/update_member_avatar"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginBottom="7dp"
-                            android:layout_toEndOf="@+id/update_member_avatar"
-                            android:text="super"
-                            android:textSize="@dimen/config_margin_15dp" />
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/update_member_name"
-                            android:layout_marginStart="@dimen/config_margin_8dp"
-                            android:layout_toEndOf="@+id/update_member_name"
-                            android:text="于"
-                            android:textSize="12sp" />
-                        <TextView
-                            android:id="@+id/update_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/update_member_name"
-                            android:layout_marginStart="@dimen/config_margin_24dp"
-                            android:layout_toEndOf="@+id/update_member_name"
-                            android:text="2019-10-9 12:34"
-                            android:textSize="12sp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/tv_operator_out"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/update_member_name"
-                            android:layout_marginStart="@dimen/config_margin_20dp"
-                            android:layout_toEndOf="@+id/update_time"
-                            android:text="取出"
-                            android:textColor="@color/xui_config_color_red" />
+                                <TextView
+                                    android:id="@+id/update_member_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/config_margin_5dp"
+                                    android:text="super"
+                                    android:textSize="@dimen/config_margin_15dp" />
 
-                    </RelativeLayout>
+                                <TextView
+                                    android:id="@+id/update_user_rfid"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/config_margin_10dp"
+                                    android:text="GZKJ-000000015-2"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/tv_operator_out"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/config_margin_10dp"
+                                    android:text="取出"
+                                    android:textColor="@color/xui_config_color_red" />
+
+                            </LinearLayout>
+                             <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/config_margin_5dp"
+                                android:orientation="horizontal">
+                                 <TextView
+                                     android:id="@+id/update_time"
+                                     android:layout_width="wrap_content"
+                                     android:layout_height="wrap_content"
+                                     android:layout_marginStart="@dimen/config_margin_5dp"
+                                     android:text="2019-10-9 12:34"
+                                     android:textSize="10sp" />
+                             </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 

@@ -118,6 +118,11 @@ public class ProductItemCirculationFragment extends BaseFragment {
                     }, R.id.create_time);
 
 
+                    holder.bindDataToViewById(view -> {
+                        TextView createUserRfid = (TextView) view;
+                        createUserRfid.setText(model.getCreateUserRfid());
+                    }, R.id.create_user_rfid);
+
 
 
                     holder.bindDataToViewById(v -> {
@@ -127,10 +132,10 @@ public class ProductItemCirculationFragment extends BaseFragment {
                                 operator.setText(model.getOperator());
                             }, R.id.tv_operator);
 
-                            RelativeLayout relativeLayout = (RelativeLayout) v;
-                            relativeLayout.setVisibility(View.GONE);
+                            LinearLayout linearLayout = (LinearLayout) v;
+                            linearLayout.setVisibility(View.GONE);
                         }
-                    },R.id.rl_take_out);
+                    },R.id.ll_take_out);
 
                     holder.bindDataToViewById(view -> {
                         RadiusImageView avatar = (RadiusImageView) view;
@@ -149,6 +154,10 @@ public class ProductItemCirculationFragment extends BaseFragment {
                         time.setText(model.getUpdateTime());
                     }, R.id.update_time);
 
+                    holder.bindDataToViewById(view -> {
+                        TextView updateUserRfid = (TextView) view;
+                        updateUserRfid.setText(model.getUpdateUserRfid());
+                    }, R.id.update_user_rfid);
 
                 }
             }

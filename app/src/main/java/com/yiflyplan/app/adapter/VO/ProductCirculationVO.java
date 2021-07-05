@@ -37,6 +37,24 @@ public class ProductCirculationVO implements Serializable {
     private String updateUserAvatar;
     private int updateUserId;
     private String updateUserName;
+    private String createUserRfid;
+    private String updateUserRfid;
+
+    public String getUpdateUserRfid() {
+        return updateUserRfid;
+    }
+
+    public void setUpdateUserRfid(String updateUserRfid) {
+        this.updateUserRfid = updateUserRfid;
+    }
+
+    public String getCreateUserRfid() {
+        return createUserRfid;
+    }
+
+    public void setCreateUserRfid(String createUserRfid) {
+        this.createUserRfid = createUserRfid;
+    }
 
     public String getCreateTime() {
         return createTime;
