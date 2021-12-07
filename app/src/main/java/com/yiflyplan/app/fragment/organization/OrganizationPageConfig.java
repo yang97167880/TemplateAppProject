@@ -83,6 +83,10 @@ public class OrganizationPageConfig {
         mPages.add(new PageInfo("分享机构", "com.yiflyplan.app.fragment.organization.components.Share", "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_share));
 
 
+//        mComponents.add(new PageInfo("RFID烧录","com.yiflyplan.app.fragment.organization.components.Share","{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_rfid_card));
+//        mPages.add(new PageInfo("RFID烧录", "com.yiflyplan.app.fragment.organization.components.Share", "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_rfid_card));
+
+
         getMenuList();
 
 //        mComponents.add(new PageInfo("机构仓库","com.yiflyplan.app.fragment.organization.components.OrganizationContainersFragment","{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_warehouse));

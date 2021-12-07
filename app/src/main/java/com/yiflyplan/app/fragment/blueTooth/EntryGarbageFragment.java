@@ -32,6 +32,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,6 +89,8 @@ public class EntryGarbageFragment extends BaseFragment {
     Button btnPollution;
     @BindView(R.id.uploadData)
     ButtonView uploadData;
+    @BindView(R.id.edt_page_number)
+    EditText edtPageNumber;
 
     private String[] mTypeOption;
     private String[] mTypeOptionId;
