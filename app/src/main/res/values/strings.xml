@@ -132,4 +132,9 @@
     <string name="btn_init_chat">发起聊天</string>
     <string name="get_dynamic_code">获取短信验证码</string>
 
+
+    <string name="btn_check_weight">进行核重</string>
+    <string name="btn_transfer_in_personal_warehouse">转移至我的个人仓库</string>
+
+
 </resources>

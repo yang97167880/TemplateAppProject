@@ -198,9 +198,9 @@
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="@dimen/config_margin_8dp"
                 android:gravity="center"
-                android:text="扫一扫"
+                android:text="扫码识别医废信息"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/config_margin_20dp" />
+                android:textSize="@dimen/config_margin_15dp" />
 
         </androidx.cardview.widget.CardView>
 
@@ -227,9 +227,9 @@
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="@dimen/config_margin_8dp"
                 android:gravity="center"
-                android:text="蓝牙录入"
+                android:text="医废信息录入"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/config_margin_20dp" />
+                android:textSize="@dimen/config_margin_15dp" />
         </androidx.cardview.widget.CardView>
     </RelativeLayout>
 

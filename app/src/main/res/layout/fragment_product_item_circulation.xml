@@ -23,29 +23,63 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/circulation_refreshLayout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:srlEnableAutoLoadMore="true"
-        app:srlEnableLoadMore="true">
-
-
-        <com.scwang.smartrefresh.header.WaterDropHeader
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/circulation_recyclerView"
+        android:layout_height="match_parent">
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/circulation_refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never"
-            tools:listitem="@layout/adapter_circulation_item" />
+            android:layout_above="@+id/ll_check_transfer"
+            app:srlEnableAutoLoadMore="true"
+            app:srlEnableLoadMore="true">
 
-        <!--    注意修改包名时，这里也需要修改    -->
-        <com.yiflyplan.app.widget.MaterialFooter
+
+            <com.scwang.smartrefresh.header.WaterDropHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/circulation_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                tools:listitem="@layout/adapter_circulation_item" />
+
+            <!--    注意修改包名时，这里也需要修改    -->
+            <com.yiflyplan.app.widget.MaterialFooter
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></com.yiflyplan.app.widget.MaterialFooter>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_check_transfer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </com.yiflyplan.app.widget.MaterialFooter>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:paddingVertical="@dimen/config_margin_10dp"
+            android:paddingHorizontal="@dimen/config_margin_20dp"
+            android:visibility="visible"
+            >
+
+            <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+                android:id="@+id/btn_check_weight"
+                style="@style/SuperButton.Primary.ProductItemCirculation"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/btn_check_weight"
+                />
+
+            <com.xuexiang.xui.widget.textview.supertextview.SuperButton
+                android:id="@+id/btn_transfer_in_personal_warehouse"
+                style="@style/SuperButton.Primary.ProductItemCirculation"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/config_margin_20dp"
+                android:text="@string/btn_transfer_in_personal_warehouse"
+                />
+
+        </LinearLayout>
+    </RelativeLayout>
+
 </LinearLayout>

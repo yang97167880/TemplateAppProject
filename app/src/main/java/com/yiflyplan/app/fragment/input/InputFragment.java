@@ -52,6 +52,7 @@ import com.yiflyplan.app.fragment.ProductInfoFragment;
 import com.yiflyplan.app.fragment.SearchFragment;
 import com.yiflyplan.app.fragment.UserInfoFragment;
 import com.yiflyplan.app.fragment.organization.components.ApplyFormFragment;
+import com.yiflyplan.app.fragment.organization.components.ProductItemCirculationFragment;
 import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.MapDataCache;
 import com.yiflyplan.app.utils.ReflectUtil;
@@ -125,7 +126,7 @@ public class InputFragment extends BaseFragment {
      */
     public static final String ORGANIZATION_QR_CODE = "机构二维码";
 
-
+    public static boolean IS_FROM_SCAN = false;
 
 
     /**
@@ -317,7 +318,8 @@ public class InputFragment extends BaseFragment {
                         break;
                     case PRODUCT_BAR_CODE:
                         ProductVO productVO = ReflectUtil.convertToObject(parseResult, ProductVO.class);
-                        openNewPage(ProductInfoFragment.class,"productVO",productVO);
+                        IS_FROM_SCAN = true;
+                        openNewPage(ProductItemCirculationFragment.class,"productVO",productVO);
                         break;
                     case USER_QR_CODE:
                         int organizationId =  MMKVUtils.getInt("organizationId",0);

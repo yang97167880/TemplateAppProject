@@ -35,6 +35,8 @@ import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xui.widget.imageview.strategy.impl.GlideImageLoadStrategy;
+import com.xuexiang.xui.widget.textview.supertextview.SuperButton;
+import com.xuexiang.xutil.tip.ToastUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.ProductCirculationVO;
 import com.yiflyplan.app.adapter.VO.ProductVO;
@@ -42,8 +44,10 @@ import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
+import com.yiflyplan.app.fragment.blueTooth.BlueToothFragment;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
+import com.yiflyplan.app.utils.XToastUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,13 +62,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import me.samlss.broccoli.Broccoli;
 
-@Page(name = "流转信息")
+import static com.yiflyplan.app.fragment.input.InputFragment.IS_FROM_SCAN;
+
+@Page(name = "医废流转信息")
 public class ProductItemCirculationFragment extends BaseFragment {
 
     @BindView(R.id.circulation_recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.circulation_refreshLayout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.ll_check_transfer)
+    LinearLayout llCheckTransfer;
+    @BindView(R.id.btn_check_weight)
+    SuperButton btnCheckWeight;
+    @BindView(R.id.btn_transfer_in_personal_warehouse)
+    SuperButton btnTransferInPersonalWarehouse;
 
 
     private final static String TAKEOUT = "取出";
@@ -76,6 +88,20 @@ public class ProductItemCirculationFragment extends BaseFragment {
     private int pageSize = 5;
     private BroccoliSimpleDelegateAdapter<ProductCirculationVO> mProductAdapter;
     private List<ProductCirculationVO> productVOS = new ArrayList<>();
+    private ProductVO product;
+    private Bundle bundle;
+
+
+    @Override
+    protected TitleBar initTitle() {
+        if (IS_FROM_SCAN){
+            IS_FROM_SCAN = false;
+            return super.initTitle().setTitle("医废信息");
+        }else {
+            return super.initTitle();
+        }
+
+    }
 
     @Override
     protected int getLayoutId() {
@@ -172,14 +198,11 @@ public class ProductItemCirculationFragment extends BaseFragment {
 
         DelegateAdapter delegateAdapter = new DelegateAdapter(virtualLayoutManager);
         delegateAdapter.addAdapter(mProductAdapter);
-//
         recyclerView.setAdapter(delegateAdapter);
+
+        isBelongPersonalWarehouse();
     }
 
-    @Override
-    protected TitleBar initTitle() {
-        return super.initTitle();
-    }
 
     @Override
     protected void initListeners() {
@@ -189,8 +212,8 @@ public class ProductItemCirculationFragment extends BaseFragment {
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
                 if (pageNo == 1) {
-                    Bundle bundle = getArguments();
-                    ProductVO product = (ProductVO) bundle.getSerializable("product");
+                    bundle = getArguments();
+                    product = (ProductVO) bundle.getSerializable("product");
                     apiGetCirculationInfo(String.valueOf(product.getId()));
                 }
                 mProductAdapter.refresh(productVOS);
@@ -201,15 +224,52 @@ public class ProductItemCirculationFragment extends BaseFragment {
         refreshLayout.setOnLoadMoreListener(refreshLayout -> {
             // TODO: 2020-02-25 网络请求
             refreshLayout.getLayout().postDelayed(() -> {
-                Bundle bundle = getArguments();
-                ProductVO product = (ProductVO) bundle.getSerializable("product");
+                bundle = getArguments();
+                product = (ProductVO) bundle.getSerializable("product");
                 apiGetCirculationInfo(String.valueOf(product.getId()));
                 refreshLayout.finishLoadMore();
             }, 500);
         });
         refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
+
+        btnCheckWeight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //点击核重
+                openNewPage(BlueToothFragment.class,"product",product);
+            }
+        });
+
+        btnTransferInPersonalWarehouse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                transfer();
+            }
+        });
     }
 
+    /**
+     * 判断是否属于个人仓库
+     */
+    private void isBelongPersonalWarehouse(){
+        //调接口判断是否属于个人仓库再决定是否隐藏控件
+    }
+
+
+    /**
+     * 转移到个人仓库
+     */
+    private void transfer(){
+        //转移至个人仓库
+        XToastUtils.toast("医废转移成功");
+        Log.d("TAG=========", "transfer: "+bundle.getString("classname"));
+    }
+
+
+
+    /**
+     * @param id
+     */
     protected void apiGetCirculationInfo(String id) {
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("itemId", id);

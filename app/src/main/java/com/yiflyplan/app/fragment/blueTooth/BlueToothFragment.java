@@ -28,6 +28,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,12 +47,14 @@ import com.xuexiang.xui.widget.progress.loading.MiniLoadingView;
 import com.xuexiang.xutil.app.ActivityUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
+import com.yiflyplan.app.adapter.VO.ProductVO;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.entity.DeviceEntity;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.fragment.SearchFragment;
+import com.yiflyplan.app.fragment.organization.components.ProductCheckWeightFragment;
 import com.yiflyplan.app.utils.XToastUtils;
 
 import java.io.Serializable;
@@ -68,6 +71,7 @@ import me.samlss.broccoli.Broccoli;
 @Page(name = "蓝牙")
 public class BlueToothFragment extends BaseFragment {
     public static final String UPLOAD = "uploadData";
+    public static final String CHECK_WEIGHT = "checkWeight";
     private final Integer REQUEST_CODE = 200;
     private BluetoothAdapter bluetoothAdapter;
 
@@ -88,11 +92,15 @@ public class BlueToothFragment extends BaseFragment {
     TextView organization;
     @BindView(R.id.department)
     TextView department;
+    @BindView(R.id.fl_address)
+    FrameLayout flAddress;
+
 
     private SimpleDelegateAdapter<DeviceEntity> mDeviceAdapter1;
     private SimpleDelegateAdapter<DeviceEntity> mDeviceAdapter2;
 
     SearchFragment.UploadData uploadData;
+    private ProductVO product;
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_bluetooth;
@@ -101,10 +109,20 @@ public class BlueToothFragment extends BaseFragment {
     @Override
     protected void initViews() {
         Bundle bundle = this.getArguments();
+        product = (ProductVO) bundle.getSerializable("product");
+
+        if (product!=null){
+            flAddress.setVisibility(View.GONE);
+        }
+
         uploadData = (SearchFragment.UploadData) bundle.getSerializable("uploadData");
-        organization.setText(uploadData.getOrganizationName());
-        department.setText(uploadData.getDepartmentName());
+        if (uploadData!=null){
+            organization.setText(uploadData.getOrganizationName());
+            department.setText(uploadData.getDepartmentName());
+        }
+
         initBT();
+
         mButton.setOnClickListener(view -> {
             bluetoothLayout.setEnableRefresh(true);
             bluetoothLayout.autoRefresh();
@@ -152,7 +170,11 @@ public class BlueToothFragment extends BaseFragment {
                                 loadingView.setVisibility(View.VISIBLE);
                             },R.id.match_loading);
                             uploadData.setAddress( model.getAddress());
-                            openNewPage(EntryGarbageFragment.class,UPLOAD,uploadData);
+                            if (product == null){
+                                openNewPage(EntryGarbageFragment.class,UPLOAD,uploadData);
+                            }else {
+//                                openNewPage(ProductCheckWeightFragment.class,CHECK_WEIGHT,bundle1);
+                            }
                         } else {
                             XToastUtils.info("请刷新后重试...");
                         }
@@ -194,8 +216,13 @@ public class BlueToothFragment extends BaseFragment {
                                 loadingView.setVisibility(View.VISIBLE);
                             },R.id.match_loading);
                             tryConnect = true;
-                            uploadData.setAddress( model.getAddress());
-                            openNewPage(EntryGarbageFragment.class,UPLOAD,uploadData);
+                            uploadData.setAddress(model.getAddress());
+                            if (product == null){
+                                openNewPage(EntryGarbageFragment.class,UPLOAD,uploadData);
+                            }else {
+//                                openNewPage(ProductCheckWeightFragment.class,CHECK_WEIGHT,bundle1);
+                            }
+
                         } else {
                             XToastUtils.info("请刷新后重试...");
                             tryConnect = false;
