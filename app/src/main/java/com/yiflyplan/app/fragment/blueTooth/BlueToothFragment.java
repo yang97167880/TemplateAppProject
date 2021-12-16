@@ -173,7 +173,10 @@ public class BlueToothFragment extends BaseFragment {
                             if (product == null){
                                 openNewPage(EntryGarbageFragment.class,UPLOAD,uploadData);
                             }else {
-//                                openNewPage(ProductCheckWeightFragment.class,CHECK_WEIGHT,bundle1);
+                                Bundle bundle1 = new Bundle();
+                                bundle1.putSerializable(UPLOAD,uploadData);
+                                bundle1.putSerializable(CHECK_WEIGHT,product);
+                                openPage(ProductCheckWeightFragment.class,bundle1);
                             }
                         } else {
                             XToastUtils.info("请刷新后重试...");
@@ -220,7 +223,11 @@ public class BlueToothFragment extends BaseFragment {
                             if (product == null){
                                 openNewPage(EntryGarbageFragment.class,UPLOAD,uploadData);
                             }else {
-//                                openNewPage(ProductCheckWeightFragment.class,CHECK_WEIGHT,bundle1);
+//                                openNewPage(ProductCheckWeightFragment.class,UPLOAD,uploadData);
+                                Bundle bundle1 = new Bundle();
+                                bundle1.putSerializable(UPLOAD,uploadData);
+                                bundle1.putSerializable(CHECK_WEIGHT,product);
+                                openPage(ProductCheckWeightFragment.class,bundle1);
                             }
 
                         } else {
@@ -274,7 +281,7 @@ public class BlueToothFragment extends BaseFragment {
 
     private void addDeviceToList(BluetoothDevice device) {
        DeviceEntity deviceEntity = new DeviceEntity(device.getName(), device.getAddress());
-        //如果不是配对过的设备
+        //如果不是配''''''''''''对过的设备
         if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
             if(pairDataList.indexOf(deviceEntity)<0){
                 pairDataList.add(deviceEntity);

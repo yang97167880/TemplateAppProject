@@ -138,6 +138,8 @@
             android:layout_marginEnd="@dimen/config_margin_15dp"
             android:background="@color/white"
             android:hint="请输入打印张数"
+            android:inputType="number"
+            android:maxLength="3"
             android:textColorHint="@color/colorAccent" />
     </LinearLayout>
 
