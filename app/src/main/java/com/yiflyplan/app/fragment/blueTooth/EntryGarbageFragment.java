@@ -125,6 +125,8 @@ public class EntryGarbageFragment extends BaseFragment {
 
     SearchFragment.UploadData nextParams;
 
+    private static int SleepTime = 2000;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_entry_garbage;
@@ -426,8 +428,11 @@ public class EntryGarbageFragment extends BaseFragment {
                                             super.run();
                                             try {
                                                 for(int i = 1;i<=printNum;i++){
+                                                    Message message = new Message();
+                                                    message.obj = "正在发送第"+i+"条数据...";
+                                                    handler.sendMessage(message);
                                                     sendMessageToRemoteBluetooth(data.getString("itemEnCoding"));
-                                                    Thread.sleep(1000);
+                                                    Thread.sleep(SleepTime);
                                                 }
                                             } catch (InterruptedException | JSONException e) {
                                                 e.printStackTrace();
