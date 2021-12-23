@@ -46,6 +46,7 @@ import com.yiflyplan.app.fragment.organization.components.PersonalWarehouse;
 import com.yiflyplan.app.fragment.organization.components.Receive;
 import com.yiflyplan.app.fragment.organization.components.Share;
 import com.yiflyplan.app.fragment.organization.components.Transfer;
+import com.yiflyplan.app.fragment.organization.components.WeightCalibration;
 import com.yiflyplan.app.utils.MMKVUtils;
 import com.yiflyplan.app.utils.ReflectUtil;
 import com.yiflyplan.app.utils.TokenUtils;
@@ -115,6 +116,8 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
                 mPages.add(new PageInfo("分享机构", "com.yiflyplan.app.fragment.organization.components.Share", "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_share));
 
 
+                mComponents.add(new PageInfo("重量校准","com.yiflyplan.app.fragment.organization.components.WeightCalibration","{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_weight_calibration));
+                mPages.add(new PageInfo("重量校准", "com.yiflyplan.app.fragment.organization.components.WeightCalibration", "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_weight_calibration));
 
 
                 JSONArray MenuList = new JSONArray(data.getString("list"));
@@ -206,6 +209,9 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
                     break;
                 case "医废接收":
                     openNewPage(Receive.class,"id",organizationId);
+                    break;
+                case "重量校准":
+                    openNewPage(WeightCalibration.class,"id",organizationId);
                     break;
                 default:
             }
