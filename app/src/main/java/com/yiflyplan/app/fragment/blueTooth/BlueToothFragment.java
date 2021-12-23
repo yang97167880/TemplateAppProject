@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -48,6 +49,7 @@ import com.xuexiang.xutil.app.ActivityUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
 import com.yiflyplan.app.adapter.VO.ProductVO;
+import com.yiflyplan.app.adapter.VO.UploadData;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.adapter.base.delegate.SimpleDelegateAdapter;
@@ -99,7 +101,7 @@ public class BlueToothFragment extends BaseFragment {
     private SimpleDelegateAdapter<DeviceEntity> mDeviceAdapter1;
     private SimpleDelegateAdapter<DeviceEntity> mDeviceAdapter2;
 
-    SearchFragment.UploadData uploadData;
+    private UploadData uploadData;
     private ProductVO product;
     @Override
     protected int getLayoutId() {
@@ -115,7 +117,7 @@ public class BlueToothFragment extends BaseFragment {
             flAddress.setVisibility(View.GONE);
         }
 
-        uploadData = (SearchFragment.UploadData) bundle.getSerializable("uploadData");
+        uploadData = (UploadData) bundle.getSerializable("uploadData");
         if (uploadData!=null){
             organization.setText(uploadData.getOrganizationName());
             department.setText(uploadData.getDepartmentName());
@@ -160,16 +162,18 @@ public class BlueToothFragment extends BaseFragment {
                     },R.id.bluetooth_address);
 
                     holder.click(R.id.bluetooth_item_view,view -> {
-
                         if (!tryConnect) {
                             bluetoothAdapter.cancelDiscovery();
 //                          XToastUtils.info("正在连接，请等待...",200);
-                            tryConnect = true;
                             holder.bindDataToViewById(v ->{
                                 MiniLoadingView loadingView = (MiniLoadingView) v;
                                 loadingView.setVisibility(View.VISIBLE);
                             },R.id.match_loading);
-                            uploadData.setAddress( model.getAddress());
+                            tryConnect = true;
+                            if (uploadData==null){
+                                uploadData = new UploadData();
+                            }
+                            uploadData.setAddress(model.getAddress());
                             if (product == null){
                                 openNewPage(EntryGarbageFragment.class,UPLOAD,uploadData);
                             }else {
@@ -219,11 +223,13 @@ public class BlueToothFragment extends BaseFragment {
                                 loadingView.setVisibility(View.VISIBLE);
                             },R.id.match_loading);
                             tryConnect = true;
+                            if (uploadData==null){
+                                uploadData = new UploadData();
+                            }
                             uploadData.setAddress(model.getAddress());
                             if (product == null){
                                 openNewPage(EntryGarbageFragment.class,UPLOAD,uploadData);
                             }else {
-//                                openNewPage(ProductCheckWeightFragment.class,UPLOAD,uploadData);
                                 Bundle bundle1 = new Bundle();
                                 bundle1.putSerializable(UPLOAD,uploadData);
                                 bundle1.putSerializable(CHECK_WEIGHT,product);

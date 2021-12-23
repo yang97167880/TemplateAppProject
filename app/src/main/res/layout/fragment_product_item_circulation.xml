@@ -65,6 +65,7 @@
             <com.xuexiang.xui.widget.textview.supertextview.SuperButton
                 android:id="@+id/btn_check_weight"
                 style="@style/SuperButton.Primary.ProductItemCirculation"
+                android:textSize="@dimen/config_margin_12dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:text="@string/btn_check_weight"
@@ -73,9 +74,10 @@
             <com.xuexiang.xui.widget.textview.supertextview.SuperButton
                 android:id="@+id/btn_transfer_in_personal_warehouse"
                 style="@style/SuperButton.Primary.ProductItemCirculation"
+                android:textSize="@dimen/config_margin_12dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_marginStart="@dimen/config_margin_20dp"
+                android:layout_marginStart="@dimen/config_margin_10dp"
                 android:text="@string/btn_transfer_in_personal_warehouse"
                 />
 

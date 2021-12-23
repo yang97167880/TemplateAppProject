@@ -41,6 +41,7 @@ import com.xuexiang.xutil.tip.ToastUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.ContainersVO;
 import com.yiflyplan.app.adapter.VO.OrganizationVO;
+import com.yiflyplan.app.adapter.VO.UploadData;
 import com.yiflyplan.app.adapter.base.broccoli.BroccoliSimpleDelegateAdapter;
 import com.yiflyplan.app.adapter.base.broccoli.MyRecyclerViewHolder;
 import com.yiflyplan.app.core.BaseFragment;
@@ -302,65 +303,6 @@ public class SearchFragment extends BaseFragment {
 
 
 
-    public static class UploadData implements Serializable {
-
-        @Override
-        public String toString() {
-            return "UploadData{" +
-                    "address='" + address + '\'' +
-                    ", departmentId=" + departmentId +
-                    ", departmentName='" + departmentName + '\'' +
-                    ", organizationId=" + organizationId +
-                    ", organizationName='" + organizationName + '\'' +
-                    '}';
-        }
-
-        private String address;
-        private String departmentId;
-        private String departmentName;
-        private String organizationId;
-        private String organizationName;
-
-        public String getAddress() {
-            return address;
-        }
-
-        public void setAddress(String address) {
-            this.address = address;
-        }
-
-        public String getDepartmentId() {
-            return departmentId;
-        }
-
-        public void setDepartmentId(String departmentId) {
-            this.departmentId = departmentId;
-        }
-
-        public String getDepartmentName() {
-            return departmentName;
-        }
-
-        public void setDepartmentName(String departmentName) {
-            this.departmentName = departmentName;
-        }
-
-        public String getOrganizationId() {
-            return organizationId;
-        }
-
-        public void setOrganizationId(String organizationId) {
-            this.organizationId = organizationId;
-        }
-
-        public String getOrganizationName() {
-            return organizationName;
-        }
-
-        public void setOrganizationName(String organizationName) {
-            this.organizationName = organizationName;
-        }
-    }
 
     private void getDepartmentCacheList(){
 

@@ -191,7 +191,7 @@ public final class MyHttp {
 //                                    callback.success(data);
                                 }
                             } else {// 业务处理中产生的异常
-                                Log.e("TAG", response.getString(Message));
+                                Log.e("HttpFail", response.getString(Message));
                                 XToastUtils.error(response.getString(Message));
                                 callback.fail(response);
                             }

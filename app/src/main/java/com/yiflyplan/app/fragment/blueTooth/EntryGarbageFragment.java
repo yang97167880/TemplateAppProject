@@ -50,6 +50,7 @@ import com.xuexiang.xui.widget.picker.widget.builder.OptionsPickerBuilder;
 import com.xuexiang.xui.widget.toast.XToast;
 import com.xuexiang.xutil.XUtil;
 import com.yiflyplan.app.R;
+import com.yiflyplan.app.adapter.VO.UploadData;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.SearchFragment;
@@ -123,7 +124,7 @@ public class EntryGarbageFragment extends BaseFragment {
     private final Integer RECEIVE_CODE = 1; //接受数据成功状态码
     private final Integer RE_RECEIVE_CODE = 2;//接受数据失败，冲录入状态码
 
-    SearchFragment.UploadData nextParams;
+    UploadData nextParams;
 
     private static int SleepTime = 2000;
 
@@ -143,7 +144,7 @@ public class EntryGarbageFragment extends BaseFragment {
         if (bundle == null) {
             throw new AssertionError();
         }
-        nextParams = (SearchFragment.UploadData) bundle.getSerializable("uploadData");
+        nextParams = (UploadData) bundle.getSerializable("uploadData");
         if (nextParams == null) {
             throw new AssertionError();
         }
@@ -405,11 +406,11 @@ public class EntryGarbageFragment extends BaseFragment {
                     handler.sendMessage(message);
 
                     LinkedHashMap<String, String> params = new LinkedHashMap<>();
-                    params.put("departmentId", String.valueOf(nextParams.getDepartmentId()));
-                    params.put("organizationId", String.valueOf(nextParams.getOrganizationId()));
-                    params.put("itemWeight", garbageWeight.getText().toString());
-                    params.put("itemTypeId", mTypeOptionId[typeSelectOption]);
                     params.put("bagTypeId", mPackageOptionId[packageSelectOption]);
+                    params.put("departmentId", String.valueOf(nextParams.getDepartmentId()));
+                    params.put("itemTypeId", mTypeOptionId[typeSelectOption]);
+                    params.put("itemWeight", garbageWeight.getText().toString());
+                    params.put("organizationId", String.valueOf(nextParams.getOrganizationId()));
                     params.put("pollutionLevelId", mPollutionOptionId[pollutionSelectOption]);
 //                    Toast.makeText(EntryGarbageActivity.this, "上传中...", Toast.LENGTH_SHORT).show();
                     MyHttp.postJson("/product/createProduct", TokenUtils.getToken(), params, new MyHttp.Callback() {

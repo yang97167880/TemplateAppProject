@@ -45,6 +45,7 @@ import com.xuexiang.xutil.display.ImageUtils;
 import com.xuexiang.xutil.file.FileUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.adapter.VO.ProductVO;
+import com.yiflyplan.app.adapter.VO.UploadData;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
 import com.yiflyplan.app.fragment.SearchFragment;
@@ -67,6 +68,8 @@ import java.util.UUID;
 
 import butterknife.BindView;
 
+import static com.yiflyplan.app.fragment.blueTooth.BlueToothFragment.CHECK_WEIGHT;
+import static com.yiflyplan.app.fragment.blueTooth.BlueToothFragment.UPLOAD;
 import static com.yiflyplan.app.fragment.components.DrawablePreviewFragment.BITMAP;
 import static com.yiflyplan.app.utils.ImageConversionUtil.base64ToBitmap;
 
@@ -79,7 +82,7 @@ public class ProductCheckWeightFragment extends BaseFragment implements View.OnC
     @BindView(R.id.btn_check_weight)
     SuperButton btnCheckWeight;
 
-    private SearchFragment.UploadData nextParams;
+    private UploadData nextParams;
     private ProductVO product;
 
 
@@ -112,13 +115,13 @@ public class ProductCheckWeightFragment extends BaseFragment implements View.OnC
         if (bundle == null) {
             throw new AssertionError();
         }
-        product = (ProductVO) bundle.getSerializable("product");
+        product = (ProductVO) bundle.getSerializable(CHECK_WEIGHT);
         if (product == null) {
             throw new AssertionError();
         }
         oldWeight.setText(String.valueOf(product.getItemWeight()));
 
-        nextParams = (SearchFragment.UploadData) bundle.getSerializable("uploadData");
+        nextParams = (UploadData) bundle.getSerializable(UPLOAD);
         if (nextParams == null) {
             throw new AssertionError();
         }
