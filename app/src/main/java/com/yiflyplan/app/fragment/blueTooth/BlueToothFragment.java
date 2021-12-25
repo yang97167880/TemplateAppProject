@@ -57,6 +57,7 @@ import com.yiflyplan.app.adapter.entity.DeviceEntity;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.fragment.SearchFragment;
 import com.yiflyplan.app.fragment.organization.components.ProductCheckWeightFragment;
+import com.yiflyplan.app.fragment.organization.components.WeightCalibration;
 import com.yiflyplan.app.utils.XToastUtils;
 
 import java.io.Serializable;
@@ -103,6 +104,7 @@ public class BlueToothFragment extends BaseFragment {
 
     private UploadData uploadData;
     private ProductVO product;
+    private String isFromWeightCalibration;
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_bluetooth;
@@ -111,6 +113,12 @@ public class BlueToothFragment extends BaseFragment {
     @Override
     protected void initViews() {
         Bundle bundle = this.getArguments();
+
+        isFromWeightCalibration = bundle.getString("isFromWeightCalibration");
+        if(isFromWeightCalibration != null){
+            flAddress.setVisibility(View.GONE);
+        }
+
         product = (ProductVO) bundle.getSerializable("product");
 
         if (product!=null){
@@ -128,6 +136,7 @@ public class BlueToothFragment extends BaseFragment {
         mButton.setOnClickListener(view -> {
             bluetoothLayout.setEnableRefresh(true);
             bluetoothLayout.autoRefresh();
+            tryConnect = false;
         });
 
         VirtualLayoutManager virtualLayoutManager1 = new VirtualLayoutManager(Objects.requireNonNull(getContext()));
@@ -174,7 +183,10 @@ public class BlueToothFragment extends BaseFragment {
                                 uploadData = new UploadData();
                             }
                             uploadData.setAddress(model.getAddress());
-                            if (product == null){
+                            if(isFromWeightCalibration != null){
+                                XToastUtils.info("开始进行重量校准");
+                                openNewPage(WeightCalibration.class,UPLOAD,uploadData);
+                            } else if (product == null){
                                 openNewPage(EntryGarbageFragment.class,UPLOAD,uploadData);
                             }else {
                                 Bundle bundle1 = new Bundle();
@@ -227,7 +239,10 @@ public class BlueToothFragment extends BaseFragment {
                                 uploadData = new UploadData();
                             }
                             uploadData.setAddress(model.getAddress());
-                            if (product == null){
+                            if(isFromWeightCalibration != null){
+                                XToastUtils.info("开始进行重量校准");
+                                openNewPage(WeightCalibration.class,UPLOAD,uploadData);
+                            } else if (product == null){
                                 openNewPage(EntryGarbageFragment.class,UPLOAD,uploadData);
                             }else {
                                 Bundle bundle1 = new Bundle();
@@ -238,7 +253,6 @@ public class BlueToothFragment extends BaseFragment {
 
                         } else {
                             XToastUtils.info("请刷新后重试...");
-                            tryConnect = false;
                         }
                     });
                 }

@@ -33,12 +33,14 @@ import com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder;
 import com.xuexiang.xui.utils.DensityUtils;
 import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
+import com.xuexiang.xutil.tip.ToastUtils;
 import com.yiflyplan.app.R;
 import com.yiflyplan.app.activity.MainActivity;
 import com.yiflyplan.app.adapter.VO.MenuListVO;
 import com.yiflyplan.app.adapter.WidgetItemAdapter;
 import com.yiflyplan.app.core.BaseFragment;
 import com.yiflyplan.app.core.http.MyHttp;
+import com.yiflyplan.app.fragment.blueTooth.BlueToothFragment;
 import com.yiflyplan.app.fragment.organization.components.Examine;
 import com.yiflyplan.app.fragment.organization.components.OrganizationContainersFragment;
 import com.yiflyplan.app.fragment.organization.components.OrganizationUser;
@@ -116,9 +118,9 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
                 mPages.add(new PageInfo("分享机构", "com.yiflyplan.app.fragment.organization.components.Share", "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_share));
 
 
-                mComponents.add(new PageInfo("重量校准","com.yiflyplan.app.fragment.organization.components.WeightCalibration","{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_weight_calibration));
-                mPages.add(new PageInfo("重量校准", "com.yiflyplan.app.fragment.organization.components.WeightCalibration", "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_weight_calibration));
-
+//                mComponents.add(new PageInfo("重量校准","com.yiflyplan.app.fragment.organization.components.WeightCalibration","{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_weight_calibration));
+//                mPages.add(new PageInfo("重量校准", "com.yiflyplan.app.fragment.organization.components.WeightCalibration", "{\"\":\"\"}", CoreAnim.slide, R.drawable.ic_weight_calibration));
+//
 
                 JSONArray MenuList = new JSONArray(data.getString("list"));
 
@@ -211,7 +213,8 @@ public abstract class BaseHomeFragment extends BaseFragment implements RecyclerV
                     openNewPage(Receive.class,"id",organizationId);
                     break;
                 case "重量校准":
-                    openNewPage(WeightCalibration.class,"id",organizationId);
+                    XToastUtils.info("请先连接手称机");
+                    openNewPage(BlueToothFragment.class,"isFromWeightCalibration","true");
                     break;
                 default:
             }

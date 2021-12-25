@@ -291,6 +291,7 @@ public class InputFragment extends BaseFragment {
                     String result = bundle.getString(XQRCode.RESULT_DATA);
                     apiGetXQRCodeResultType(result);
                     XToastUtils.toast("解析结果:" + result, Toast.LENGTH_LONG);
+
                 } else if (bundle.getInt(XQRCode.RESULT_TYPE) == XQRCode.RESULT_FAILED) {
                     XToastUtils.toast("解析失败", Toast.LENGTH_LONG);
                 }
@@ -319,7 +320,7 @@ public class InputFragment extends BaseFragment {
                     case PRODUCT_BAR_CODE:
                         ProductVO productVO = ReflectUtil.convertToObject(parseResult, ProductVO.class);
                         IS_FROM_SCAN = true;
-                        openNewPage(ProductItemCirculationFragment.class,"productVO",productVO);
+                        openNewPage(ProductItemCirculationFragment.class,"product",productVO);
                         break;
                     case USER_QR_CODE:
                         int organizationId =  MMKVUtils.getInt("organizationId",0);

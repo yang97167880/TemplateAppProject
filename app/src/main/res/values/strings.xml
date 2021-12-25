@@ -134,6 +134,7 @@
 
 
     <string name="btn_check_weight">进行核重</string>
+    <string name="btn_start_check_weight">开始校准</string>
     <string name="btn_transfer_in_personal_warehouse">转移至我的个人仓库</string>
     <string name="btn_upload_weight">上传对比结果</string>
 

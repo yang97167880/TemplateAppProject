@@ -79,6 +79,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="@dimen/config_margin_10dp"
                 android:text="@string/btn_transfer_in_personal_warehouse"
+                android:visibility="gone"
                 />
 
         </LinearLayout>

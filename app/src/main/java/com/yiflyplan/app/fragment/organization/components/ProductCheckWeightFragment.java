@@ -383,36 +383,6 @@ public class ProductCheckWeightFragment extends BaseFragment implements View.OnC
         }
     }
 
-//    private void sendMessageToRemoteBluetooth(String message) {
-//        try {
-//            OutputStream outputStream = bluetoothSocket.getOutputStream();
-//            byte[] bytes = message.getBytes();
-//            int addSpaceNum = 0;
-//            //计算出0x0a个数，为下方准换格式添加0x0d申请新空间
-//            for (byte b : bytes) {
-//                if (b == 0x0a) {
-//                    ++addSpaceNum;
-//                }
-//            }
-//            //申请新空间
-//            byte[] newBytes = new byte[bytes.length + addSpaceNum];
-//            //开始转换
-//            for (int i = 0; i < bytes.length; ++i) {
-//                if (bytes[i] == 0x0a) {
-//                    newBytes[i] = 0x0d;
-//                    newBytes[++i] = 0x0a;
-//                } else {
-//                    newBytes[i] = bytes[i];
-//                }
-//            }
-//            //转换完成，写入流
-//            outputStream.write(newBytes);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-
 
     @Override
     public void onClick(View v) {
@@ -423,19 +393,23 @@ public class ProductCheckWeightFragment extends BaseFragment implements View.OnC
      * 上传医废差值
      */
     private void UploadDifference(){
-//        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-//        MyHttp.postJson("", TokenUtils.getToken(), params, new MyHttp.Callback() {
-//
-//            @Override
-//            public void success(JSONObject data) throws JSONException {
-//
-//            }
-//
-//            @Override
-//            public void fail(JSONObject error) throws JSONException {
-//
-//            }
-//        });
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("currentWeight",newWeight.getText().toString());
+        params.put("itemId",String.valueOf(product.getId()));
+        MyHttp.postJson("/product/itemWeightCheck", TokenUtils.getToken(), params, new MyHttp.Callback() {
+
+            @Override
+            public void success(JSONObject data) throws JSONException {
+                XToastUtils.toast("上传差值成功");
+            }
+
+            @Override
+            public void fail(JSONObject error) throws JSONException {
+                XToastUtils.error("上传差值失败，请重新上传");
+                XToastUtils.error(error.getString("message"));
+
+            }
+        });
     }
 
 }
